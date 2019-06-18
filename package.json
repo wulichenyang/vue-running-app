@@ -3,11 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
+    "vue-serve": "vue-cli-service serve",
+    "serve": "concurrently \"vue-cli-service serve\" \"cd server && yarn start\"",
+    "vue-build": "vue-cli-service build",
+    "build": "concurrently \"vue-cli-service build\" \"cd server && yarn build\"",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "concurrently": "^4.1.0",
     "core-js": "^2.6.5",
     "vue": "^2.6.10",
     "vue-router": "^3.0.3",
