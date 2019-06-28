@@ -14,7 +14,7 @@
         </div>
         <!-- Start Button -->
         <div class="start-btn-wrapper">
-          <button class="btn start-btn waves" slot>开始{{tripWay}}</button>
+          <button class="start-btn waves" slot>开始{{tripWay}}</button>
         </div>
       </div>
     </section>
@@ -25,6 +25,7 @@
 </template>
 <script>
 import { TabBar } from "mand-mobile";
+import initWaveButton from '@/assets/js/wave-button.js'
 
 export default {
   name: "trip",
@@ -47,7 +48,7 @@ export default {
     };
   },
   mounted() {
-
+    initWaveButton()
   },
   methods: {
     onTripWayChange(e) {
@@ -59,6 +60,7 @@ export default {
 </script>
 <style lang="scss">
 @import "../assets/css/var.scss";
+@import '../assets/css/wave-button.css';
 
 .trip {
   width: 100%;
