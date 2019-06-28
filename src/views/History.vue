@@ -1,5 +1,5 @@
 <template>
-  <div class="history">
+  <section class="history">
     <h1>This is an history page</h1>
-  </div>
+  </section>
 </template>

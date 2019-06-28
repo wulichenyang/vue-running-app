@@ -1,5 +1,5 @@
 <template>
-  <div class="traffic">
+  <section class="traffic">
     <h1>This is an traffic page</h1>
-  </div>
+  </section>
 </template>

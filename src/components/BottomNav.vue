@@ -67,21 +67,20 @@ export default {
 </script>
 
 <style lang="scss">
+@import "../assets/css/var.scss";
+
 .nav-tab {
   width: 100%;
-  height: 64px;
-  background-color: #fff;
+  height: $bottomNavHeight;
+  background-color: $bottomNavBgColor;
   .md-tab-bar-item {
-    min-height: 64px !important;
+    min-height: $bottomNavHeight !important;
     .icon {
       text-align: center;
     }
     .text {
-      font-size: 14px;
+      font-size: $tabFontSize;
     }
   }
-  // .md-tab-bar-item {
-
-  // }
 }
 </style>
