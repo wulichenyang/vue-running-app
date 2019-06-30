@@ -9,8 +9,8 @@
         <!-- Data Tips -->
         <div class="tips">
           <p>累计{{tripWay}}</p>
-          <h2>{{distance}}</h2>
-          <p>本月{{tripWay}}{{distance}}公里>></p>
+          <h2>{{distanceNow}}</h2>
+          <p>本月{{tripWay}}{{distanceNow}}公里>></p>
         </div>
         <!-- Start Button -->
         <div class="start-btn-wrapper">
@@ -25,18 +25,18 @@
 </template>
 <script>
 import { TabBar } from "mand-mobile";
-import initWaveButton from '@/assets/js/wave-button.js'
+import initWaveButton from "@/assets/js/wave-button.js";
+import { mapGetters, mapActions } from "vuex";
 
 export default {
   name: "trip",
   components: {
     [TabBar.name]: TabBar
   },
-
   data() {
     return {
       tripWay: "步行",
-      distance: 0,
+      // distance: 0,
       // Top tab
       current: 1,
       items: [
@@ -47,20 +47,44 @@ export default {
       ]
     };
   },
+  computed: {
+    distanceNow() {
+      if(this.distance) {
+        switch (this.tripWay) {
+          case "步行":
+            return this.distance["walking"];
+          case "跑步":
+            return this.distance["running"];
+          case "骑行":
+            return this.distance["riding"];
+          case "驾车":
+            return this.distance["driving"];
+          default:
+            return '0.0'
+        }
+      } else {
+        return '0.0'
+      }
+    },
+    ...mapGetters(["distance"])
+  },
   mounted() {
-    initWaveButton()
+    initWaveButton();
+    this.getDistance()
+    this.getUser()
   },
   methods: {
     onTripWayChange(e) {
       // this.current = index
       this.tripWay = e.label;
-    }
+    },
+    ...mapActions(['getDistance', 'getUser'])
   }
 };
 </script>
 <style lang="scss">
 @import "../assets/css/var.scss";
-@import '../assets/css/wave-button.css';
+@import "../assets/css/wave-button.css";
 
 .trip {
   width: 100%;
