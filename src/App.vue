@@ -1,31 +1,41 @@
 <template>
   <div id="app">
     <main class="main-wrapper">
-      <keep-alive>
-        <transition name="fademap">
+      <transition name="fademap">
+        <keep-alive>
           <router-view/>
-        </transition>
-      </keep-alive>
+        </keep-alive>
+      </transition>
     </main>
-    <bottomNav></bottomNav>
+    <BottomNav></BottomNav>
+    <Loading :isLoading="isLoading"></Loading>
   </div>
 </template>
 
 <script>
-import bottomNav from "@/components/BottomNav.vue";
+import BottomNav from "@/components/BottomNav.vue";
+import Loading from "@/components/Loading.vue";
+
+import { mapGetters } from "vuex";
+
 export default {
   components: {
-    bottomNav: bottomNav
+    BottomNav: BottomNav,
+    Loading: Loading
   },
   mounted() {
-    // For iphone to disable cache, in Dev mode
-    window.onpageshow = e => {
-      if (e.persisted) {
-        window.location.reload();
-      }
-    };
+    // // For iphone to disable cache, in Dev mode
+    // window.onpageshow = e => {
+    //   if (e.persisted) {
+    //     window.location.reload();
+    //   }
+    // };
   },
-  methods: {}
+  methods: {},
+
+  computed: {
+    ...mapGetters(["isLoading"])
+  }
 };
 </script>
 

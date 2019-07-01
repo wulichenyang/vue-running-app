@@ -1,23 +1,27 @@
 <template>
   <div class="trip">
-    <section class="trip-bg-wrapper">
-      <div class="trip-wrapper">
-        <!-- Top Trip Nav -->
-        <div class="md-example-child md-example-child-tabs md-example-child-tab-bar-1">
-          <md-tab-bar v-model="current" :items="items" :maxLength="4" @change="onTripWayChange"/>
+    <!-- Notice Bar -->
+    <NoticeBar :ifNotice="ifNotice" :noticeInfo="noticeInfo"></NoticeBar>
+    <ScrollWrapper @onRefresh="onRefreshTrip">
+      <section class="trip-bg-wrapper">
+        <div class="trip-wrapper">
+          <!-- Top Trip Nav -->
+          <div class="md-example-child md-example-child-tabs md-example-child-tab-bar-1">
+            <md-tab-bar v-model="current" :items="items" :maxLength="4" @change="onTripWayChange"/>
+          </div>
+          <!-- Data Tips -->
+          <div class="tips">
+            <p>累计{{tripWay}}</p>
+            <h2>{{distanceNow}}</h2>
+            <p>本月{{tripWay}}{{distanceNow}}公里>></p>
+          </div>
+          <!-- Start Button -->
+          <div class="start-btn-wrapper">
+            <button class="start-btn waves" slot>开始{{tripWay}}</button>
+          </div>
         </div>
-        <!-- Data Tips -->
-        <div class="tips">
-          <p>累计{{tripWay}}</p>
-          <h2>{{distanceNow}}</h2>
-          <p>本月{{tripWay}}{{distanceNow}}公里>></p>
-        </div>
-        <!-- Start Button -->
-        <div class="start-btn-wrapper">
-          <button class="start-btn waves" slot>开始{{tripWay}}</button>
-        </div>
-      </div>
-    </section>
+      </section>
+    </ScrollWrapper>
 
     <!-- Click the Button to Show Map -->
     <section class="map-wrapper"></section>
@@ -26,12 +30,15 @@
 <script>
 import { TabBar } from "mand-mobile";
 import initWaveButton from "@/assets/js/wave-button.js";
+import ScrollWrapper from "@/components/ScrollWrapper.vue";
+import NoticeBar from "@/components/NoticeBar.vue";
 import { mapGetters, mapActions } from "vuex";
-
 export default {
   name: "trip",
   components: {
-    [TabBar.name]: TabBar
+    [TabBar.name]: TabBar,
+    ScrollWrapper: ScrollWrapper,
+    NoticeBar: NoticeBar
   },
   data() {
     return {
@@ -49,7 +56,7 @@ export default {
   },
   computed: {
     distanceNow() {
-      if(this.distance) {
+      if (this.distance) {
         switch (this.tripWay) {
           case "步行":
             return this.distance["walking"];
@@ -60,25 +67,32 @@ export default {
           case "驾车":
             return this.distance["driving"];
           default:
-            return '0.0'
+            return "0.0";
         }
       } else {
-        return '0.0'
+        return "0.0";
       }
     },
-    ...mapGetters(["distance"])
+    ...mapGetters(["distance", "ifNotice", "noticeInfo"])
   },
   mounted() {
     initWaveButton();
-    this.getDistance()
-    this.getUser()
+    this.getDistance();
+    this.getUser();
   },
   methods: {
     onTripWayChange(e) {
       // this.current = index
       this.tripWay = e.label;
     },
-    ...mapActions(['getDistance', 'getUser'])
+    async onRefreshTrip(finishRefresh) {
+      let finished = await this.refreshDistance();
+      if (finished) {
+        finishRefresh();
+        this.updateNoticeBar({msg:'更新里程成功！'})
+      }
+    },
+    ...mapActions(["getDistance", "refreshDistance", "getUser", 'updateNoticeBar'])
   }
 };
 </script>

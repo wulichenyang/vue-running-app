@@ -29,14 +29,17 @@ export default {
         if(res.code === 0) {
           console.log(res)
           commit(types.SET_USER, {user: res.data.user})
+          dispatch('subLoading')
+          return true
         } else { // Failed
           dispatch('fetchingError', {msg: '用户'})
+          dispatch('subLoading')
+          return false
         }
-        
-        dispatch('subLoading')
       } catch(e) { // Error
         dispatch('fetchingError', {msg: '用户'})
         dispatch('subLoading')
+        return false
       }
     },
     async getDistance({commit, dispatch}) {
@@ -46,14 +49,35 @@ export default {
         // Success
         if(res.code === 0) {
           commit(types.SET_DISTANCE, {distance: res.data.distance})
+          dispatch('subLoading')
+          return true
         } else { // Failed
           dispatch('fetchingError', {msg: '里程'})
+          dispatch('subLoading')
+          return false
         }
         
-        dispatch('subLoading')
       } catch(e) { // Error
         dispatch('fetchingError', {msg: '里程'})
         dispatch('subLoading')
+        return false
+      }
+    },
+    async refreshDistance({commit}) {
+      try {
+        let res = await tripApi.getDistance()
+        // Success
+        if(res.code === 0) {
+          commit(types.SET_DISTANCE, {distance: res.data.distance})
+          return true
+        } else { // Failed
+          dispatch('fetchingError', {msg: '里程'})
+          return false
+        }
+        
+      } catch(e) { // Error
+        dispatch('fetchingError', {msg: '里程'})
+        return false
       }
     }
   }

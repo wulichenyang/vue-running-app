@@ -19,7 +19,7 @@
 import { TabBar, Icon } from "mand-mobile";
 
 export default {
-  name: "bottomNav",
+  name: "BottomNav",
   components: {
     [TabBar.name]: TabBar,
     [Icon.name]: Icon
