@@ -1,6 +1,5 @@
 import * as types from '../mutation-types'
-import {Toast} from 'mand-mobile'
-
+import { Toast } from 'mand-mobile'
 export default {
   state: {
     loading: []
@@ -19,19 +18,19 @@ export default {
     [types.SUB_LOADING](state) {
       state.loading = state.loading.slice(1)
     },
-    [types.FETCHING_ERROR](state, {msg}) {
+    [types.FETCHING_ERROR](state, { msg }) {
       Toast.failed(`获取${msg}信息失败`)
     }
   },
   actions: {
-    addLoading({commit}) {
+    addLoading({ commit }) {
       commit(types.ADD_LOADING)
     },
-    subLoading({commit}) {
+    subLoading({ commit }) {
       commit(types.SUB_LOADING)
     },
-    fetchingError({commit}, {msg}) {
-      commit(types.FETCHING_ERROR, {msg})
+    fetchingError({ commit }, { msg }) {
+      commit(types.FETCHING_ERROR, { msg })
     }
   }
 }

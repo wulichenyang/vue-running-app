@@ -22,37 +22,38 @@ export default {
   },
   actions: {
     async getUser({commit, dispatch}) {
-      dispatch(types.ADD_LOADING)
+      dispatch('addLoading')
       try {
         let res = await userApi.getUser()
         // Success
         if(res.code === 0) {
+          console.log(res)
           commit(types.SET_USER, {user: res.data.user})
         } else { // Failed
-          dispatch(types.FETCHING_ERROR, {msg: '用户'})
+          dispatch('fetchingError', {msg: '用户'})
         }
         
-        dispatch(types.SUB_LOADING)
+        dispatch('subLoading')
       } catch(e) { // Error
-        dispatch(types.FETCHING_ERROR, {msg: '用户'})
-        dispatch(types.SUB_LOADING)
+        dispatch('fetchingError', {msg: '用户'})
+        dispatch('subLoading')
       }
     },
     async getDistance({commit, dispatch}) {
-      dispatch(types.ADD_LOADING)
+      dispatch('addLoading')
       try {
         let res = await tripApi.getDistance()
         // Success
         if(res.code === 0) {
           commit(types.SET_DISTANCE, {distance: res.data.distance})
         } else { // Failed
-          dispatch(types.FETCHING_ERROR, {msg: '里程'})
+          dispatch('fetchingError', {msg: '里程'})
         }
         
-        dispatch(types.SUB_LOADING)
+        dispatch('subLoading')
       } catch(e) { // Error
-        dispatch(types.FETCHING_ERROR, {msg: '里程'})
-        dispatch(types.SUB_LOADING)
+        dispatch('fetchingError', {msg: '里程'})
+        dispatch('subLoading')
       }
     }
   }

@@ -6,7 +6,7 @@ export const getDistance = async () => {
   // return get('/trip/distance')
   return new Promise((r, f) => {
     setTimeout(()=>{
-      return {
+      r({
         code: 0,
         message: 'OK',
         data: {
@@ -17,7 +17,7 @@ export const getDistance = async () => {
             driving: 123.311
           }
         }
-      }
+      })
     }, 2000)
   })
 }

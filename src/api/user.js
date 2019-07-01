@@ -6,7 +6,7 @@ export const getUser = async () => {
   // return get('/user')
   return new Promise((r, f) => {
     setTimeout(()=>{
-      return {
+      r ({
         code:0,
         message: 'OK',
         data: {
@@ -14,7 +14,7 @@ export const getUser = async () => {
             name: 'lichenyang'
           }
         }
-      }
+      })
     }, 500)
   })
 }
