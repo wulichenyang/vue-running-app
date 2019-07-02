@@ -1,13 +1,13 @@
 <template>
   <div id="app">
-    <main class="main-wrapper">
+    <main class="main-wrapper" :style="{'height': !showNav ? '100% !important': ''}">
       <transition name="fademap">
         <keep-alive>
           <router-view/>
         </keep-alive>
       </transition>
     </main>
-    <BottomNav></BottomNav>
+    <BottomNav v-if="showNav"></BottomNav>
     <Loading :isLoading="isLoading"></Loading>
   </div>
 </template>
@@ -34,6 +34,9 @@ export default {
   methods: {},
 
   computed: {
+    showNav() {
+      return this.$route.name !== 'signup' && this.$route.name !== 'login'
+    },
     ...mapGetters(["isLoading"])
   }
 };

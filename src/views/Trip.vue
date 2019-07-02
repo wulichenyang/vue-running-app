@@ -16,9 +16,7 @@
             <p>本月{{tripWay}}{{distanceNow}}公里>></p>
           </div>
           <!-- Start Button -->
-          <div class="start-btn-wrapper">
-            <button class="start-btn waves" slot>开始{{tripWay}}</button>
-          </div>
+          <ConfirmButton :text="`开始${tripWay}`" @onClickButton="onSelectStart"></ConfirmButton>
         </div>
       </section>
     </ScrollWrapper>
@@ -29,16 +27,17 @@
 </template>
 <script>
 import { TabBar } from "mand-mobile";
-import initWaveButton from "@/assets/js/wave-button.js";
 import ScrollWrapper from "@/components/ScrollWrapper.vue";
 import NoticeBar from "@/components/NoticeBar.vue";
+import ConfirmButton from "@/components/ConfirmButton.vue";
 import { mapGetters, mapActions } from "vuex";
 export default {
   name: "trip",
   components: {
     [TabBar.name]: TabBar,
     ScrollWrapper: ScrollWrapper,
-    NoticeBar: NoticeBar
+    NoticeBar: NoticeBar,
+    ConfirmButton: ConfirmButton,
   },
   data() {
     return {
@@ -76,7 +75,6 @@ export default {
     ...mapGetters(["distance", "ifNotice", "noticeInfo"])
   },
   mounted() {
-    initWaveButton();
     this.getDistance();
     this.getUser();
   },
@@ -85,21 +83,27 @@ export default {
       // this.current = index
       this.tripWay = e.label;
     },
+    onSelectStart() {
+      console.log('confirm')
+    },
     async onRefreshTrip(finishRefresh) {
       let finished = await this.refreshDistance();
       if (finished) {
         finishRefresh();
-        this.updateNoticeBar({msg:'更新里程成功！'})
+        this.updateNoticeBar({ msg: "更新里程成功！" });
       }
     },
-    ...mapActions(["getDistance", "refreshDistance", "getUser", 'updateNoticeBar'])
+    ...mapActions([
+      "getDistance",
+      "refreshDistance",
+      "getUser",
+      "updateNoticeBar"
+    ])
   }
 };
 </script>
 <style lang="scss">
 @import "../assets/css/var.scss";
-@import "../assets/css/wave-button.css";
-
 .trip {
   width: 100%;
   height: 100%;
@@ -153,25 +157,6 @@ export default {
           color: $linkFontColor;
           text-decoration: underline;
           letter-spacing: 1px;
-        }
-      }
-      .start-btn-wrapper {
-        margin-top: 48px;
-        text-align: center;
-        border-radius: 90px;
-        overflow: hidden;
-        position: relative;
-        .start-btn {
-          display: inline-block;
-          width: 240px;
-          height: 48px;
-          letter-spacing: 2px;
-          border-radius: 90px;
-          font-size: $primaryBtnFontSize;
-          color: $primaryBtnFontColor;
-          background-color: $primaryBtnBgColor;
-          border: none;
-          outline: none;
         }
       }
     }
