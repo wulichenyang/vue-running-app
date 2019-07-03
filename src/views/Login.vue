@@ -6,18 +6,20 @@
       <div class="login-wrapper">
         <!-- Title -->
         <div class="title">
-          <img src="../assets/img/logo1.png">
+          <img src="../assets/img/logo1.png" />
         </div>
         <!-- Login Form-->
         <div class="login-form">
           <md-field>
             <md-input-item title="手机号" type="phone" v-model="phone" align="left"></md-input-item>
             <md-input-item title="密码" type="password" v-model="password" align="left"></md-input-item>
-            <router-link to="/signup">注册账号</router-link>
           </md-field>
         </div>
         <!-- Login Button -->
-        <ConfirmButton text="登录" @onClickButton="onLogin"></ConfirmButton>
+        <section class="button-group">
+          <ConfirmButton text="注册" @onClickButton="toSignUp"></ConfirmButton>
+          <ConfirmButton text="登录" @onClickButton="onLogin"></ConfirmButton>
+        </section>
       </div>
     </section>
   </div>
@@ -48,6 +50,9 @@ export default {
   mounted() {},
   methods: {
     onLogin() {},
+    toSignUp() {
+      this.$router.push({ path: "/signup" });
+    },
     ...mapActions([])
   }
 };
@@ -98,7 +103,8 @@ export default {
         .md-field-item-title {
           width: 64px !important;
         }
-        .md-field-item-content, .md-field-item-control {
+        .md-field-item-content,
+        .md-field-item-control {
           min-height: 50px !important;
           height: 72px;
         }
@@ -118,6 +124,27 @@ export default {
         }
         .md-field {
           background: transparent;
+        }
+      }
+      .button-group {
+        display: flex;
+        text-align: center;
+        justify-content: space-between;
+        padding-left: 40px;
+        padding-right: 40px;
+        .start-btn-wrapper {
+          flex: .45;
+          width: 45%;
+          .start-btn {
+            width: 100%;
+          }
+        }
+        .start-btn-wrapper:nth-child(1) {
+          .start-btn {
+            background-color: transparent !important;
+            color: $mainFontColor;
+            border: $buttonBorder;
+          }
         }
       }
     }

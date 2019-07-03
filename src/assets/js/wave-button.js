@@ -73,9 +73,20 @@ const initWaveButton = () => {
       },duration);
     },100)
   }
-  document.querySelector('.waves').addEventListener('click',function(e){
-    show(e);
-  },!1);
+  document.querySelectorAll('.waves').forEach(e=>{
+    e.addEventListener('click',function(e){
+      show(e);
+    },!1)
+  });
 }
 
-export default initWaveButton
+const destroyListener = ()=> {
+  document.querySelectorAll('.waves').forEach(e=>{
+    e.removeEventListener('click')
+  });
+}
+
+export {
+  initWaveButton,
+  destroyListener
+}

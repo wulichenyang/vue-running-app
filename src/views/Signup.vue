@@ -1,22 +1,22 @@
 <template>
-  <div class="login">
+  <div class="signup">
     <!-- Notice Bar -->
     <NoticeBar :ifNotice="ifNotice" :noticeInfo="noticeInfo"></NoticeBar>
-    <section class="login-bg-wrapper">
-      <div class="login-wrapper">
+    <section class="signup-bg-wrapper">
+      <div class="signup-wrapper">
         <!-- Title -->
         <div class="title">
-          <img src="../assets/img/logo1.png">
+          <img src="../assets/img/logo1.png" />
         </div>
-        <!-- Login Form-->
-        <div class="login-form">
+        <!-- Signup Form-->
+        <div class="signup-form">
           <md-field>
             <md-input-item title="手机号" type="phone" v-model="phone" align="left"></md-input-item>
             <md-input-item title="密码" type="password" v-model="password" align="left"></md-input-item>
           </md-field>
         </div>
-        <!-- Login Button -->
-        <ConfirmButton text="注册" @onClickButton="onLogin"></ConfirmButton>
+        <!-- Signup Button -->
+        <ConfirmButton text="注册" @onClickButton="onSignup"></ConfirmButton>
       </div>
     </section>
   </div>
@@ -54,10 +54,10 @@ export default {
 <style lang="scss">
 @import "../assets/css/var.scss";
 
-.login {
+.signup {
   width: 100%;
   height: 100%;
-  .login-bg-wrapper {
+  .signup-bg-wrapper {
     position: relative;
     width: 100%;
     height: 100%;
@@ -76,7 +76,7 @@ export default {
       left: 0;
       background: $coverBgColor;
     }
-    .login-wrapper {
+    .signup-wrapper {
       .title {
         padding-top: 100px;
         text-align: center;
@@ -89,7 +89,7 @@ export default {
       height: 100%;
       position: relative;
       z-index: 1;
-      .login-form {
+      .signup-form {
         .md-field {
           padding-top: 10px;
           padding-bottom: 10px;
@@ -97,7 +97,8 @@ export default {
         .md-field-item-title {
           width: 64px !important;
         }
-        .md-field-item-content, .md-field-item-control {
+        .md-field-item-content,
+        .md-field-item-control {
           min-height: 50px !important;
           height: 72px;
         }
@@ -117,6 +118,13 @@ export default {
         }
         .md-field {
           background: transparent;
+        }
+      }
+      .start-btn-wrapper {
+        padding-left: 40px;
+        padding-right: 40px;
+        .start-btn {
+          width: 100%;
         }
       }
     }

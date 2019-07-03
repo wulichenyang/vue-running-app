@@ -1,11 +1,11 @@
 <template>
   <div class="start-btn-wrapper">
-    <button class="start-btn waves" @click="onClickButton"  slot>{{text}}</button>
+    <button class="start-btn waves" @click="onClickButton" slot>{{text}}</button>
   </div>
 </template>
 
 <script>
-import initWaveButton from "@/assets/js/wave-button.js";
+import { initWaveButton, destroyListener } from "@/assets/js/wave-button.js";
 
 export default {
   name: "ConfirmButton",
@@ -18,9 +18,12 @@ export default {
   mounted() {
     initWaveButton();
   },
+  destroyed() {
+    destroyListener();
+  },
   methods: {
     onClickButton() {
-      this.$emit("onClickButton")
+      this.$emit("onClickButton");
     }
   }
 };
@@ -38,7 +41,7 @@ export default {
   position: relative;
   .start-btn {
     display: inline-block;
-    width: 240px;
+    min-width: 100px;
     height: 48px;
     letter-spacing: 2px;
     border-radius: 90px;
