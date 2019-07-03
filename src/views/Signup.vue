@@ -11,8 +11,10 @@
         <!-- Signup Form-->
         <div class="signup-form">
           <md-field>
-            <md-input-item title="手机号" type="phone" v-model="phone" align="left"></md-input-item>
-            <md-input-item title="密码" type="password" v-model="password" align="left"></md-input-item>
+            <md-input-item @keyup="onPhoneCheck" title="手机号" type="phone" v-model="phone" align="left"></md-input-item>
+            <p class="error" v-show="phoneError">{{phoneError}}</p>
+            <md-input-item @keyup="onPasswordCheck" title="密码" type="password" v-model="password" align="left"></md-input-item>
+            <p class="error" v-show="passwordError">{{passwordError}}</p>
           </md-field>
         </div>
         <!-- Signup Button -->
@@ -25,20 +27,23 @@
 import { InputItem, Field } from "mand-mobile";
 import NoticeBar from "@/components/NoticeBar.vue";
 import ConfirmButton from "@/components/ConfirmButton.vue";
-
 import { mapGetters, mapActions } from "vuex";
+
+const phoneTest = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1}))+\d{8})$/; 
 export default {
-  name: "login",
+  name: "signup",
   components: {
     [Field.name]: Field,
     [InputItem.name]: InputItem,
     NoticeBar: NoticeBar,
-    ConfirmButton: ConfirmButton
+    ConfirmButton: ConfirmButton,
   },
   data() {
     return {
       phone: "",
-      password: ""
+      password: "",
+      phoneError: '',
+      passwordError: '',
     };
   },
   computed: {
@@ -46,7 +51,36 @@ export default {
   },
   mounted() {},
   methods: {
-    onLogin() {},
+    onSignup() {
+      if(this.onPhoneCheck() && this.onPasswordCheck()) {
+        console.log('logging')
+      }
+    },
+    onPhoneCheck() {
+      if(this.phone.length !== 11) {
+        this.phoneError = '* 请填写11位手机号'
+        return false
+      }
+      else if(!phoneTest.test(this.phone)) {
+        this.phoneError = '* 手机号格式错误'
+        return false
+      } else {
+        this.phoneError = ''
+        return true
+      }
+    },
+    onPasswordCheck() {
+      if (this.password.length === 0) {
+        this.passwordError = "* 密码不能为空";
+        return false;
+      } else if (this.password.length < 4) {
+        this.passwordError = "* 请填写超过3位的密码";
+        return false
+      } else {
+        this.passwordError = "";
+        return true;
+      }
+    },
     ...mapActions([])
   }
 };
@@ -90,6 +124,9 @@ export default {
       position: relative;
       z-index: 1;
       .signup-form {
+        p.error {
+          margin-top: 5px
+        }
         .md-field {
           padding-top: 10px;
           padding-bottom: 10px;
