@@ -132,9 +132,8 @@ instance.interceptors.response.use(
 export async function get(url, params) {
   // try {
   // 有错误处理拦截器
-  return await instance.get(ApiConfig.HOST + ApiConfig.apiPrefix + url, {
-    params,
-  })
+  return await instance.get(ApiConfig.HOST + ApiConfig.apiPrefix + url,
+    params)
   // } catch (error) {
   //   console.error("Api request error: " + error)
   //   return new Promise((r, f) => {

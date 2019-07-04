@@ -1,13 +1,14 @@
 import {
   get,
+  post
 } from "./http"
 
 export const getUser = async () => {
   // return get('/user')
   return new Promise((r, f) => {
-    setTimeout(()=>{
-      r ({
-        code:0,
+    setTimeout(() => {
+      r({
+        code: 0,
         message: 'OK',
         data: {
           user: {
@@ -16,6 +17,13 @@ export const getUser = async () => {
         }
       })
     }, 500)
+  })
+}
+
+export const signup = async (logName, password) => {
+  return post('/signup', {
+    logName,
+    password
   })
 }
 
