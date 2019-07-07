@@ -3,12 +3,14 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var jwtauth = require('./middleware/jwtauth');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 const cors = require('cors')
 var app = express();
 var mongoose = require('mongoose');
+
 const {
   user,
   pwd,
@@ -38,13 +40,15 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(cors(corsConf))
+
+// 身份验证
+app.use(jwtauth)
+
 app.use(indexRouter);
 app.use(usersRouter);
 // Add api prefix
 app.use(apiPrefix, indexRouter)
 app.use(apiPrefix, usersRouter)
-
-
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
   next(createError(404));

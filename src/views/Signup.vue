@@ -36,7 +36,7 @@
   </div>
 </template>
 <script>
-import { InputItem, Field } from "mand-mobile";
+import { InputItem, Field, Toast } from "mand-mobile";
 import NoticeBar from "@/components/NoticeBar.vue";
 import ConfirmButton from "@/components/ConfirmButton.vue";
 import { mapGetters, mapActions } from "vuex";
@@ -69,18 +69,28 @@ export default {
     async onSignup() {
       if (this.onPhoneCheck() && this.onPasswordCheck()) {
         console.log("signing");
-        let res = await signup(this.phone, md5(this.password))
         this.posting = true
+        let res = await signup(this.phone, md5(this.password))
         // Success
         if(res.code === 0) {
-
-          this.posting = true
+          // TODO posting
+          this.posting = false
+          this.resetForm()
+          Toast.succeed(res.message)
+          this.$router.push({path: '/login'})
         } else if(res.code === 1) {
           // Fail
           this.posting = false
+          Toast.failed(res.message)
         }
       }
     },
+    
+    resetForm() {
+      this.phone = ''
+      this.password = ''
+    },
+
     onPhoneCheck() {
       if (this.phone.length !== 11) {
         this.phoneError = "* 请填写11位手机号";
