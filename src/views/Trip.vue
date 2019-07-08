@@ -12,8 +12,8 @@
           <!-- Data Tips -->
           <div class="tips">
             <p>累计{{tripWay}}</p>
-            <h2>{{distanceNow.toFixed(1)}}</h2>
-            <p>本月{{tripWay}}{{distanceNow.toFixed(1)}}公里>></p>
+            <h2>{{distanceNow}}</h2>
+            <p>本月{{tripWay}}{{distanceNow}}公里>></p>
           </div>
           <!-- Start Button -->
           <ConfirmButton :text="`开始${tripWay}`" @onClickButton="onSelectStart"></ConfirmButton>
@@ -73,13 +73,13 @@ export default {
       if (this.distance) {
         switch (this.tripWay) {
           case "步行":
-            return this.distance["walking"];
+            return this.distance["walking"].toFixed(1);
           case "跑步":
-            return this.distance["running"];
+            return this.distance["running"].toFixed(1);
           case "骑行":
-            return this.distance["riding"];
+            return this.distance["riding"].toFixed(1);
           case "驾车":
-            return this.distance["driving"];
+            return this.distance["driving"].toFixed(1);
           default:
             return "0.0";
         }

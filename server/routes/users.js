@@ -74,6 +74,8 @@ router.post('/signup', function (req, res, next) {
                 code: 1,
                 message: err.message
               })
+              // TODO: remove user
+              
             } else {
               res.json({
                 code: 0,
