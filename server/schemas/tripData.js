@@ -1,6 +1,8 @@
 let mongoose = require('mongoose');
 let Schema = mongoose.Schema;
 const ObjectId = Schema.Types.ObjectId;
+require('mongoose-double')(mongoose);
+const Double = mongoose.Schema.Types.Double;
 
 let tripDataSchema = new Schema({
   // 用户id，唯一

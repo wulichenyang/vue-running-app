@@ -35,6 +35,7 @@ module.exports = (req, res, next) => {
         /* 关键关键关键 */
         // 取出token里username信息
         req.phone = decoded.phone
+        req.userId = decoded.userId
 
         // token验证成功 刷新token并返回给前端
         // let newToken = jwt.sign({ username: decoded.username }, "secretOrPrivateKey", {

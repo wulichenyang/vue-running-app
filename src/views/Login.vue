@@ -1,7 +1,7 @@
 <template>
-  <div class="login">
+  <div class="login" @keyup.enter="onLogin">
     <!-- Notice Bar -->
-    <NoticeBar :ifNotice="ifNotice" :noticeInfo="noticeInfo"></NoticeBar>
+    <!-- <NoticeBar :ifNotice="ifNotice" :noticeInfo="noticeInfo"></NoticeBar> -->
     <section class="login-bg-wrapper">
       <div class="login-wrapper">
         <!-- Title -->
@@ -67,10 +67,11 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["ifNotice"])
+    // ...mapGetters(["ifNotice"])
   },
   mounted() {},
   methods: {
+    // TODO listen to enter key
     async onLogin() {
       if (this.onPhoneCheck() && this.onPasswordCheck()) {
         console.log("logging");
@@ -81,7 +82,7 @@ export default {
           // TODO posting
           this.posting = false;
           this.resetForm();
-          cookie.setCookie(access_token, res.data.token, 0.005); // 12分钟
+          cookie.setCookie(access_token, res.data.token, 0.2); // 12分钟
           Toast.succeed(res.message);
           this.$router.push({ path: "/" });
         } else if (res.code === 1) {
@@ -122,7 +123,7 @@ export default {
       }
     },
     toSignUp() {
-      this.$router.push({ path: "/signup" });
+      this.$router.push({ path: "signup" });
     },
     ...mapActions([])
   }

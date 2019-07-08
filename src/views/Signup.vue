@@ -1,7 +1,7 @@
 <template>
-  <div class="signup">
+  <div class="signup"  @keyup.enter="onSignup">
     <!-- Notice Bar -->
-    <NoticeBar :ifNotice="ifNotice" :noticeInfo="noticeInfo"></NoticeBar>
+    <!-- <NoticeBar :ifNotice="ifNotice" :noticeInfo="noticeInfo"></NoticeBar> -->
     <section class="signup-bg-wrapper">
       <div class="signup-wrapper">
         <!-- Title -->
@@ -62,7 +62,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["ifNotice"])
+    // ...mapGetters(["ifNotice"])
   },
   mounted() {},
   methods: {
@@ -77,7 +77,7 @@ export default {
           this.posting = false
           this.resetForm()
           Toast.succeed(res.message)
-          this.$router.push({path: '/login'})
+          this.$router.push({path: 'login'})
         } else if(res.code === 1) {
           // Fail
           this.posting = false

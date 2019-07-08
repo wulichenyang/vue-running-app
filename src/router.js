@@ -23,7 +23,12 @@ const router = new Router({
       // route level code-splitting
       // this generates a separate chunk (about.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "xxx" */ './views/Trip.vue')
+      component: () => import(/* webpackChunkName: "xxx" */ './views/Trip.vue'),
+      children: [{
+        path: 'map/:tripWay',
+        name: 'map',
+        component: () => import( /* webpackChunkName: "xxx" */'./components/Map.vue'),
+      }]
     },
     {
       path: '/traffic',
@@ -80,8 +85,8 @@ router.beforeEach((to, from, next) => {
     return
   } else {
     // 刷新token在cookie里的时间
-    cookie.setCookie(access_token, token, 0.005)
-    // cookie.setCookie('username', username, 0.005)
+    cookie.setCookie(access_token, token, 0.2)
+    // cookie.setCookie('username', username, 0.2)
     next()
   }
 })

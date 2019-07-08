@@ -2,27 +2,28 @@
   <div class="trip">
     <!-- Notice Bar -->
     <NoticeBar :ifNotice="ifNotice" :noticeInfo="noticeInfo"></NoticeBar>
-    <ScrollWrapper @onRefresh="onRefreshTrip">
+    <ScrollWrapper @onRefresh="onRefreshTrip" v-show="this.$route.name === 'trip'">
       <section class="trip-bg-wrapper">
         <div class="trip-wrapper">
           <!-- Top Trip Nav -->
           <div class="md-example-child md-example-child-tabs md-example-child-tab-bar-1">
-            <md-tab-bar v-model="current" :items="items" :maxLength="4" @change="onTripWayChange"/>
+            <md-tab-bar v-model="current" :items="items" :maxLength="4" @change="onTripWayChange" />
           </div>
           <!-- Data Tips -->
           <div class="tips">
             <p>累计{{tripWay}}</p>
-            <h2>{{distanceNow}}</h2>
-            <p>本月{{tripWay}}{{distanceNow}}公里>></p>
+            <h2>{{distanceNow.toFixed(1)}}</h2>
+            <p>本月{{tripWay}}{{distanceNow.toFixed(1)}}公里>></p>
           </div>
           <!-- Start Button -->
           <ConfirmButton :text="`开始${tripWay}`" @onClickButton="onSelectStart"></ConfirmButton>
         </div>
       </section>
     </ScrollWrapper>
-
     <!-- Click the Button to Show Map -->
-    <section class="map-wrapper"></section>
+    <transition name="fademap">
+      <router-view v-if="this.$route.name === 'map'"></router-view>
+    </transition>
   </div>
 </template>
 <script>
@@ -30,6 +31,7 @@ import { TabBar } from "mand-mobile";
 import ScrollWrapper from "@/components/ScrollWrapper.vue";
 import NoticeBar from "@/components/NoticeBar.vue";
 import ConfirmButton from "@/components/ConfirmButton.vue";
+import Map from "@/components/Map.vue";
 import { mapGetters, mapActions } from "vuex";
 export default {
   name: "trip",
@@ -38,6 +40,7 @@ export default {
     ScrollWrapper: ScrollWrapper,
     NoticeBar: NoticeBar,
     ConfirmButton: ConfirmButton,
+    Map: Map
   },
   data() {
     return {
@@ -54,6 +57,18 @@ export default {
     };
   },
   computed: {
+    tripWayCode() {
+      switch (this.tripWay) {
+        case "步行":
+          return "walking";
+        case "跑步":
+          return "running";
+        case "骑行":
+          return "riding";
+        case "驾车":
+          return "driving";
+      }
+    },
     distanceNow() {
       if (this.distance) {
         switch (this.tripWay) {
@@ -76,7 +91,6 @@ export default {
   },
   mounted() {
     this.getDistance();
-    this.getUser();
   },
   methods: {
     onTripWayChange(e) {
@@ -84,7 +98,14 @@ export default {
       this.tripWay = e.label;
     },
     onSelectStart() {
-      console.log('confirm')
+      console.log("confirm");
+      this.$router.push({
+        // name 是子路由组件，path是一级路由组件
+        name: "map",
+        params: {
+          tripWay: this.tripWayCode
+        }
+      });
     },
     async onRefreshTrip(finishRefresh) {
       let finished = await this.refreshDistance();
@@ -158,6 +179,9 @@ export default {
           text-decoration: underline;
           letter-spacing: 1px;
         }
+      }
+      .start-btn {
+        width: 220px;
       }
     }
   }
