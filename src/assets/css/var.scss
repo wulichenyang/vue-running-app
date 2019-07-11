@@ -25,7 +25,13 @@ $LoadingBgColor: #fff;
 $coverBgColor: rgba(255, 255, 255, 0.3);
 $bottomNavBgColor: #fff;
 $primaryBtnBgColor:#57c595;
+$mapToolBgColor: #fff;
 
 // Border
 $tipDashedBorder: dashed 4px $linkFontColor;
 $buttonBorder: solid 1px $linkFontColor;
+$toolRightBorder: solid 1px #afaeae;
+
+// Box-shadow
+$toolBoxShadowColor: 0px 0px 30px #afaeae;
+$boxShadowColor: 0px 8px 30px #afaeae;

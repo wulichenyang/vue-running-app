@@ -8,7 +8,7 @@ var jwtauth = require('./middleware/jwtauth');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var distanceRouter = require('./routes/distance');
-const cors = require('cors')
+// const cors = require('cors')
 var app = express();
 var mongoose = require('mongoose');
 
@@ -18,7 +18,7 @@ const {
   database,
   apiPrefix,
   sessionConf,
-  corsConf,
+  // corsConf,
 } = require('./config')
 
 // Connect to mongodb: database: runningTrip
@@ -40,7 +40,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(cors(corsConf))
+// app.use(cors(corsConf))
 
 // 身份验证
 app.use(jwtauth)

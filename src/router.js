@@ -3,7 +3,7 @@ import Router from 'vue-router'
 import { Toast } from 'mand-mobile'
 import cookie from './utils/cookie'
 import {access_token} from './configs'
-// import Home from './views/Home.vue'
+// import Home from '@/views/Home.vue'
 
 Vue.use(Router)
 
@@ -23,11 +23,11 @@ const router = new Router({
       // route level code-splitting
       // this generates a separate chunk (about.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "xxx" */ './views/Trip.vue'),
+      component: () => import(/* webpackChunkName: "xxx" */ '@/views/Trip.vue'),
       children: [{
         path: 'map/:tripWay',
         name: 'map',
-        component: () => import( /* webpackChunkName: "xxx" */'./components/Map.vue'),
+        component: () => import( /* webpackChunkName: "xxx" */'@/components/Map.vue'),
       }]
     },
     {
@@ -36,7 +36,7 @@ const router = new Router({
       // route level code-splitting
       // this generates a separate chunk (about.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "xxx" */ './views/Traffic.vue')
+      component: () => import(/* webpackChunkName: "xxx" */ '@/views/Traffic.vue')
     },
     {
       path: '/history',
@@ -44,7 +44,7 @@ const router = new Router({
       // route level code-splitting
       // this generates a separate chunk (about.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "xxx" */ './views/History.vue')
+      component: () => import(/* webpackChunkName: "xxx" */ '@/views/History.vue')
     },
     {
       path: '/user',
@@ -52,7 +52,7 @@ const router = new Router({
       // route level code-splitting
       // this generates a separate chunk (about.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "xxx" */ './views/User.vue')
+      component: () => import(/* webpackChunkName: "xxx" */ '@/views/User.vue')
     },
     {
       path: '/login',
@@ -60,7 +60,7 @@ const router = new Router({
       // route level code-splitting
       // this generates a separate chunk (about.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "xxx" */ './views/Login.vue')
+      component: () => import(/* webpackChunkName: "xxx" */ '@/views/Login.vue')
     },
     {
       path: '/signup',
@@ -68,25 +68,25 @@ const router = new Router({
       // route level code-splitting
       // this generates a separate chunk (about.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "xxx" */ './views/Signup.vue')
+      component: () => import(/* webpackChunkName: "xxx" */ '@/views/Signup.vue')
     }
 
   ]
 })
-
+// TODO: logout
 // 导航守卫，非登录状态先登录
 router.beforeEach((to, from, next) => {
   let token = cookie.getCookie(access_token)
   // let username = cookie.getCookie('vue_running_username')
-  // 登录验证 路由改变时刷新cookie中的token过期时间 0.2小时
+  // 登录验证 路由改变时刷新cookie中的token过期时间 30天
   if (!token && (to.name !== 'login' && to.name !== 'signup')) {
     Toast.succeed('请登录', 1000)
     next({ path: '/login' })
     return
   } else {
     // 刷新token在cookie里的时间
-    cookie.setCookie(access_token, token, 0.2)
-    // cookie.setCookie('username', username, 0.2)
+    cookie.setCookie(access_token, token, 24 * 30) // 30天
+    // cookie.setCookie('username', username, 24 * 30)
     next()
   }
 })

@@ -1,6 +1,6 @@
 export const ApiConfig = {
   // HOST: "http://192.168.1.167:3001",
-  HOST: `http://localhost:3838`,
+  // HOST: `http://localhost:3838`,
   apiPrefix : '/running-api-v1',
 }
 

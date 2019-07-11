@@ -24,11 +24,11 @@ const sessionConf = {
 // cors config
 const corsConf = {
   origin: [
-    'http://localhost:3838',
-    'http://localhost:8080',
-    'http://192.168.1.167:3838',
-    'http://192.168.1.167:8080',
-    'http://127.0.0.1:8080'
+    // 'http://localhost:3838',
+    // 'http://localhost:8080',
+    // 'http://192.168.1.167:3838',
+    // 'http://192.168.1.167:8080',
+    // 'http://127.0.0.1:8080'
   ],
   // origin: '*',
   credentials: true
