@@ -5,14 +5,14 @@
     <!-- 地图操作工具栏 -->
     <section class="map-tool">
       <ul class="tool-wrapper">
-        <li class="tool-item">
+        <li class="tool-item" @click="addressOnToggle">
           <svg-icon icon-class="city" />
           <span v-if="mapData.district">{{mapData.district}}</span>
           <span v-else-if="mapData.city">{{mapData.city}}</span>
           <span v-else>未知地区</span>
         </li>
-        <li class="tool-item" @click="themeOnClick">
-          <svg-icon icon-class="map" />
+        <li class="tool-item" @click="themeOnToggle">
+          <svg-icon icon-class="brush" />
           <span>主题</span>
         </li>
         <li class="tool-item" @click="loactionOnClick">
@@ -26,16 +26,28 @@
     <!-- 开始按钮 -->
     <ConfirmButton text="开始"></ConfirmButton>
 
-    <!-- 地址 -->
-    <section class="address"></section>
+    <!-- ********************* Popup ******************** -->
+
+    <!-- 地址详情 -->
+    <section class="address">
+      <md-popup style="z-index:999" v-model="addressPopupShow" position="top">
+        <div>
+          <md-field>
+            <md-cell-item title="地址详情" :brief="mapAddress" />
+          </md-field>
+        </div>
+      </md-popup>
+    </section>
+
     <!-- 主题 -->
     <section class="theme">
-      <md-popup style="z-index:999" v-model="mapPopupShow" position="top">
+      <md-popup style="z-index:999" v-model="themePopupShow" position="bottom">
         <div class="popupText">
+          <span @click="themeOnToggle">OK</span>
           <md-field>
-            <md-field-item title="地图" solid>
-              <md-radio name="dark" v-model="theme" label="幻影黑" inline />
+            <md-field-item title="主题" solid>
               <md-radio name="normal" v-model="theme" label="标准" inline />
+              <md-radio name="dark" v-model="theme" label="幻影黑" inline />
               <md-radio name="light" v-model="theme" label="月光银" inline />
               <md-radio name="whitesmoke" v-model="theme" label="远山黛" inline />
               <md-radio name="grey" v-model="theme" label="雅士灰" inline />
@@ -54,14 +66,30 @@
 </template>
 
 <script>
-import { Icon, Toast } from "mand-mobile";
+import {
+  Icon,
+  Toast,
+  Radio,
+  Field,
+  FieldItem,
+  Popup,
+  PopupTitleBar,
+  CellItem
+} from "mand-mobile";
+
 import ConfirmButton from "@/components/ConfirmButton";
 import { mapActions } from "vuex";
 export default {
   name: "Map",
   components: {
     ConfirmButton: ConfirmButton,
-    Toast: Toast
+    [CellItem.name]: CellItem,
+    [Toast.name]: Toast,
+    [Field.name]: Field,
+    [FieldItem.name]: FieldItem,
+    [Radio.name]: Radio,
+    [Popup.name]: Popup,
+    [PopupTitleBar.name]: PopupTitleBar
   },
   data() {
     return {
@@ -69,16 +97,21 @@ export default {
       geolocation: null, // 定位实例
       mapData: {},
       mapAddress: "",
-      mapPopupShow: false, // 模态框
-      theme: 'normal', // 地图背景
+      themePopupShow: false, // 主题模态框
+      addressPopupShow: false, // 地址模态框
+      theme: "normal" // 地图背景
     };
   },
   mounted() {
     this.createMap();
   },
   watch: {
-    theme (newVal) {
-      this.map.setMapStyle(`amap://styles/${newVal}`)
+    theme(newVal) {
+      this.map.setMapStyle(`amap://styles/${newVal}`);
+      // Hide theme popup
+      setTimeout(() => {
+        this.themeOnToggle();
+      }, 200);
     }
   },
   methods: {
@@ -93,8 +126,11 @@ export default {
         // }
       });
     },
-    themeOnClick() {
-      this.mapPopupShow = true;
+    themeOnToggle() {
+      this.themePopupShow = !this.themePopupShow;
+    },
+    addressOnToggle() {
+      this.addressPopupShow = !this.addressPopupShow;
     },
     // 监听手动定位成功
     localOnComplete(e) {
@@ -226,6 +262,9 @@ export default {
         &:last-child {
           border-right: none;
         }
+        svg {
+          margin-right: 5px;
+        }
       }
     }
   }
@@ -244,8 +283,50 @@ export default {
     }
   }
   .address {
+    .md-field {
+      padding: 32px;
+      .md-cell-item-body {
+        padding-top: 10px;
+        padding-bottom: 10px;
+        .md-cell-item-title {
+          font-size: $TitleFontSize;
+        }
+        .md-cell-item-brief {
+          font-size: $BriefFontSize;
+        }
+      }
+    }
   }
   .theme {
+    position: relative;
+    .md-popup-box {
+      border-top-left-radius: 5px;
+      border-top-right-radius: 5px;
+      span {
+        font-size: $ConfirmFontSize;
+        color: $ConfirmBtnColor;
+        position: absolute;
+        top: 12px;
+        right: 20px;
+      }
+      .md-field-item-title {
+        min-width: 100px !important;
+        width: 100px;
+        font-size: $TitleFontSize;
+      }
+      .md-field-item-control {
+        min-width: 100px;
+        font-size: $mainFontSize;
+        i {
+          font-size: $radioFontSize;
+        }
+        label {
+          min-width: 80px;
+          margin-right: 24px;
+        }
+
+      }
+    }
   }
 }
 </style>

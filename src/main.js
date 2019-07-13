@@ -3,12 +3,14 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import registerComponents from './utils/registerComponents'
-// import mandMobile from 'mand-mobile'
+import IconSvg from '@/components/SvgIcon/index.vue';
+import './icons'
 
 Vue.use(registerComponents)
 Vue.config.productionTip = false
 
-// Vue.use(mandMobile)
+// 全局注册svg-icon
+Vue.component('svg-icon', IconSvg);
 
 new Vue({
   router,

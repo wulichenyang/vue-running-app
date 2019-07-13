@@ -35,7 +35,7 @@ export default {
 
   computed: {
     showNav() {
-      return this.$route.name !== 'signup' && this.$route.name !== 'login' && this.$route.name !== 'map'
+      return this.$route.name !== 'signup' && this.$route.name !== 'login'
     },
     ...mapGetters(["isLoading"])
   }

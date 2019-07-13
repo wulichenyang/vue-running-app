@@ -1,6 +1,6 @@
 const path = require('path')
 
-function resolve (dir) {
+function resolve(dir) {
   return path.join(__dirname, './', dir)
 }
 
@@ -18,21 +18,32 @@ module.exports = {
     //   .set('style', resolve('src/style'))
 
     /** 设置处理svg的router，使svg可直接用名称调用，无需路径 */
+    // file-loader，并且把路径指定为在img文件夹下，但我们的 svg 并不在 img 文件夹，
+    // 而且svg-sprite-loader已经自带了file-loader的功能，所以，我们可以在我们自定义
+    // 的vue.config.js文件下将rule(svg)清除：
+    // config.module.rule('svg').uses.clear()
+    config.module.rules.delete("svg");
     // svg rule loader
-    const svgRule = config.module.rule('svg') // 找到svg-loader
-    svgRule.uses.clear() // 清除已有的loader, 如果不这样做会添加在此loader之后
-    svgRule.exclude.add(/node_modules/) // 正则匹配排除node_modules目录
-    svgRule // 添加svg新的loader处理
+    config.module
+      .rule('svg')
+      .uses.clear()
+    config.module
+      .rule('svg1')
       .test(/\.svg$/)
-      .use('svg-sprite-loader')
+      .use('svg-sprite')
       .loader('svg-sprite-loader')
       .options({
         symbolId: 'icon-[name]'
       })
+      .end()
+      .include
+      .add(resolve('src/icons'))
+      .end()
+
   },
 
   publicPath: '/',
-  
+
   /* 开发环境代理 */
   devServer: {
     proxy: {
