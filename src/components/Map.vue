@@ -140,11 +140,15 @@ export default {
       traceMapHd: null, // 坐标获取循环句柄
 
       // 行程移动坐标数组: [[22, 3224.22], ...]
-      mapTraceData: []
+      mapTraceData: [],
+      marker: null // 绘制路径
     };
   },
   mounted() {
     this.createMap();
+  },
+  destroyed() {
+    this.destroyMap();
   },
   watch: {
     theme(newVal) {
@@ -211,13 +215,16 @@ export default {
         this.startTimeCounter();
       } else if (this.actionState === "running") {
         this.actionState = "finished";
+        this.drawTripLine();
         this.clearTimeCounter();
-        this.clearTraceMap();
+        this.clearTimeTraceMap();
+        this.saveTripData(); // TODO
       } else if (this.actionState === "finished") {
         this.resetRunningData();
         this.actionState = "ready";
       }
     },
+    saveTripData() {},
     themeOnToggle() {
       this.themePopupShow = !this.themePopupShow;
     },
@@ -318,7 +325,43 @@ export default {
         });
       });
     },
-
+    drawTripLine() {
+      this.marker = new AMap.Marker({
+        map: this.map,
+        position: [116.478935, 39.997761],
+        icon: "https://webapi.amap.com/images/car.png",
+        offset: new AMap.Pixel(-26, -13),
+        autoRotation: true,
+        angle: -90
+      });
+      // 绘制行程途经轨迹
+      let polyline = new AMap.Polyline({
+        map: this.map,
+        path: this.mapTraceData,
+        showDir: true,
+        strokeColor: "#28F", //线颜色
+        // strokeOpacity: 1,     //线透明度
+        strokeWeight: 6 //线宽
+        // strokeStyle: "solid"  //线样式
+      });
+      // 绘制行程路径动画
+      let passedPolyline = new AMap.Polyline({
+        map: this.map,
+        // path: lineArr,
+        strokeColor: "#AF5", //线颜色
+        // strokeOpacity: 1,     //线透明度
+        strokeWeight: 6 //线宽
+        // strokeStyle: "solid"  //线样式
+      });
+      // 触发行程路径动画
+      this.marker.on("moving", function(e) {
+        passedPolyline.setPath(e.passedPath);
+      });
+      this.startDrawTripLineAnimation();
+    },
+    startDrawTripLineAnimation() {
+      this.marker.moveAlong(this.mapTraceData, 200);
+    },
     // 时间计数器
     startTimeCounter() {
       this.timeHd = setInterval(() => {
@@ -328,8 +371,8 @@ export default {
     clearTimeCounter() {
       clearInterval(this.timeHd);
     },
-    clearTraceMap() {
-      clearTimeout(this.traceMapHd)
+    clearTimeTraceMap() {
+      clearTimeout(this.traceMapHd);
     },
     onGetCurrPositionComplete(gps) {
       // 获取上一个定位坐标
@@ -417,12 +460,15 @@ export default {
     //   );
     // },
 
-    // 结束行程, 销毁地图, 重设数据
+    // 结束行程, 重设数据
     resetRunningData() {
-      this.map.destroy();
       this.timeSecond = 0;
+      this.marker = null;
       this.mapTraceData = [];
       this.$router.push({ path: "/trip" });
+    },
+    destroyMap() {
+      this.map.destroy();
     }
   }
 };
