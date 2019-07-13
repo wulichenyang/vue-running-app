@@ -1,11 +1,14 @@
 <template>
-  <div class="start-btn-wrapper">
+  <section class="start-btn-wrapper">
     <button class="start-btn waves" @click="onClickButton" slot>{{text}}</button>
-  </div>
+  </section>
 </template>
 
 <script>
-import { initWaveButton, destroyListener } from "@/assets/js/wave-button.js";
+import { 
+  initWaveButton, 
+// destroyListener 
+} from "@/assets/js/wave-button.js";
 
 export default {
   name: "ConfirmButton",
@@ -19,7 +22,7 @@ export default {
     initWaveButton();
   },
   destroyed() {
-    destroyListener();
+    // destroyListener();
   },
   methods: {
     onClickButton() {

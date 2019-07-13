@@ -33,7 +33,7 @@ export default {
   width: 100%;
   top: 0;
   left: 0;
-  background-color: $NoticeBgColor;
+  background-color: $noticeBgColor;
   z-index: 999;
 }
 .md-notice-bar {

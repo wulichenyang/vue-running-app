@@ -64,4 +64,7 @@ export default {
 .fademap-enter-active {
   transition: all 0.2s;
 }
+.md-toast-text {
+  font-size: $tipTopFontSize;
+}
 </style>

@@ -74,19 +74,19 @@ const initWaveButton = () => {
     },100)
   }
   document.querySelectorAll('.waves').forEach(e=>{
-    e.addEventListener('click',function(e){
+    e.addEventListener('touchstart',function(e){
       show(e);
     },!1)
   });
 }
 
-const destroyListener = ()=> {
-  document.querySelectorAll('.waves').forEach(e=>{
-    e.removeEventListener('click')
-  });
-}
+// const destroyListener = ()=> {
+//   document.querySelectorAll('.waves').forEach(e=>{
+//     e.removeEventListener('click')
+//   });
+// }
 
 export {
   initWaveButton,
-  destroyListener
+  // destroyListener
 }

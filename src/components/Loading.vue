@@ -32,7 +32,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: $LoadingBgColor;
+  background-color: $loadingBgColor;
   z-index: 999;
 }
 </style>

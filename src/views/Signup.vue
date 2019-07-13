@@ -180,7 +180,7 @@ export default {
         }
         label,
         input {
-          font-size: $FormFontSize !important;
+          font-size: $formFontSize !important;
           color: $mainFontColor;
           font-weight: lighter !important;
         }
