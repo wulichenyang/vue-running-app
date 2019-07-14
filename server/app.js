@@ -7,7 +7,7 @@ var jwtauth = require('./middleware/jwtauth');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
-var distanceRouter = require('./routes/distance');
+var tripRouter = require('./routes/trip');
 // const cors = require('cors')
 var app = express();
 var mongoose = require('mongoose');
@@ -47,11 +47,11 @@ app.use(jwtauth)
 
 app.use(indexRouter);
 app.use(usersRouter);
-app.use(distanceRouter);
+app.use(tripRouter);
 // Add api prefix
 app.use(apiPrefix, indexRouter)
 app.use(apiPrefix, usersRouter)
-app.use(apiPrefix, distanceRouter)
+app.use(apiPrefix, tripRouter)
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
   next(createError(404));

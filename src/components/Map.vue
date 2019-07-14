@@ -104,9 +104,18 @@ import {
 } from "mand-mobile";
 
 import ConfirmButton from "@/components/ConfirmButton";
-import { formatSeconds } from "@/utils/time";
+import { formatSeconds, getTime } from "@/utils/time";
 import { mapTraceDataToDistance } from "@/utils/mapUtils";
 import { mapActions } from "vuex";
+import { saveTrip } from "@/api/trip";
+import { tripWayMap } from "@/views/Trip.vue";
+
+export const actionStateMap = {
+  ready: '开始',
+  running: '结束',
+  finished: '退出'
+}
+
 export default {
   name: "Map",
   components: {
@@ -138,9 +147,8 @@ export default {
       timeSecond: 0,
       timeHd: null, // 时间循环句柄
       traceMapHd: null, // 坐标获取循环句柄
-
-      // 行程移动坐标数组: [[22, 3224.22], ...]
-      mapTraceData: [],
+      markText: '',
+      mapTraceData: [], // 行程移动坐标数组: [[22, 3224.22], ...]
       marker: null // 绘制路径
     };
   },
@@ -161,19 +169,7 @@ export default {
   },
   computed: {
     confirmText() {
-      switch (this.actionState) {
-        case "ready":
-          return "开始";
-          break;
-        case "running":
-          return "结束";
-          break;
-        case "finished":
-          return "退出";
-          break;
-        default:
-          break;
-      }
+      return actionStateMap[this.actionState]
     },
 
     // 跑步数据
@@ -216,15 +212,39 @@ export default {
       } else if (this.actionState === "running") {
         this.actionState = "finished";
         this.drawTripLine();
+        this.saveTripData();
         this.clearTimeCounter();
         this.clearTimeTraceMap();
-        this.saveTripData(); // TODO
       } else if (this.actionState === "finished") {
         this.resetRunningData();
         this.actionState = "ready";
       }
     },
-    saveTripData() {},
+    async saveTripData() {
+      let type =
+        location.pathname.indexOf("trip") > 0
+          ? "trip"
+          : location.pathname.indexOf("traffic") > 0
+          ? "traffic"
+          : "";
+      let tripWayCode = location.pathname.split('/').pop()
+      let tripWayCN = tripWayMap[tripWayCode]
+
+      let res = await saveTrip({
+        type,
+        tripWay: `${tripWayCN}`,
+        distance: parseFloat(this.distanceNow),
+        date: getTime().date2,
+        time: this.timeNow,
+        trajectory: this.mapTraceData,
+        calorie: parseFloat(this.calorieNow),
+        speed: parseFloat(this.speedNow),
+        mark: this.markText || '无备注'
+      });
+      if(res.code === 0) {
+        Toast.succeed(res.message)
+      }
+    },
     themeOnToggle() {
       this.themePopupShow = !this.themePopupShow;
     },
@@ -387,10 +407,7 @@ export default {
         console.log("停留当前位置中");
       } else {
         console.log("加入新坐标: ", pNow);
-        this.mapTraceData = [
-          ...this.mapTraceData,
-          pNow.slice()
-        ]
+        this.mapTraceData = [...this.mapTraceData, pNow.slice()];
       }
     },
 

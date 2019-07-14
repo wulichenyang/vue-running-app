@@ -31,8 +31,24 @@ import { TabBar } from "mand-mobile";
 import ScrollWrapper from "@/components/ScrollWrapper.vue";
 import NoticeBar from "@/components/NoticeBar.vue";
 import ConfirmButton from "@/components/ConfirmButton.vue";
-import Map from "@/components/Map.vue";
+// import Map from "@/components/Map.vue";
 import { mapGetters, mapActions } from "vuex";
+
+export const tripWayMap = {
+  步行: "walking",
+  跑步: "running",
+  骑行: "riding",
+  驾车: "driving",
+  公交: "bus",
+  打车: "taxi",
+  walking: '步行',
+  running: '跑步',
+  riding: '骑行',
+  driving: '驾车',
+  bus: '公交',
+  taxi: '打车'
+};
+
 export default {
   name: "trip",
   components: {
@@ -40,7 +56,7 @@ export default {
     ScrollWrapper: ScrollWrapper,
     NoticeBar: NoticeBar,
     ConfirmButton: ConfirmButton,
-    Map: Map
+    // Map: Map
   },
   data() {
     return {
@@ -58,33 +74,14 @@ export default {
   },
   computed: {
     tripWayCode() {
-      switch (this.tripWay) {
-        case "步行":
-          return "walking";
-        case "跑步":
-          return "running";
-        case "骑行":
-          return "riding";
-        case "驾车":
-          return "driving";
-      }
+      return tripWayMap[this.tripWay];
     },
     distanceNow() {
       if (this.distance) {
-        switch (this.tripWay) {
-          case "步行":
-            return this.distance["walking"].toFixed(1);
-          case "跑步":
-            return this.distance["running"].toFixed(1);
-          case "骑行":
-            return this.distance["riding"].toFixed(1);
-          case "驾车":
-            return this.distance["driving"].toFixed(1);
-          default:
-            return "0.0";
-        }
+        const tripWayCode = tripWayMap[this.tripWay];
+        return this.distance[tripWayCode].toFixed(1);
       } else {
-        return "0.0";
+        return '0.0'
       }
     },
     ...mapGetters(["distance", "ifNotice", "noticeInfo"])
