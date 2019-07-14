@@ -24,7 +24,7 @@
     <!-- 定位按钮 -->
     <section id="location-button" @click="loactionOnClick"></section>
     <!-- 开始按钮 -->
-    <ConfirmButton :text="confirmText" @onClickButton="onConfirmClick"></ConfirmButton>
+    <ConfirmButton :style="{zIndex: 9999}" :text="confirmText" @onClickButton="onConfirmClick"></ConfirmButton>
 
     <!-- ********************* Popup ******************** -->
     <!-- 地址详情 -->
@@ -62,8 +62,8 @@
     <!-- 开始跑步信息 -->
     <transition name="fadeStart">
       <section
-        :class="actionState === 'running' ? 'detail-info running-info' : actionState === 'finished' ? 'detail-info finised-info': ''"
-        v-if="this.actionState !== 'ready'"
+        :class="actionState === 'running' ? 'detail-info running-info' : actionState === 'submitting' ? 'detail-info submitting-info': ''"
+        v-if="this.actionState === 'running' || this.actionState === 'submitting'"
       >
         <h1>
           {{distanceNow}}
@@ -83,6 +83,11 @@
             <p>消耗卡路里</p>
           </li>
         </ul>
+        <p v-if="this.actionState === 'submitting'" class="brief">
+          <md-field>
+            <md-input-item v-model="brief" title="添加备注" placeholder="添加备注" is-title-latent clearable></md-input-item>
+          </md-field>
+        </p>
       </section>
     </transition>
   </section>
@@ -97,7 +102,8 @@ import {
   FieldItem,
   Popup,
   PopupTitleBar,
-  CellItem
+  CellItem,
+  InputItem
 } from "mand-mobile";
 
 import ConfirmButton from "@/components/ConfirmButton";
@@ -110,6 +116,7 @@ import { tripWayMap } from "@/views/Trip.vue";
 export const actionStateMap = {
   ready: "开始",
   running: "结束",
+  submitting: '提交',
   finished: "退出"
 };
 
@@ -123,7 +130,9 @@ export default {
     [FieldItem.name]: FieldItem,
     [Radio.name]: Radio,
     [Popup.name]: Popup,
-    [PopupTitleBar.name]: PopupTitleBar
+    [PopupTitleBar.name]: PopupTitleBar,
+    [InputItem.name]: InputItem,
+    [Field.name]: Field,
   },
   data() {
     return {
@@ -146,7 +155,8 @@ export default {
       traceMapHd: null, // 坐标获取循环句柄
       markText: "",
       mapTraceData: [], // 行程移动坐标数组: [[22, 3224.22], ...]
-      marker: null // 绘制路径
+      marker: null, // 绘制路径
+      brief: '', // 行程备注
     };
   },
   mounted() {
@@ -208,11 +218,13 @@ export default {
         this.startTraceMap();
         this.startTimeCounter();
       } else if (this.actionState === "running") {
-        this.actionState = "finished";
+        this.actionState = 'submitting';
         this.drawTripLine();
-        this.saveTripData();
         this.clearTimeCounter();
         this.clearTimeTraceMap();
+      } else if(this.actionState === 'submitting') {
+        this.actionState = "finished";
+        this.saveTripData();
       } else if (this.actionState === "finished") {
         this.resetRunningData();
         this.actionState = "ready";
@@ -227,7 +239,7 @@ export default {
           : "";
       let tripWayCode = location.pathname.split("/").pop();
       let tripWayCN = tripWayMap[tripWayCode];
-
+      let markText = this.brief
       let res = await saveTrip({
         type,
         tripWay: `${tripWayCN}`,
@@ -237,7 +249,7 @@ export default {
         trajectory: this.mapTraceData,
         calorie: parseFloat(this.calorieNow),
         speed: parseFloat(this.speedNow),
-        mark: this.markText || "无备注"
+        mark: markText || "无备注"
       });
       if (res.code === 0) {
         Toast.succeed(res.message);
@@ -630,12 +642,24 @@ export default {
           font-size: $tipTopFontSize;
         }
         p {
+
         }
+      }
+    }
+    p.brief {
+      .md-field {
+        padding-top: 0;
+      }
+      label {
+        font-size: $tipTopFontSize !important;
+      }
+      input {
+        font-size: $mainFontSize;
       }
     }
     &.running-info {
     }
-    &.finished-info {
+    &.submitting-info {
     }
   }
   .fadeStart-enter,
