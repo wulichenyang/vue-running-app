@@ -85,9 +85,6 @@
         </ul>
       </section>
     </transition>
-    <ul :style="{position: 'relative'}">
-      <li :key="i" v-for="(a, i) in mapTraceData">{{a.toString()}}</li>
-    </ul>
   </section>
 </template>
 
@@ -104,17 +101,17 @@ import {
 } from "mand-mobile";
 
 import ConfirmButton from "@/components/ConfirmButton";
-import { formatSeconds, getTime } from "@/utils/time";
+import { formatSeconds, localDate } from "@/utils/time";
 import { mapTraceDataToDistance } from "@/utils/mapUtils";
 import { mapActions } from "vuex";
 import { saveTrip } from "@/api/trip";
 import { tripWayMap } from "@/views/Trip.vue";
 
 export const actionStateMap = {
-  ready: '开始',
-  running: '结束',
-  finished: '退出'
-}
+  ready: "开始",
+  running: "结束",
+  finished: "退出"
+};
 
 export default {
   name: "Map",
@@ -134,7 +131,7 @@ export default {
       /* 地图 */
       map: null, // 地图实例
       geolocation: null, // 定位实例
-      watchTraceId: null, // 监听行程移动句柄
+      // watchTraceId: null, // 原生监听行程移动句柄（暂时不可用）
       mapData: {},
       mapAddress: "",
 
@@ -147,7 +144,7 @@ export default {
       timeSecond: 0,
       timeHd: null, // 时间循环句柄
       traceMapHd: null, // 坐标获取循环句柄
-      markText: '',
+      markText: "",
       mapTraceData: [], // 行程移动坐标数组: [[22, 3224.22], ...]
       marker: null // 绘制路径
     };
@@ -155,7 +152,7 @@ export default {
   mounted() {
     this.createMap();
   },
-  destroyed() {
+  beforeDestroy() {
     this.destroyMap();
   },
   watch: {
@@ -169,7 +166,7 @@ export default {
   },
   computed: {
     confirmText() {
-      return actionStateMap[this.actionState]
+      return actionStateMap[this.actionState];
     },
 
     // 跑步数据
@@ -207,6 +204,7 @@ export default {
     onConfirmClick() {
       if (this.actionState === "ready") {
         this.actionState = "running";
+        Toast.info("行程开启~");
         this.startTraceMap();
         this.startTimeCounter();
       } else if (this.actionState === "running") {
@@ -227,22 +225,22 @@ export default {
           : location.pathname.indexOf("traffic") > 0
           ? "traffic"
           : "";
-      let tripWayCode = location.pathname.split('/').pop()
-      let tripWayCN = tripWayMap[tripWayCode]
+      let tripWayCode = location.pathname.split("/").pop();
+      let tripWayCN = tripWayMap[tripWayCode];
 
       let res = await saveTrip({
         type,
         tripWay: `${tripWayCN}`,
         distance: parseFloat(this.distanceNow),
-        date: getTime().date2,
-        time: this.timeNow,
+        date: localDate(new Date()),
+        time: this.timeNow, // TODO
         trajectory: this.mapTraceData,
         calorie: parseFloat(this.calorieNow),
         speed: parseFloat(this.speedNow),
-        mark: this.markText || '无备注'
+        mark: this.markText || "无备注"
       });
-      if(res.code === 0) {
-        Toast.succeed(res.message)
+      if (res.code === 0) {
+        Toast.succeed(res.message);
       }
     },
     themeOnToggle() {
@@ -279,12 +277,12 @@ export default {
       console.log(e);
       Toast.failed("定位失败请尝试刷新");
     },
-    // 停止实时定位回调
-    locationOnDelete() {
-      let that = this;
-      that.geolocation.clearWatch(that.watchTraceId);
-      console.log("停止实时定位");
-    },
+    // // 停止实时定位回调(原生)
+    // locationOnDelete() {
+    //   let that = this;
+    // that.geolocation.clearWatch(that.watchTraceId);
+    //   console.log("停止实时定位");
+    // },
     createMap() {
       /* 实例化高德地图 */
       let buttonDom = document.getElementById("location-button");
@@ -463,7 +461,7 @@ export default {
     //     error => {
     //       console.log("listen to currentPosition error", error.code);
     //       //清除多次地理位置定位
-    //       navigator.geolocation.clearWatch(this.watchTraceId);
+    //      navigator.geolocation.clearWatch(this.watchTraceId);
     //       Toast.failed("实时定位出错，请尝试刷新", error.code);
     //       // this.distroyMap();
     //     },
@@ -481,15 +479,22 @@ export default {
     // },
 
     // 结束行程, 重设数据
-    resetRunningData() {
+    async resetRunningData() {
       this.timeSecond = 0;
       this.marker = null;
       this.mapTraceData = [];
+      await this.getDistance();
+
       this.$router.push({ path: "/trip" });
     },
+
     destroyMap() {
       this.map.destroy();
-    }
+      this.map = null;
+      this.geolocation = null;
+    },
+
+    ...mapActions(["getDistance"])
   }
 };
 </script>

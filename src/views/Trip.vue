@@ -79,7 +79,7 @@ export default {
     distanceNow() {
       if (this.distance) {
         const tripWayCode = tripWayMap[this.tripWay];
-        return this.distance[tripWayCode].toFixed(1);
+        return this.distance[tripWayCode].toFixed(2);
       } else {
         return '0.0'
       }

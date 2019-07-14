@@ -5,7 +5,7 @@ let Trip = require('../models/trip')
 
 // GET all distance
 router.get('/distance', function (req, res, next) {
-  Distance.find({ userId: req.userId }, { userId: 0 }, (err, doc) => {
+  Distance.find({ userId: req.userId }, { userId: 0, _id: 0, __v: 0 }, (err, doc) => {
     if (err) {
       res.status(500).send({
         code: 1,
@@ -63,7 +63,6 @@ const addTripData = (req, res) => {
 
 const updateDistance = (req, res) => {
   const { tripWay, distance } = req.body.tripData
-  console.log(distance)
   Distance.findOne(
     {
       userId: req.userId
@@ -76,22 +75,17 @@ const updateDistance = (req, res) => {
         })
         return;
       } else {
-        console.log(result)
         // Update all distance data
         let tripWayCode = tripWayMap[tripWay]
-        console.log('code', tripWayCode)
-        console.log('distance: ', result[tripWayCode] + distance)
         result[tripWayCode] = result[tripWayCode] + distance
         result.save((err, doc) => {
           if (err) { // Failed
-            console.log('err')
             res.status(500).json({
               code: 1,
               message: err.message
             })
             return;
           } else {
-            console.log('else2')
             // Successful
             res.json({
               code: 0,

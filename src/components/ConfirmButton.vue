@@ -1,14 +1,11 @@
 <template>
   <section class="start-btn-wrapper">
-    <button class="start-btn waves" @click="onClickButton" slot>{{text}}</button>
+    <button ref="buttonRef" class="start-btn waves" @click="onClickButton" slot>{{text}}</button>
   </section>
 </template>
 
 <script>
-import { 
-  initWaveButton, 
-// destroyListener 
-} from "@/assets/js/wave-button.js";
+import { initWaveButton, destroyListener } from "@/assets/js/wave-button.js";
 
 export default {
   name: "ConfirmButton",
@@ -19,10 +16,10 @@ export default {
     }
   },
   mounted() {
-    initWaveButton();
+    initWaveButton(this.$refs.buttonRef);
   },
-  destroyed() {
-    // destroyListener();
+  beforeDestroy() {
+    destroyListener(this.$refs.buttonRef);
   },
   methods: {
     onClickButton() {
