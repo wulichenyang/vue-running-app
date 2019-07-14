@@ -337,7 +337,7 @@ export default {
       // 绘制行程途经轨迹
       let polyline = new AMap.Polyline({
         map: this.map,
-        path: this.mapTraceData,
+        path: this.mapTraceData.slice(), // 防止数据被修改
         showDir: true,
         strokeColor: "#28F", //线颜色
         // strokeOpacity: 1,     //线透明度
@@ -360,7 +360,7 @@ export default {
       this.startDrawTripLineAnimation();
     },
     startDrawTripLineAnimation() {
-      this.marker.moveAlong(this.mapTraceData, 200);
+      this.marker.moveAlong(this.mapTraceData.slice(), 200); // 防止数据被修改
     },
     // 时间计数器
     startTimeCounter() {
@@ -387,7 +387,10 @@ export default {
         console.log("停留当前位置中");
       } else {
         console.log("加入新坐标: ", pNow);
-        this.mapTraceData.push(pNow);
+        this.mapTraceData = [
+          ...this.mapTraceData,
+          pNow.slice()
+        ]
       }
     },
 
