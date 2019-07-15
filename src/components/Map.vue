@@ -8,13 +8,11 @@
 </template>
 
 <script>
-import {
-  Toast,
-} from "mand-mobile";
+import { Toast } from "mand-mobile";
 export default {
   name: "v-map",
   components: {
-    [Toast.name]: Toast,
+    [Toast.name]: Toast
   },
   props: {
     theme: {
@@ -120,7 +118,8 @@ export default {
       this.marker = null;
     },
     clearMapTraceData() {
-      this.mapTraceData = []
+      this.mapTraceData = [];
+      this.$emit("onMapTraceData", this.mapTraceData);
     },
     clearTimeTraceMap() {
       clearTimeout(this.traceMapHd);
@@ -139,6 +138,7 @@ export default {
       } else {
         console.log("加入新坐标: ", pNow);
         this.mapTraceData = [...this.mapTraceData, pNow.slice()];
+        this.$emit("onMapTraceData", this.mapTraceData);
       }
     },
 
@@ -178,7 +178,7 @@ export default {
       // street: "合作路"
       // streetNumber: "77号"
       // township: "合作街道"
-      this.$emit('onAddress', e.addressComponent, e.formattedAddress)
+      this.$emit("onAddress", e.addressComponent, e.formattedAddress);
       // formattedAddress: "四川省成都市郫都区合作街道电子科技大学清水河校区学知三组团电子科技大学清水河校区"
     },
 

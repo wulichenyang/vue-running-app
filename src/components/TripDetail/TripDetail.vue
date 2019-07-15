@@ -1,7 +1,12 @@
 <template>
   <section class="map-wrapper">
     <!-- 地图实例 -->
-    <Map ref="mapRef" :theme="theme" @onAddress="onGetAddress"></Map>
+    <Map
+      ref="mapRef"
+      :theme="theme"
+      @onAddress="onGetAddress"
+      @onMapTraceData="onMapTraceDataChange"
+    ></Map>
     <!-- 地图操作工具栏 -->
     <section class="map-tool">
       <ul class="tool-wrapper">
@@ -139,7 +144,7 @@ export default {
     [PopupTitleBar.name]: PopupTitleBar,
     [InputItem.name]: InputItem,
     [Field.name]: Field,
-    Map: Map,
+    Map: Map
   },
   data() {
     return {
@@ -151,6 +156,7 @@ export default {
       theme: "normal", // 地图背景
       addressPopupShow: false, // 地址模态框
       /* 跑步数据 */
+      mapTraceData: [], // 行程移动坐标数组: [[22, 3224.22], ...]
       timeSecond: 0,
       timeHd: null, // 时间循环句柄
       markText: "",
@@ -175,7 +181,10 @@ export default {
     // 跑步数据
     distanceNow() {
       // mapTraceData [[22, 333], ...] -> distanceNow (xx公里)
-      return mapTraceDataToDistance(this.$refs.mapRef.mapTraceData, window.AMap);
+      return mapTraceDataToDistance(
+        this.mapTraceData,
+        window.AMap
+      );
     },
     timeNow() {
       // Seconds to 00:00:00
@@ -232,8 +241,8 @@ export default {
         tripWay: `${tripWayCN}`,
         distance: parseFloat(this.distanceNow),
         date: localDate(new Date()),
-        time: this.timeNow, // TODO
-        trajectory: this.$refs.mapRef.mapTraceData,
+        time: this.timeNow,
+        trajectory: this.mapTraceData,
         calorie: parseFloat(this.calorieNow),
         speed: parseFloat(this.speedNow),
         mark: markText || "无备注"
@@ -263,7 +272,11 @@ export default {
       this.mapData = mapData;
       this.mapAddress = mapAddress;
     },
-
+    onMapTraceDataChange(newMapTraceData) {
+      this.mapTraceData = [
+        ...newMapTraceData
+      ]
+    },
     // 结束行程, 重设数据
     async resetRunningData() {
       this.timeSecond = 0;
