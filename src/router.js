@@ -27,7 +27,7 @@ const router = new Router({
       children: [{
         path: 'map/:tripWay',
         name: 'map',
-        component: () => import( /* webpackChunkName: "xxx" */'@/components/Map.vue'),
+        component: () => import( /* webpackChunkName: "xxx" */'@/components/TripDetail/TripDetail.vue'),
       }]
     },
     {
