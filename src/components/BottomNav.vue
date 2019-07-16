@@ -1,71 +1,39 @@
 <template>
   <footer class="nav-tab">
-    <md-tab-bar v-model="current" :items="items" :has-ink="false" @change="onNavChange">
-      <template slot="item" slot-scope="{ item }">
-        <div class="custom-item">
+    <ul>
+      <li :key="item.name" v-for="item in items">
+        <router-link :to="item.href">
           <div class="icon">
             <md-icon :name="item.icon" size="xs"/>
           </div>
           <div class="text">
             <span v-text="item.label"></span>
           </div>
-        </div>
-      </template>
-    </md-tab-bar>
+        </router-link>
+      </li>
+    </ul>
   </footer>
 </template>
 
 <script>
-import { TabBar, Icon } from "mand-mobile";
+import { Icon } from "mand-mobile";
 
 export default {
   name: "BottomNav",
   components: {
-    [TabBar.name]: TabBar,
     [Icon.name]: Icon
   },
   data() {
     return {
       current: 1,
       items: [
-        { name: 1, label: "出行", icon: "home" },
-        { name: 2, label: "交通", icon: "location" },
-        { name: 3, label: "历史", icon: "calendar" },
-        { name: 4, label: "我的", icon: "user" }
+        { name: 1, label: "出行", icon: "home" , href: '/trip'},
+        { name: 2, label: "交通", icon: "location" , href:'/traffic'},
+        { name: 3, label: "历史", icon: "calendar", href: '/history' },
+        { name: 4, label: "我的", icon: "user", href: '/user' }
       ]
     };
   },
-  watch: {
-    
-  },
-  methods: {
-    onNavChange(e) {
-      switch (e.name) {
-        case 1:
-          this.$router.push({
-            path: "/trip"
-          });
-          break;
-        case 2:
-          this.$router.push({
-            path: "/traffic"
-          });
-          break;
-        case 3:
-          this.$router.push({
-            path: "/history"
-          });
-          break;
-        case 4:
-          this.$router.push({
-            path: "/user"
-          });
-          break;
-        default:
-          break;
-      }
-    }
-  }
 };
 </script>
 
@@ -76,13 +44,30 @@ export default {
   width: 100%;
   height: $bottomNavHeight;
   background-color: $bottomNavBgColor;
-  .md-tab-bar-item {
+  ul {
+    padding: 0 10px;
+    display: flex;
     min-height: $bottomNavHeight !important;
-    .icon {
+    li {
+      display: flex;
+      flex: 1;
       text-align: center;
-    }
-    .text {
-      font-size: $tabFontSize;
+      a {
+        flex:1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        color: $navLinkFontColor;
+        &.router-link-active {
+          color: $confirmBtnColor;
+        }
+        .icon {
+          text-align: center;
+        }
+        .text {
+          font-size: $tabFontSize;
+        }
+      }
     }
   }
 }
