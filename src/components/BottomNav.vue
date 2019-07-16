@@ -35,6 +35,9 @@ export default {
       ]
     };
   },
+  watch: {
+    
+  },
   methods: {
     onNavChange(e) {
       switch (e.name) {
