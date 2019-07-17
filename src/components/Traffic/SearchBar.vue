@@ -9,7 +9,7 @@
             placeholder="从哪儿出发"
             is-title-latent
             clearable
-            @focus="onFocus"
+            @focus="onFocus('start')()"
             @change="onInputStartAddress"
           ></md-input-item>
           <md-button type="primary" plain>{{trafficWay}}</md-button>
@@ -21,7 +21,7 @@
             placeholder="您要去哪儿"
             is-title-latent
             clearable
-            @focus="onFocus"
+            @focus="onFocus('end')()"
             @change="onInputTerminalAddress"
           ></md-input-item>
           <md-button type="primary">搜索</md-button>
@@ -47,10 +47,10 @@ export default {
     [Field.name]: Field
   },
   props: {
-    pStartAddress: '',
-    pTerminalAddress: '',
+    pStartAddress: "",
+    pTerminalAddress: "",
     ifListenChange: {
-      type: Boolean,
+      type: Boolean
     }
   },
   data() {
@@ -64,31 +64,39 @@ export default {
     pStartAddress: {
       immediate: true,
       handler(val) {
-        this.startAddress = val
+        this.startAddress = val;
       }
     },
     pTerminalAddress: {
       immediate: true,
       handler(val) {
-        this.terminalAddress = val
+        this.terminalAddress = val;
       }
-    },
+    }
   },
   methods: {
     onInputStartAddress(name, value) {
-      if(this.ifListenChange) {
-        this.$emit('onInputStartAddress', value)
+      if (this.ifListenChange) {
+        this.$emit("onInputStartAddress", value);
       }
     },
     onInputTerminalAddress(name, value) {
-      if(this.ifListenChange) {
-        this.$emit('onInputTerminalAddress', value)
+      if (this.ifListenChange) {
+        this.$emit("onInputTerminalAddress", value);
       }
     },
-    onFocus(name) {
-      this.$emit('onTurnOnChange')
+    onFocus(addType) {
+      return (name) => {
+        this.$emit("onTurnOnChange");
+        console.log('hehe')
+        if (addType === "start") {
+          this.$emit("onInputStartAddress", this.startAddress);
+        } else if (addType === "end") {
+          this.$emit("onInputTerminalAddress", this.terminalAddress);
+        }
+      };
     }
-  },
+  }
 };
 </script>
 
