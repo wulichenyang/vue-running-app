@@ -218,6 +218,30 @@ export default {
     },
     startDrawTripLineAnimation() {
       this.marker.moveAlong(this.mapTraceData.slice(), 200); // 防止数据被修改
+    },
+    searchAddress(keyword) {
+      this.map.plugin("AMap.Autocomplete", () => {
+        // 实例化Autocomplete
+        var autoOptions = {
+          // city 限定城市，默认全国
+          city: "全国"
+        };
+        var autoComplete = new window.AMap.Autocomplete(autoOptions);
+        autoComplete.search(keyword, (status, result) => {
+          Toast.hide();
+          // 搜索成功时，result即是对应的匹配数据
+          console.log(status, result);
+          if (status !== "complete") {
+            this.$emit("onSuggestAddress", []);
+            return;
+          }
+          if (result.info !== "OK") {
+            this.$emit("onSuggestAddress", []);
+            return;
+          }
+          this.$emit("onSuggestAddress", result.tips);
+        });
+      });
     }
   },
   watch: {

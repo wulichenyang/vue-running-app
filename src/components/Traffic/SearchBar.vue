@@ -9,6 +9,7 @@
             placeholder="从哪儿出发"
             is-title-latent
             clearable
+            @focus="onFocus"
             @change="onInputStartAddress"
           ></md-input-item>
           <md-button type="primary" plain>{{trafficWay}}</md-button>
@@ -20,7 +21,8 @@
             placeholder="您要去哪儿"
             is-title-latent
             clearable
-            @change="onInputTerminalAddress()"
+            @focus="onFocus"
+            @change="onInputTerminalAddress"
           ></md-input-item>
           <md-button type="primary">搜索</md-button>
         </p>
@@ -44,6 +46,13 @@ export default {
     [InputItem.name]: InputItem,
     [Field.name]: Field
   },
+  props: {
+    pStartAddress: '',
+    pTerminalAddress: '',
+    ifListenChange: {
+      type: Boolean,
+    }
+  },
   data() {
     return {
       startAddress: "",
@@ -51,12 +60,33 @@ export default {
       trafficWay: "公交"
     };
   },
+  watch: {
+    pStartAddress: {
+      immediate: true,
+      handler(val) {
+        this.startAddress = val
+      }
+    },
+    pTerminalAddress: {
+      immediate: true,
+      handler(val) {
+        this.terminalAddress = val
+      }
+    },
+  },
   methods: {
     onInputStartAddress(name, value) {
-      this.$emit('onInputStartAddress', value)
+      if(this.ifListenChange) {
+        this.$emit('onInputStartAddress', value)
+      }
     },
     onInputTerminalAddress(name, value) {
-      this.$emit('onInputTerminalAddress', value)
+      if(this.ifListenChange) {
+        this.$emit('onInputTerminalAddress', value)
+      }
+    },
+    onFocus(name) {
+      this.$emit('onTurnOnChange')
     }
   },
 };

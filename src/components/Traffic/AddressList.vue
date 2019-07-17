@@ -1,29 +1,37 @@
 <template>
-  <section class="address-list">
-    <ul>
-      addlist 
-      <li :key="address.name" v-for="address in addressList">{{address}}</li>
-    </ul>
+  <section class="address-list" v-if="addressList.length > 0">
+    <md-field>
+      <md-cell-item
+        :key="address.id"
+        v-for="address in addressList"
+        :title="address.name"
+        :brief="typeof address.address==='string'?address.address:address.district"
+        @click="onSelectAddress(address)"
+      ></md-cell-item>
+    </md-field>
   </section>
 </template>
 
 <script>
-
+import { Field, CellItem } from "mand-mobile";
 export default {
-  name: 'addressList',
-  
+  name: "addressList",
   components: {
-    
+    [Field.name]: Field,
+    [CellItem.name]: CellItem
   },
   props: {
-    addressList:{
+    addressList: {
       type: Array,
       default: []
     }
   },
   data() {
-    return {
-
+    return {};
+  },
+  methods: {
+    onSelectAddress(address) {
+      this.$emit("onSelectAddress", address);
     }
   }
 };
@@ -33,6 +41,5 @@ export default {
 @import "../../assets/css/var.scss";
 .address-list {
   position: relative;
-
 }
 </style>
