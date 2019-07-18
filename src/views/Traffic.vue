@@ -13,8 +13,8 @@
     ></SearchBar>
     <AddressList
       :addressList="addressList"
-      :collapsedAddressList="collapsedAddressList"
-
+      :isAddressListCollapsed="isAddressListCollapsed"
+      @onCollapsedChange="onCollapsedChange"
       @onSelectAddress="onSelectAddress"
     ></AddressList>
     <RouteDetail></RouteDetail>
@@ -46,7 +46,7 @@ export default {
       timer: null,
       editType: "",
       ifListenChange: true,
-      collapsedAddressList: false
+      isAddressListCollapsed: false
     };
   },
   beforeDestroy() {
@@ -59,7 +59,6 @@ export default {
     onGetStartAddressList(startAddress) {
       this.editType = "startAddress";
       this.startAddress = startAddress;
-      this.collapsedAddressList = false;
       console.log("start:", this.startAddress);
 
       clearTimeout(this.timer);
@@ -70,7 +69,6 @@ export default {
     onGetTerminalAddressList(terminalAddress) {
       this.editType = "terminalAddress";
       this.terminalAddress = terminalAddress;
-      this.collapsedAddressList = false;
       console.log("end:", this.terminalAddress);
 
       clearTimeout(this.timer);
@@ -98,6 +96,10 @@ export default {
     },
     onTurnOnChange() {
       this.ifListenChange = true;
+      this.isAddressListCollapsed = false;
+    },
+    onCollapsedChange(flag) {
+      this.isAddressListCollapsed = flag;
     },
     onSearchRoute() {}
   }

@@ -86,9 +86,9 @@ export default {
       }
     },
     onFocus(addType) {
-      return (name) => {
+      return name => {
         this.$emit("onTurnOnChange");
-        console.log('hehe')
+        console.log("hehe");
         if (addType === "start") {
           this.$emit("onInputStartAddress", this.startAddress);
         } else if (addType === "end") {
@@ -104,14 +104,42 @@ export default {
 @import "../../assets/css/var.scss";
 .search-bar {
   position: relative;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  overflow: hidden;
+  .md-field {
+    box-shadow: $boxShadowSearchColor;
+    margin: 0 10px 10px 10px;
+    padding: 0  20px 12px 20px !important;
+  }
   p {
     display: flex;
     align-items: center;
     .md-field-item {
       flex: 1;
     }
+    .md-input-item {
+      min-height: 50px;
+      .md-field-item-content {
+        padding-top: 0;
+        min-height: 64px !important;
+      }
+    }
     button {
-      width: 100px !important;
+      min-width: 64px;
+      width: 64px !important;
+      height: 48px;
+      line-height: 48px;
+      font-size: $primaryBtnFontSize;
+    }
+    label {
+      font-size: $mainFontSize !important;
+    }
+    input {
+      height: initial !important;
+      padding-top: 40px !important;
+      padding-bottom: 12px;
+      font-size: $formFontSize;
     }
   }
 }
