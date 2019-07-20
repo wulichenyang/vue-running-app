@@ -1,6 +1,11 @@
 <template>
   <section class="traffic">
-    <Map ref="mapRef" @onSuggestAddress="onGetSuggestAddress"></Map>
+    <Map 
+      ref="mapRef" 
+      @onSuggestAddress="onGetSuggestAddress"
+      @onTurnOnRoute="onShowRoute"
+      @onGetRoute="onGetRoute"
+    ></Map>
     <SearchBar
       @onSelectTrafficWay="onGetTrafficWay"
       @onInputStartAddress="onGetStartAddressList"
@@ -11,13 +16,13 @@
       :pTerminalAddress="terminalAddress"
       :ifListenChange="ifListenChange"
     ></SearchBar>
-      <AddressList
-        :addressList="addressList"
-        :isAddressListCollapsed="isAddressListCollapsed"
-        @onCollapsedChange="onCollapsedChange"
-        @onSelectAddress="onSelectAddress"
-      ></AddressList>
-    <RouteDetail></RouteDetail>
+    <AddressList
+      :addressList="addressList"
+      :isAddressListCollapsed="isAddressListCollapsed"
+      @onCollapsedChange="onCollapsedChange"
+      @onSelectAddress="onSelectAddress"
+    ></AddressList>
+    <RouteDetail :showRouteDetail="showRouteDetail"></RouteDetail>
     <!-- 出行提交表单模态 -->
   </section>
 </template>
@@ -27,13 +32,15 @@ import SearchBar from "@/components/Traffic/SearchBar.vue";
 import AddressList from "@/components/Traffic/AddressList.vue";
 import RouteDetail from "@/components/Traffic/RouteDetail.vue";
 import Map from "@/components/Map.vue";
+import { Toast } from "mand-mobile";
 export default {
   name: "traffic",
   components: {
     Map: Map,
     SearchBar: SearchBar,
     AddressList: AddressList,
-    RouteDetail: RouteDetail
+    RouteDetail: RouteDetail,
+    [Toast.name]: Toast
   },
   data() {
     return {
@@ -46,7 +53,10 @@ export default {
       timer: null,
       editType: "",
       ifListenChange: true,
-      isAddressListCollapsed: false
+      isAddressListCollapsed: false,
+      showRouteDetail: false,
+      trafficeWayNow: "AMap.Transfer",
+      route: null,
     };
   },
   beforeDestroy() {
@@ -101,7 +111,33 @@ export default {
     onCollapsedChange(flag) {
       this.isAddressListCollapsed = flag;
     },
-    onSearchRoute() {}
+    onSearchRoute(transportation) {
+      this.trafficeWayNow = transportation;
+      this.$refs.mapRef.clearMarker();
+      if (
+        this.startAddressDetail &&
+        this.startAddressDetail.location &&
+        this.terminalAddressDetail &&
+        this.terminalAddressDetail.location
+      ) {
+        this.searchRoute(this.trafficeWayNow);
+      } else {
+        Toast.info("请输入起止地点");
+      }
+    },
+    onShowRoute(){
+      this.showRouteDetail = true;
+    },
+    searchRoute(transportation) {
+      let routeLocationArr = [
+        this.startAddressDetail.location,
+        this.terminalAddressDetail.location
+      ];
+      this.$refs.mapRef.searchRoute(routeLocationArr, transportation);
+    },
+    onGetRoute(route) {
+      this.route = route
+    }
   }
 };
 </script>
@@ -109,6 +145,5 @@ export default {
 <style lang="scss">
 @import "../assets/css/var.scss";
 .traffic {
-
 }
 </style>

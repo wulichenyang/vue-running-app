@@ -24,6 +24,7 @@ export default {
     this.createMap();
   },
   beforeDestroy() {
+    this.clearMarker();
     this.destroyMap();
   },
   data() {
@@ -115,6 +116,9 @@ export default {
       }, 1000);
     },
     clearMarker() {
+      if (this.marker && this.marker.clear) {
+        this.marker.clear();
+      }
       this.marker = null;
     },
     clearMapTraceData() {
@@ -241,6 +245,53 @@ export default {
           }
           this.$emit("onSuggestAddress", result.tips);
         });
+      });
+    },
+    // 根据起止位置查找返回推荐路线
+    searchRoute(routeLocationArr, transportation) {
+      let type = transportation.slice(5, 15);
+      this.map.plugin(transportation, () => {
+        this.marker = new window.AMap[type]({
+          map: this.map,
+          city: "北京市",
+          panel: "panel",
+          autoFitView: true
+          //   policy: window.AMap.TransferPolicy.LEAST_TIME
+        });
+        // 根据起终点经纬度规划驾车导航路线
+        this.marker.search(
+          routeLocationArr[0],
+          routeLocationArr[1],
+          //   new window.AMap.LngLat(116.291035, 39.907899),
+          //   new window.AMap.LngLat(116.427281, 39.903719),
+          (status, result) => {
+            // result 即是对应的驾车导航信息，相关数据结构文档请参考  https://lbs.amap.com/api/javascript-api/reference/route-search#m_DrivingResult
+            console.log(status, result);
+            if (status === "complete") {
+              console.log("绘制驾车路线完成");
+              // 存第一条轨迹的路程
+              if (result.plans) {
+                this.$emit(
+                  "onGetRoute",
+                  (result.plans[0].distance / 1000).toFixed(2)
+                );
+              } else {
+                this.$emit(
+                  "onGetRoute",
+                  (result.routes[0].distance / 1000).toFixed(2)
+                );
+              }
+              this.$emit("onTurnOnRoute");
+              //   this.isPanelShow = true
+            } else {
+              console.log("获取驾车数据失败：" + result);
+              Toast.failed("未检测到匹配路线");
+            }
+          }
+        );
+        // window.AMap.event.addListener(this.driving, 'complete', function (e) {
+        //   console.log(e)
+        // }) // 返回定位出错信息
       });
     }
   },

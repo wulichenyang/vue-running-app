@@ -1,24 +1,21 @@
 <template>
   <section class="route-detail">
-    route detail    
+    
   </section>
 </template>
 
 <script>
-
 export default {
-  name: 'routeDetail',
-  
-  components: {
-    
-  },
+  name: "routeDetail",
+
+  components: {},
   props: {
-    
+    showRouteDetail: {
+      type: Boolean
+    },
   },
   data() {
-    return {
-
-    }
+    return {};
   }
 };
 </script>
@@ -27,6 +24,5 @@ export default {
 @import "../../assets/css/var.scss";
 .route-detail {
   position: relative;
-
 }
 </style>

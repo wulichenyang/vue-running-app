@@ -24,7 +24,7 @@
             @focus="onFocus('end')()"
             @change="onInputTerminalAddress"
           ></md-input-item>
-          <md-button type="primary">搜索</md-button>
+          <md-button @click="onClickSearch" type="primary">搜索</md-button>
         </p>
       </md-field>
     </section>
@@ -36,7 +36,7 @@
             :key="item.value"
             v-for="item in transportations"
             :title="item.text"
-            @click="onSelectTransportation(item.text)"
+            @click="onSelectTransportation(item)"
           />
         </md-field>
       </section>
@@ -139,8 +139,12 @@ export default {
       this.showTransportation = true;
     },
     onSelectTransportation(transportation) {
-      this.trafficWayText = transportation.split("/")[0];
+      this.trafficWayText = transportation.text.split("/")[0];
+      this.trafficeWayNow = transportation.value;
       this.showTransportation = false;
+    },
+    onClickSearch() {
+      this.$emit('onSearch', this.trafficeWayNow)
     }
   }
 };
