@@ -12,7 +12,7 @@
             @focus="onFocus('start')()"
             @change="onInputStartAddress"
           ></md-input-item>
-          <md-button type="primary" plain>{{trafficWay}}</md-button>
+          <md-button type="primary" @click="onPopTransportation" plain>{{trafficWayText}}</md-button>
         </p>
         <p>
           <md-input-item
@@ -29,12 +29,30 @@
       </md-field>
     </section>
     <!-- 出行工具模态框 -->
-    <section>chu xin modal</section>
+    <transition name="topDown">
+      <section class="transportation" v-if="showTransportation">
+        <md-field>
+          <md-cell-item
+            :key="item.value"
+            v-for="item in transportations"
+            :title="item.text"
+            @click="onSelectTransportation(item.text)"
+          />
+        </md-field>
+      </section>
+    </transition>
   </section>
 </template>
 
 <script>
-import { Field, FieldItem, Popup, InputItem, Button } from "mand-mobile";
+import {
+  Field,
+  CellItem,
+  FieldItem,
+  Popup,
+  InputItem,
+  Button
+} from "mand-mobile";
 import AddressList from "@/components/Traffic/AddressList.vue";
 export default {
   name: "searchBar",
@@ -44,7 +62,8 @@ export default {
     [FieldItem.name]: FieldItem,
     [Popup.name]: Popup,
     [InputItem.name]: InputItem,
-    [Field.name]: Field
+    [Field.name]: Field,
+    [CellItem.name]: CellItem
   },
   props: {
     pStartAddress: "",
@@ -57,7 +76,27 @@ export default {
     return {
       startAddress: "",
       terminalAddress: "",
-      trafficWay: "公交"
+      trafficWayText: "公交",
+      trafficeWayNow: "AMap.Transfer",
+      showTransportation: false,
+      transportations: [
+        {
+          value: "AMap.Transfer",
+          text: "公交/地铁"
+        },
+        {
+          value: "AMap.Driving",
+          text: "出租车"
+        },
+        {
+          value: "AMap.Riding",
+          text: "单车/电车"
+        },
+        {
+          value: "AMap.Walking",
+          text: "步行"
+        }
+      ]
     };
   },
   watch: {
@@ -95,6 +134,13 @@ export default {
           this.$emit("onInputTerminalAddress", this.terminalAddress);
         }
       };
+    },
+    onPopTransportation() {
+      this.showTransportation = true;
+    },
+    onSelectTransportation(transportation) {
+      this.trafficWayText = transportation.split("/")[0];
+      this.showTransportation = false;
     }
   }
 };
@@ -110,7 +156,7 @@ export default {
   .md-field {
     box-shadow: $boxShadowSearchColor;
     margin: 0 10px 10px 10px;
-    padding: 0  20px 12px 20px !important;
+    padding: 0 20px 12px 20px !important;
   }
   p {
     display: flex;
@@ -142,5 +188,40 @@ export default {
       font-size: $formFontSize;
     }
   }
+}
+.transportation {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  z-index: 999;
+  .md-field {
+    margin: 0 10px 10px 10px;
+    padding: 0 20px 12px 20px !important;
+    box-shadow: $boxShadowSearchColor;
+    .md-cell-item {
+      height: 64px;
+      .md-cell-item-body {
+        height: 64px;
+        min-height: 64px;
+        padding: 0;
+        .md-cell-item-content {
+          line-height: 1;
+          p.md-cell-item-title {
+            line-height: 1;
+            font-size: $mainFontSize !important;
+          }
+        }
+      }
+    }
+  }
+}
+.topDown-enter,
+.topDown-leave-to {
+  transform: translateY(-80%);
+  opacity: 0;
+}
+.topDown-enter-active,
+.topDown-leave-active {
+  transition: ease all 0.4s;
 }
 </style>

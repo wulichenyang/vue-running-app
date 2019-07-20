@@ -1,26 +1,28 @@
 <template>
-  <section
-    :class="collapsed ? 'address-list collapsed' : 'address-list'"
-    v-if="addressList.length > 0"
-  >
-    <div class="address-inner">
-      <p class="toggle-button" @click="onToggleList">
-        <svg-icon icon-class="up" v-if="collapsed" />
-        <svg-icon icon-class="down" v-if="!collapsed" />
-      </p>
-      <div class="address-inner-scroll">
-        <md-field>
-          <md-cell-item
-            :key="address.id"
-            v-for="address in addressList"
-            :title="address.name"
-            :brief="typeof address.address==='string'?address.address:address.district"
-            @click="onSelectAddress(address)"
-          ></md-cell-item>
-        </md-field>
+  <transition name="down-up">
+    <section
+      :class="collapsed ? 'address-list collapsed' : 'address-list'"
+      v-if="addressList.length > 0"
+    >
+      <div class="address-inner">
+        <p class="toggle-button" @click="onToggleList">
+          <svg-icon icon-class="up" v-if="collapsed" />
+          <svg-icon icon-class="down" v-if="!collapsed" />
+        </p>
+        <div class="address-inner-scroll">
+          <md-field>
+            <md-cell-item
+              :key="address.id"
+              v-for="address in addressList"
+              :title="address.name"
+              :brief="typeof address.address==='string'?address.address:address.district"
+              @click="onSelectAddress(address)"
+            ></md-cell-item>
+          </md-field>
+        </div>
       </div>
-    </div>
-  </section>
+    </section>
+  </transition>
 </template>
 
 <script>
@@ -72,13 +74,13 @@ export default {
   width: 100%;
   height: calc(100% - 180px);
   z-index: 999;
-  box-shadow: $boxShadowSearchColor;
   transition: all ease 0.4s;
   &.collapsed {
     transform: translateY(calc(100% - 30px));
     transition: all ease 0.4s;
   }
   .address-inner {
+    box-shadow: $boxShadowSearchColor;
     height: 100%;
     margin: 0px 10px !important;
     p.toggle-button {
@@ -120,5 +122,13 @@ export default {
       }
     }
   }
+}
+.down-up-enter,
+.down-up-leave-to {
+  transform: translateY(100%);
+}
+.down-up-enter-active,
+.down-up-leave-active {
+  transition: ease 0.4s all;
 }
 </style>

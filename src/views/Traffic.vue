@@ -11,12 +11,12 @@
       :pTerminalAddress="terminalAddress"
       :ifListenChange="ifListenChange"
     ></SearchBar>
-    <AddressList
-      :addressList="addressList"
-      :isAddressListCollapsed="isAddressListCollapsed"
-      @onCollapsedChange="onCollapsedChange"
-      @onSelectAddress="onSelectAddress"
-    ></AddressList>
+      <AddressList
+        :addressList="addressList"
+        :isAddressListCollapsed="isAddressListCollapsed"
+        @onCollapsedChange="onCollapsedChange"
+        @onSelectAddress="onSelectAddress"
+      ></AddressList>
     <RouteDetail></RouteDetail>
     <!-- 出行提交表单模态 -->
   </section>
@@ -109,5 +109,6 @@ export default {
 <style lang="scss">
 @import "../assets/css/var.scss";
 .traffic {
+
 }
 </style>
