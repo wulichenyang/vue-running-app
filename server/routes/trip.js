@@ -102,11 +102,42 @@ const updateDistance = (req, res) => {
   )
 }
 
-// Post one tripData
-router.post('/addTripData', (req, res, next) => {
+const addTrafficData = (req, res) => {
+  const newTraffic = req.body.trafficData
+  Trip.insertMany(
+    {
+      userId: req.userId,
+      ...newTraffic
+    },
+    (err, doc) => {
+      if (err) { // Failed
+        res.status(500).json({
+          code: 1,
+          message: err.message
+        })
+        return;
+      } else {
+        // Successful
+        // updateDistance(req, res)
+        res.send({
+          code: 0,
+          message: '保存成功',
+        })
+      }
+    }
+  )
+}
+// Add one tripData
+router.post('/addTrip', (req, res, next) => {
   // Insert new trip data
   addTripData(req, res)
   // Update all distance data
+})
+
+
+// Add one trafficData
+router.post('/addTraffic', (req, res, next) => {
+  addTrafficData(req, res)
 })
 
 module.exports = router;

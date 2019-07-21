@@ -269,20 +269,20 @@ export default {
             console.log(status, result);
             if (status === "complete") {
               console.log("绘制驾车路线完成");
-              // 存第一条轨迹的路程
+              // 存第一条轨迹的路径长度
               if (result.plans) {
                 this.$emit(
-                  "onGetRoute",
+                  "onGetRouteLength",
                   (result.plans[0].distance / 1000).toFixed(2)
                 );
               } else {
+                // 保存路径长度
                 this.$emit(
-                  "onGetRoute",
+                  "onGetRouteLength",
                   (result.routes[0].distance / 1000).toFixed(2)
                 );
               }
               this.$emit("onTurnOnRoute");
-              //   this.isPanelShow = true
             } else {
               console.log("获取驾车数据失败：" + result);
               Toast.failed("未检测到匹配路线");

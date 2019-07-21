@@ -9,7 +9,11 @@ export const getDistance = async () => {
 }
 
 export const saveTrip = async (tripData) => {
-  return post('/addTripData', { tripData })
+  return post('/addTrip', { tripData })
+}
+
+export const saveTraffic = async (trafficData) => {
+  return post('/addTraffic', { trafficData })
 }
 
 // export const getSunburstGraphData = async () => {

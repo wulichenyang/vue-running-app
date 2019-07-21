@@ -142,9 +142,10 @@ export default {
       this.trafficWayText = transportation.text.split("/")[0];
       this.trafficeWayNow = transportation.value;
       this.showTransportation = false;
+      this.$emit("onSelectTrafficWay", transportation);
     },
     onClickSearch() {
-      this.$emit('onSearch', this.trafficeWayNow)
+      this.$emit("onSearch", this.trafficeWayNow);
     }
   }
 };
