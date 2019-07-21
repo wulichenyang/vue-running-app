@@ -10,7 +10,7 @@ let tripSchema = new Schema({
   // 出行类型 trip / traffic
   type: { type: String },
   // 具体出行方式 步行/跑步/骑行/驾车/公交/打车
-  tripWay: { type: String, enum:['步行', '跑步', '骑行', '驾车', '公交', '打车']},
+  tripWay: { type: String, enum:['步行', '跑步', '骑行', '驾车', '公交', '打车', '公交/地铁', '出租车', '单车/电车']},
   // 此次出行公里数
   distance: { type: Double },
   // 出行时间

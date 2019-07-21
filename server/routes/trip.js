@@ -36,7 +36,10 @@ const tripWayMap = {
   '骑行': 'riding',
   '驾车': 'driving',
   '公交': 'bus',
-  '打车': 'taxi'
+  '打车': 'taxi',
+  '出租车': 'taxi',
+  '单车/电车': 'riding',
+  '公交/地铁': 'bus'
 }
 
 const addTripData = (req, res) => {
@@ -102,8 +105,42 @@ const updateDistance = (req, res) => {
   )
 }
 
+const updateAllDistance = (tripType, distance, req, res) => {
+  Distance.findOne(
+    {
+      userId: req.userId
+    },
+    (err, result) => {
+      if (err) {
+        res.status(500).json({
+          code: 1,
+          message: err.message
+        })
+        return;
+      } else {
+        // Update all distance data
+        let tripWayCode = tripWayMap[tripType]
+        result[tripWayCode] = result[tripWayCode] + distance
+        result.save((err, doc) => {
+          if (err) { // Failed
+            res.status(500).json({
+              code: 1,
+              message: err.message
+            })
+            return;
+          } else {
+            // Successful
+          }
+        })
+      }
+    }
+  )
+}
+
 const addTrafficData = (req, res) => {
   const newTraffic = req.body.trafficData
+  const { tripType, distance } = newTraffic
+  updateAllDistance(tripType, distance, req, res)
   Trip.insertMany(
     {
       userId: req.userId,
@@ -118,7 +155,6 @@ const addTrafficData = (req, res) => {
         return;
       } else {
         // Successful
-        // updateDistance(req, res)
         res.send({
           code: 0,
           message: '保存成功',

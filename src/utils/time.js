@@ -41,7 +41,7 @@ const getTime = ()  => {
     date1: `${year}年${month}月${day}日`,
     date2: `${year}/${month}/${day}`,
     date3: `${year}年${month}月${day}日/${hh}:${mm}:${ss}`,
-    date4: `${hh}:${mm}:${ss}`
+    time: `${hh}:${mm}:${ss}`
   }
   return time
 }

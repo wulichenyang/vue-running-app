@@ -47,7 +47,7 @@
 </template>
 
 <script>
-import { localDate } from "@/utils/time";
+import { localDate, getTime } from "@/utils/time";
 import SearchBar from "@/components/Traffic/SearchBar.vue";
 import AddressList from "@/components/Traffic/AddressList.vue";
 import RouteDetail from "@/components/Traffic/RouteDetail.vue";
@@ -194,6 +194,7 @@ export default {
     },
     onPopForm() {
       this.ifShowForm = true;
+      this.date = localDate(new Date()).split('T')[0]
     },
     onSaveRoute() {
       // 提交路线表单
@@ -207,10 +208,10 @@ export default {
 
       const trafficData = {
         type: "traffic",
-        tripType: this.trafficWay,
+        tripWay: this.trafficWay,
         distance: this.distance,
         date: localDate(new Date()),
-        time: getTime().date4,
+        time: getTime().time,
         price: this.cost,
         startPlace: this.startAddress,
         endPlace: this.terminalAddress,
@@ -224,7 +225,15 @@ export default {
       }
     },
     clearForm() {
+      this.cost = 0;
+      this.startAddress = '',
+      this.terminalAddress = '',
+      this.startAddressDetail = {},
+      this.terminalAddressDetail = {},
+      this.distance = 0,
+      this.markText = '',
       this.ifShowForm = false;
+      // TODO : clear routeDetail and validate form and fix updateAllDistance
     }
   }
 };
