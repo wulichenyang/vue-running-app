@@ -187,7 +187,7 @@ export default {
     },
 
     drawTripLine() {
-      this.marker = new AMap.Marker({
+      this.marker = new window.AMap.Marker({
         map: this.map,
         position: [116.478935, 39.997761],
         icon: "https://webapi.amap.com/images/car.png",
@@ -196,7 +196,7 @@ export default {
         angle: -90
       });
       // 绘制行程途经轨迹
-      let polyline = new AMap.Polyline({
+      let polyline = new window.AMap.Polyline({
         map: this.map,
         path: this.mapTraceData.slice(), // 防止数据被修改
         showDir: true,
@@ -206,7 +206,7 @@ export default {
         // strokeStyle: "solid"  //线样式
       });
       // 绘制行程路径动画
-      let passedPolyline = new AMap.Polyline({
+      let passedPolyline = new window.AMap.Polyline({
         map: this.map,
         // path: lineArr,
         strokeColor: "#AF5", //线颜色
@@ -248,13 +248,13 @@ export default {
       });
     },
     // 根据起止位置查找返回推荐路线
-    searchRoute(routeLocationArr, transportation) {
+    searchRoute(routeLocationArr, transportation, panel) {
       let type = transportation.slice(5, 15);
       this.map.plugin(transportation, () => {
         this.marker = new window.AMap[type]({
           map: this.map,
           city: "北京市",
-          panel: "panel",
+          panel,
           autoFitView: true
           //   policy: window.AMap.TransferPolicy.LEAST_TIME
         });

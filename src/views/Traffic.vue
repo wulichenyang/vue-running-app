@@ -1,7 +1,7 @@
 <template>
   <section class="traffic">
-    <Map 
-      ref="mapRef" 
+    <Map
+      ref="mapRef"
       @onSuggestAddress="onGetSuggestAddress"
       @onTurnOnRoute="onShowRoute"
       @onGetRoute="onGetRoute"
@@ -22,7 +22,7 @@
       @onCollapsedChange="onCollapsedChange"
       @onSelectAddress="onSelectAddress"
     ></AddressList>
-    <RouteDetail :showRouteDetail="showRouteDetail"></RouteDetail>
+    <RouteDetail :showRouteDetail="showRouteDetail" :panelId="panelId"></RouteDetail>
     <!-- 出行提交表单模态 -->
   </section>
 </template>
@@ -57,6 +57,7 @@ export default {
       showRouteDetail: false,
       trafficeWayNow: "AMap.Transfer",
       route: null,
+      panelId: "panel"
     };
   },
   beforeDestroy() {
@@ -125,7 +126,7 @@ export default {
         Toast.info("请输入起止地点");
       }
     },
-    onShowRoute(){
+    onShowRoute() {
       this.showRouteDetail = true;
     },
     searchRoute(transportation) {
@@ -133,10 +134,14 @@ export default {
         this.startAddressDetail.location,
         this.terminalAddressDetail.location
       ];
-      this.$refs.mapRef.searchRoute(routeLocationArr, transportation);
+      this.$refs.mapRef.searchRoute(
+        routeLocationArr,
+        transportation,
+        this.panelId
+      );
     },
     onGetRoute(route) {
-      this.route = route
+      this.route = route;
     }
   }
 };
