@@ -194,25 +194,43 @@ export default {
     },
     onPopForm() {
       this.ifShowForm = true;
-      this.date = localDate(new Date()).split('T')[0]
+      this.date = localDate(new Date()).split("T")[0];
     },
     onSaveRoute() {
       // 提交路线表单
       this.saveRoute();
       // 清除表单信息
       this.clearForm();
+      // 清除路线轨迹
+      this.$refs.mapRef.clearMarker();
+      // 清除路线信息Dom
+      const panelChildrenDom = document.getElementById(this.panelId);
+      [].forEach.call(panelChildrenDom.children, dom => dom.remove());
+      // 关闭详细路线
+      this.showRouteDetail = false;
     },
     async saveRoute() {
+      if (
+        !this.startAddressDetail ||
+        !this.terminalAddressDetail ||
+        !this.startAddress ||
+        !this.terminalAddress ||
+        !this.trafficWay
+      ) {
+        Toast.failed("路线信息不完整");
+        return;
+      }
+
       let startCode = `${this.startAddressDetail.location.lng}, ${this.startAddressDetail.location.lat}`;
       let endCode = `${this.terminalAddressDetail.location.lng}, ${this.terminalAddressDetail.location.lat}`;
 
       const trafficData = {
         type: "traffic",
         tripWay: this.trafficWay,
-        distance: this.distance,
+        distance: parseFloat(this.distance),
         date: localDate(new Date()),
         time: getTime().time,
-        price: this.cost,
+        price: parseFloat(this.cost),
         startPlace: this.startAddress,
         endPlace: this.terminalAddress,
         startCode,
@@ -226,14 +244,13 @@ export default {
     },
     clearForm() {
       this.cost = 0;
-      this.startAddress = '',
-      this.terminalAddress = '',
-      this.startAddressDetail = {},
-      this.terminalAddressDetail = {},
-      this.distance = 0,
-      this.markText = '',
+      this.startAddress = "";
+      this.terminalAddress = "";
+      this.startAddressDetail = {};
+      this.terminalAddressDetail = {};
+      this.distance = 0;
+      this.markText = "";
       this.ifShowForm = false;
-      // TODO : clear routeDetail and validate form and fix updateAllDistance
     }
   }
 };

@@ -47,7 +47,10 @@ const addTripData = (req, res) => {
   Trip.insertMany(
     {
       userId: req.userId,
-      ...newTrip
+      ...newTrip,
+      distance: parseFloat(newTrip.distance),
+      calorie: parseFloat(newTrip.calorie),
+      speed: parseFloat(newTrip.speed)
     },
     (err, doc) => {
       if (err) { // Failed
@@ -58,14 +61,14 @@ const addTripData = (req, res) => {
         return;
       } else {
         // Successful
-        updateDistance(req, res)
+        updateDistance(req, res, true, 'tripData')
       }
     }
   )
 }
 
-const updateDistance = (req, res) => {
-  const { tripWay, distance } = req.body.tripData
+const updateDistance = (req, res, showSuccess, payloadName) => {
+  const { tripWay, distance } = req.body[payloadName]
   Distance.findOne(
     {
       userId: req.userId
@@ -80,7 +83,7 @@ const updateDistance = (req, res) => {
       } else {
         // Update all distance data
         let tripWayCode = tripWayMap[tripWay]
-        result[tripWayCode] = result[tripWayCode] + distance
+        result[tripWayCode] = result[tripWayCode] + parseFloat(distance)
         result.save((err, doc) => {
           if (err) { // Failed
             res.status(500).json({
@@ -89,47 +92,17 @@ const updateDistance = (req, res) => {
             })
             return;
           } else {
-            // Successful
-            res.json({
-              code: 0,
-              message: "成功保存本次行程",
-              // data: {
-              //   newTrip: doc,
-              //   oldDistance: raw
-              // }
-            })
-          }
-        })
-      }
-    }
-  )
-}
-
-const updateAllDistance = (tripType, distance, req, res) => {
-  Distance.findOne(
-    {
-      userId: req.userId
-    },
-    (err, result) => {
-      if (err) {
-        res.status(500).json({
-          code: 1,
-          message: err.message
-        })
-        return;
-      } else {
-        // Update all distance data
-        let tripWayCode = tripWayMap[tripType]
-        result[tripWayCode] = result[tripWayCode] + distance
-        result.save((err, doc) => {
-          if (err) { // Failed
-            res.status(500).json({
-              code: 1,
-              message: err.message
-            })
-            return;
-          } else {
-            // Successful
+            if(showSuccess) {
+              // Successful
+              res.json({
+                code: 0,
+                message: "成功保存本次行程",
+                // data: {
+                //   newTrip: doc,
+                //   oldDistance: raw
+                // }
+              })
+            }
           }
         })
       }
@@ -139,12 +112,13 @@ const updateAllDistance = (tripType, distance, req, res) => {
 
 const addTrafficData = (req, res) => {
   const newTraffic = req.body.trafficData
-  const { tripType, distance } = newTraffic
-  updateAllDistance(tripType, distance, req, res)
+  updateDistance(req, res, false, 'trafficData')
   Trip.insertMany(
     {
       userId: req.userId,
-      ...newTraffic
+      ...newTraffic,
+      distance: parseFloat(newTraffic.distance),
+      price: parseFloat(newTraffic.price),
     },
     (err, doc) => {
       if (err) { // Failed
