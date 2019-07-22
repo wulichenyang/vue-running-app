@@ -137,6 +137,32 @@ const addTrafficData = (req, res) => {
     }
   )
 }
+
+const getHistory = (req, res) => {
+  Trip.find(
+    {
+      userId: req.userId
+    },
+    { userId: 0, __v: 0 },
+    (err, docs) => {
+      if (err) {
+        res.status(500).json({
+          code: 1,
+          message: err.message
+        })
+        return;
+      } else {
+        if(docs.length > 0) {
+          res.send({
+            code: 0,
+            data: docs
+          })
+        }
+      }
+    }
+  )
+}
+
 // Add one tripData
 router.post('/addTrip', (req, res, next) => {
   // Insert new trip data
@@ -144,10 +170,13 @@ router.post('/addTrip', (req, res, next) => {
   // Update all distance data
 })
 
-
 // Add one trafficData
 router.post('/addTraffic', (req, res, next) => {
   addTrafficData(req, res)
+})
+
+router.get('/history', (req, res, next) => {
+  getHistory(req, res)
 })
 
 module.exports = router;

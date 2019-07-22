@@ -4,8 +4,11 @@ import {
 } from "./http"
 
 export const getDistance = async () => {
-  // return get('/trip/distance')
   return get('/distance')
+}
+
+export const getHistory = async () => {
+  return get('/history')
 }
 
 export const saveTrip = async (tripData) => {
