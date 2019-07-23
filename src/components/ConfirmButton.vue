@@ -1,6 +1,11 @@
 <template>
   <section class="start-btn-wrapper">
-    <button ref="buttonRef" class="start-btn waves" @click="onClickButton" slot>{{text}}</button>
+    <button
+      ref="buttonRef"
+      class="start-btn waves"
+      @click="onClickButton"
+      slot
+    >{{text}}</button>
   </section>
 </template>
 

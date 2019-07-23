@@ -1,13 +1,24 @@
 <template>
   <div class="trip">
     <!-- Notice Bar -->
-    <NoticeBar :ifNotice="ifNotice" :noticeInfo="noticeInfo"></NoticeBar>
-    <ScrollWrapper @onRefresh="onRefreshTrip" v-show="this.$route.name === 'trip'">
+    <NoticeBar
+      :ifNotice="ifNotice"
+      :noticeInfo="noticeInfo"
+    ></NoticeBar>
+    <ScrollWrapper
+      @onRefresh="onRefreshTrip"
+      v-show="this.$route.name === 'trip'"
+    >
       <section class="trip-bg-wrapper">
         <div class="trip-wrapper">
           <!-- Top Trip Nav -->
           <div class="md-example-child md-example-child-tabs md-example-child-tab-bar-1">
-            <md-tab-bar v-model="current" :items="items" :maxLength="4" @change="onTripWayChange" />
+            <md-tab-bar
+              v-model="current"
+              :items="items"
+              :maxLength="4"
+              @change="onTripWayChange"
+            />
           </div>
           <!-- Data Tips -->
           <div class="tips">
@@ -16,7 +27,10 @@
             <p>本月{{tripWay}}{{distanceNow}}公里>></p>
           </div>
           <!-- Start Button -->
-          <ConfirmButton :text="`开始${tripWay}`" @onClickButton="onSelectStart"></ConfirmButton>
+          <ConfirmButton
+            :text="`开始${tripWay}`"
+            @onClickButton="onSelectStart"
+          ></ConfirmButton>
         </div>
       </section>
     </ScrollWrapper>
@@ -41,12 +55,12 @@ export const tripWayMap = {
   驾车: "driving",
   公交: "bus",
   打车: "taxi",
-  walking: '步行',
-  running: '跑步',
-  riding: '骑行',
-  driving: '驾车',
-  bus: '公交',
-  taxi: '打车'
+  walking: "步行",
+  running: "跑步",
+  riding: "骑行",
+  driving: "驾车",
+  bus: "公交",
+  taxi: "打车"
 };
 
 export default {
@@ -55,7 +69,7 @@ export default {
     [TabBar.name]: TabBar,
     ScrollWrapper: ScrollWrapper,
     NoticeBar: NoticeBar,
-    ConfirmButton: ConfirmButton,
+    ConfirmButton: ConfirmButton
     // Map: Map
   },
   data() {
@@ -81,7 +95,7 @@ export default {
         const tripWayCode = tripWayMap[this.tripWay];
         return this.distance[tripWayCode].toFixed(2);
       } else {
-        return '0.0'
+        return "0.0";
       }
     },
     ...mapGetters(["distance", "ifNotice", "noticeInfo"])

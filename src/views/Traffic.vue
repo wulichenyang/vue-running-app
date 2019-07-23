@@ -22,18 +22,44 @@
       @onCollapsedChange="onCollapsedChange"
       @onSelectAddress="onSelectAddress"
     ></AddressList>
-    <RouteDetail :showRouteDetail="showRouteDetail" :panelId="panelId" @onPopForm="onPopForm"></RouteDetail>
+    <RouteDetail
+      :showRouteDetail="showRouteDetail"
+      :panelId="panelId"
+      @onPopForm="onPopForm"
+    ></RouteDetail>
     <!-- 出行提交表单模态 -->
-    <md-dialog title="本次出行" :closable="true" v-model="ifShowForm" :btns="btnDialog">
+    <md-dialog
+      title="本次出行"
+      :closable="true"
+      v-model="ifShowForm"
+      :btns="btnDialog"
+    >
       <md-field class="dialog-field">
-        <md-detail-item title="交通工具" :content="trafficWay" bold />
-        <md-detail-item title="出发地" :content="startAddress" />
-        <md-detail-item title="目的地" :content="terminalAddress" />
+        <md-detail-item
+          title="交通工具"
+          :content="trafficWay"
+          bold
+        />
+        <md-detail-item
+          title="出发地"
+          :content="startAddress"
+        />
+        <md-detail-item
+          title="目的地"
+          :content="terminalAddress"
+        />
         <!-- <md-detail-item title="花费" content="5元"/> -->
         <md-field-item title="花费">
-          <md-stepper slot="right" v-model="cost" min="0" />
+          <md-stepper
+            slot="right"
+            v-model="cost"
+            min="0"
+          />
         </md-field-item>
-        <md-detail-item title="日期" :content="date" />
+        <md-detail-item
+          title="日期"
+          :content="date"
+        />
         <md-input-item
           id="markText"
           v-model="markText"

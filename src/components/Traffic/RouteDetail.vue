@@ -5,12 +5,29 @@
       :class="collapsed ? 'route-detail collapsed' : 'route-detail'"
     >
       <div class="route-inner">
-        <p class="toggle-button" @click="onToggleRouteDetail">
-          <svg-icon icon-class="up" v-if="collapsed" />
-          <svg-icon icon-class="down" v-if="!collapsed" />
-          <md-button v-if="!collapsed" type="primary" @click.stop="onPopForm" inline>保存路线</md-button>
+        <p
+          class="toggle-button"
+          @click="onToggleRouteDetail"
+        >
+          <svg-icon
+            icon-class="up"
+            v-if="collapsed"
+          />
+          <svg-icon
+            icon-class="down"
+            v-if="!collapsed"
+          />
+          <md-button
+            v-if="!collapsed"
+            type="primary"
+            @click.stop="onPopForm"
+            inline
+          >保存路线</md-button>
         </p>
-        <div :id="this.panelId" class="route-inner-scroll"></div>
+        <div
+          :id="this.panelId"
+          class="route-inner-scroll"
+        ></div>
       </div>
     </section>
   </transition>

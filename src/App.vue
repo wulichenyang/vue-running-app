@@ -1,9 +1,12 @@
 <template>
   <div id="app">
-    <main class="main-wrapper" :style="{'height': !showNav ? '100% !important': ''}">
+    <main
+      class="main-wrapper"
+      :style="{'height': !showNav ? '100% !important': ''}"
+    >
       <transition name="fademap">
         <keep-alive>
-          <router-view/>
+          <router-view />
         </keep-alive>
       </transition>
     </main>
@@ -35,7 +38,7 @@ export default {
 
   computed: {
     showNav() {
-      return this.$route.name !== 'signup' && this.$route.name !== 'login'
+      return this.$route.name !== "signup" && this.$route.name !== "login";
     },
     ...mapGetters(["isLoading"])
   }

@@ -1,10 +1,16 @@
 <template>
   <footer class="nav-tab">
     <ul>
-      <li :key="item.name" v-for="item in items">
+      <li
+        :key="item.name"
+        v-for="item in items"
+      >
         <router-link :to="item.href">
           <div class="icon">
-            <md-icon :name="item.icon" size="xs"/>
+            <md-icon
+              :name="item.icon"
+              size="xs"
+            />
           </div>
           <div class="text">
             <span v-text="item.label"></span>
@@ -27,13 +33,13 @@ export default {
     return {
       current: 1,
       items: [
-        { name: 1, label: "出行", icon: "home" , href: '/trip'},
-        { name: 2, label: "交通", icon: "location" , href:'/traffic'},
-        { name: 3, label: "历史", icon: "calendar", href: '/history' },
-        { name: 4, label: "我的", icon: "user", href: '/user' }
+        { name: 1, label: "出行", icon: "home", href: "/trip" },
+        { name: 2, label: "交通", icon: "location", href: "/traffic" },
+        { name: 3, label: "历史", icon: "calendar", href: "/history" },
+        { name: 4, label: "我的", icon: "user", href: "/user" }
       ]
     };
-  },
+  }
 };
 </script>
 
@@ -53,7 +59,7 @@ export default {
       flex: 1;
       text-align: center;
       a {
-        flex:1;
+        flex: 1;
         display: flex;
         flex-direction: column;
         justify-content: center;

@@ -1,5 +1,9 @@
 <template>
-  <md-scroll-view ref="scrollView" :scrolling-x="false" @refreshing="$_onRefresh">
+  <md-scroll-view
+    ref="scrollView"
+    :scrolling-x="false"
+    @refreshing="$_onRefresh"
+  >
     <md-scroll-view-refresh
       slot="refresh"
       slot-scope="{ scrollTop, isRefreshActive, isRefreshing }"
@@ -41,7 +45,7 @@ export default {
   height: 100%;
   .scroll-view-container {
     width: 100%;
-    height: 100% ;
+    height: 100%;
     .md-scroll-view-refresh {
       padding: 16px;
     }

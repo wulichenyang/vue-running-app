@@ -5,9 +5,18 @@
       v-if="addressList.length > 0"
     >
       <div class="address-inner">
-        <p class="toggle-button" @click="onToggleList">
-          <svg-icon icon-class="up" v-if="collapsed" />
-          <svg-icon icon-class="down" v-if="!collapsed" />
+        <p
+          class="toggle-button"
+          @click="onToggleList"
+        >
+          <svg-icon
+            icon-class="up"
+            v-if="collapsed"
+          />
+          <svg-icon
+            icon-class="down"
+            v-if="!collapsed"
+          />
         </p>
         <div class="address-inner-scroll">
           <md-field>

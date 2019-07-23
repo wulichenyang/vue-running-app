@@ -269,8 +269,8 @@ export default {
             console.log(status, result);
             if (status === "complete") {
               console.log("绘制驾车路线完成");
-              if(result && result.info === "NO_DATA") {
-                Toast.failed('请确保起止路线不同')
+              if (result && result.info === "NO_DATA") {
+                Toast.failed("请确保起止路线不同");
               }
               // 存第一条轨迹的路径长度
               if (result.plans) {

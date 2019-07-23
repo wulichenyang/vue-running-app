@@ -1,5 +1,8 @@
 <template>
-  <div class="signup"  @keyup.enter="onSignup">
+  <div
+    class="signup"
+    @keyup.enter="onSignup"
+  >
     <!-- Notice Bar -->
     <!-- <NoticeBar :ifNotice="ifNotice" :noticeInfo="noticeInfo"></NoticeBar> -->
     <section class="signup-bg-wrapper">
@@ -18,7 +21,10 @@
               v-model="phone"
               align="left"
             ></md-input-item>
-            <p class="error" v-show="phoneError">{{phoneError}}</p>
+            <p
+              class="error"
+              v-show="phoneError"
+            >{{phoneError}}</p>
             <md-input-item
               @keyup="onPasswordCheck"
               title="密码"
@@ -26,11 +32,17 @@
               v-model="password"
               align="left"
             ></md-input-item>
-            <p class="error" v-show="passwordError">{{passwordError}}</p>
+            <p
+              class="error"
+              v-show="passwordError"
+            >{{passwordError}}</p>
           </md-field>
         </div>
         <!-- Signup Button -->
-        <ConfirmButton text="注册" @onClickButton="onSignup"></ConfirmButton>
+        <ConfirmButton
+          text="注册"
+          @onClickButton="onSignup"
+        ></ConfirmButton>
       </div>
     </section>
   </div>
@@ -58,7 +70,7 @@ export default {
       password: "",
       phoneError: "",
       passwordError: "",
-      posting: false,
+      posting: false
     };
   },
   computed: {
@@ -69,26 +81,26 @@ export default {
     async onSignup() {
       if (this.onPhoneCheck() && this.onPasswordCheck()) {
         console.log("signing");
-        this.posting = true
-        let res = await signup(this.phone, md5(this.password))
+        this.posting = true;
+        let res = await signup(this.phone, md5(this.password));
         // Success
-        if(res.code === 0) {
+        if (res.code === 0) {
           // TODO posting
-          this.posting = false
-          this.resetForm()
-          Toast.succeed(res.message)
-          this.$router.push({path: 'login'})
-        } else if(res.code === 1) {
+          this.posting = false;
+          this.resetForm();
+          Toast.succeed(res.message);
+          this.$router.push({ path: "login" });
+        } else if (res.code === 1) {
           // Fail
-          this.posting = false
-          Toast.failed(res.message)
+          this.posting = false;
+          Toast.failed(res.message);
         }
       }
     },
-    
+
     resetForm() {
-      this.phone = ''
-      this.password = ''
+      this.phone = "";
+      this.password = "";
     },
 
     onPhoneCheck() {

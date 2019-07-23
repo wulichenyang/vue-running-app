@@ -1,16 +1,21 @@
 <template>
-  <section class="loading-wrapper" v-show="isLoading">
-    <md-activity-indicator type="carousel" :size="15"></md-activity-indicator>
+  <section
+    class="loading-wrapper"
+    v-show="isLoading"
+  >
+    <md-activity-indicator
+      type="carousel"
+      :size="15"
+    ></md-activity-indicator>
   </section>
 </template>
 <script>
-
 import { ActivityIndicator } from "mand-mobile";
 
 export default {
   name: "Loading",
   components: {
-    [ActivityIndicator.name]: ActivityIndicator,
+    [ActivityIndicator.name]: ActivityIndicator
   },
   props: {
     isLoading: {
@@ -21,7 +26,7 @@ export default {
 };
 </script>
 <style lang="scss">
-@import '../assets/css/var.scss';
+@import "../assets/css/var.scss";
 
 .loading-wrapper {
   position: absolute;

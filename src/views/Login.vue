@@ -1,5 +1,8 @@
 <template>
-  <div class="login" @keyup.enter="onLogin">
+  <div
+    class="login"
+    @keyup.enter="onLogin"
+  >
     <!-- Notice Bar -->
     <!-- <NoticeBar :ifNotice="ifNotice" :noticeInfo="noticeInfo"></NoticeBar> -->
     <section class="login-bg-wrapper">
@@ -18,7 +21,10 @@
               v-model="phone"
               align="left"
             ></md-input-item>
-            <p class="error" v-show="phoneError">{{phoneError}}</p>
+            <p
+              class="error"
+              v-show="phoneError"
+            >{{phoneError}}</p>
             <md-input-item
               @keyup="onPasswordCheck"
               title="密码"
@@ -26,13 +32,22 @@
               v-model="password"
               align="left"
             ></md-input-item>
-            <p class="error" v-show="passwordError">{{passwordError}}</p>
+            <p
+              class="error"
+              v-show="passwordError"
+            >{{passwordError}}</p>
           </md-field>
         </div>
         <!-- Login Button -->
         <section class="button-group">
-          <ConfirmButton text="注册" @onClickButton="toSignUp"></ConfirmButton>
-          <ConfirmButton text="登录" @onClickButton="onLogin"></ConfirmButton>
+          <ConfirmButton
+            text="注册"
+            @onClickButton="toSignUp"
+          ></ConfirmButton>
+          <ConfirmButton
+            text="登录"
+            @onClickButton="onLogin"
+          ></ConfirmButton>
         </section>
       </div>
     </section>
@@ -46,7 +61,7 @@ import { mapGetters, mapActions } from "vuex";
 import md5 from "md5";
 import { login } from "../api/user";
 import { access_token } from "../configs";
-import cookie from '../utils/cookie'
+import cookie from "../utils/cookie";
 
 const phoneTest = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1}))+\d{8})$/;
 export default {

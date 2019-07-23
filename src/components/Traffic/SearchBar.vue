@@ -12,7 +12,11 @@
             @focus="onFocus('start')()"
             @change="onInputStartAddress"
           ></md-input-item>
-          <md-button type="primary" @click="onPopTransportation" plain>{{trafficWayText}}</md-button>
+          <md-button
+            type="primary"
+            @click="onPopTransportation"
+            plain
+          >{{trafficWayText}}</md-button>
         </p>
         <p>
           <md-input-item
@@ -24,13 +28,19 @@
             @focus="onFocus('end')()"
             @change="onInputTerminalAddress"
           ></md-input-item>
-          <md-button @click="onClickSearch" type="primary">搜索</md-button>
+          <md-button
+            @click="onClickSearch"
+            type="primary"
+          >搜索</md-button>
         </p>
       </md-field>
     </section>
     <!-- 出行工具模态框 -->
     <transition name="topDown">
-      <section class="transportation" v-if="showTransportation">
+      <section
+        class="transportation"
+        v-if="showTransportation"
+      >
         <md-field>
           <md-cell-item
             :key="item.value"

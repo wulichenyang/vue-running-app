@@ -1,18 +1,27 @@
 <template>
   <section class="history">
-    <md-scroll-view
-      ref="scrollView"
-      @scroll="$_onScroll"
-      :scrolling-x="false"
-    >
+    <div class="inner-wrapper">
       <h1>
         出行历史
         <svg-icon icon-class="history-list" />
       </h1>
-      <md-field>
-        <md-cell-item :key="historyItem._id" v-for="historyItem in historyList" :title="historyItem.tripWay" :brief="tripOrTraffic(historyItem)" :addon="historyItem.date.substring(0, 10)" arrow />
-      </md-field>
-    </md-scroll-view>
+      <md-scroll-view
+        ref="scrollView"
+        @scroll="$_onScroll"
+        :scrolling-x="false"
+      >
+        <md-field>
+          <md-cell-item
+            :key="historyItem._id"
+            v-for="historyItem in historyList"
+            :title="historyItem.tripWay"
+            :brief="tripOrTraffic(historyItem)"
+            :addon="historyItem.date.substring(0, 10)"
+            arrow
+          />
+        </md-field>
+      </md-scroll-view>
+    </div>
   </section>
 </template>
 
@@ -22,13 +31,7 @@
 import Map from "@/components/Map.vue";
 import { getHistory } from "@/api/trip";
 import { mapActions } from "vuex";
-import {
-  ScrollView,
-  Toast,
-  Field,
-  FieldItem,
-  CellItem,
-} from "mand-mobile";
+import { ScrollView, Toast, Field, FieldItem, CellItem } from "mand-mobile";
 export default {
   name: "history",
   components: {
@@ -59,10 +62,10 @@ export default {
       }
     },
     tripOrTraffic(historyItem) {
-      if(historyItem.type === 'trip') {
-        return `行程${historyItem.distance}公里`
-      } else if (historyItem.type === 'traffic') {
-        return `${historyItem.startPlace} - ${historyItem.endPlace}`
+      if (historyItem.type === "trip") {
+        return `行程${historyItem.distance}公里`;
+      } else if (historyItem.type === "traffic") {
+        return `${historyItem.startPlace} - ${historyItem.endPlace}`;
       }
     },
     ...mapActions(["addLoading", "subLoading"])
@@ -74,7 +77,7 @@ export default {
 @import "../assets/css/var.scss";
 
 .history {
-  .md-scroll-view {
+  .inner-wrapper {
     padding: 20px;
     .md-field {
       padding: 0;

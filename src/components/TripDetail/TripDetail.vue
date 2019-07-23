@@ -10,17 +10,26 @@
     <!-- 地图操作工具栏 -->
     <section class="map-tool">
       <ul class="tool-wrapper">
-        <li class="tool-item" @click="addressOnToggle">
+        <li
+          class="tool-item"
+          @click="addressOnToggle"
+        >
           <svg-icon icon-class="city" />
           <span v-if="mapData.district">{{mapData.district}}</span>
           <span v-else-if="mapData.city">{{mapData.city}}</span>
           <span v-else>未知地区</span>
         </li>
-        <li class="tool-item" @click="themeOnToggle">
+        <li
+          class="tool-item"
+          @click="themeOnToggle"
+        >
           <svg-icon icon-class="brush" />
           <span>主题</span>
         </li>
-        <li class="tool-item" @click="loactionOnClick">
+        <li
+          class="tool-item"
+          @click="loactionOnClick"
+        >
           <svg-icon icon-class="location" />
           <span>定位</span>
         </li>
@@ -28,15 +37,26 @@
     </section>
 
     <!-- 开始按钮 -->
-    <ConfirmButton :style="{zIndex: 998}" :text="confirmText" @onClickButton="onConfirmClick"></ConfirmButton>
+    <ConfirmButton
+      :style="{zIndex: 998}"
+      :text="confirmText"
+      @onClickButton="onConfirmClick"
+    ></ConfirmButton>
 
     <!-- ********************* Popup ******************** -->
     <!-- 地址详情 -->
     <section class="address">
-      <md-popup style="z-index:999" v-model="addressPopupShow" position="top">
+      <md-popup
+        style="z-index:999"
+        v-model="addressPopupShow"
+        position="top"
+      >
         <div>
           <md-field>
-            <md-cell-item title="地址详情" :brief="mapAddress" />
+            <md-cell-item
+              title="地址详情"
+              :brief="mapAddress"
+            />
           </md-field>
         </div>
       </md-popup>
@@ -44,19 +64,66 @@
 
     <!-- 主题 -->
     <section class="theme">
-      <md-popup style="z-index:999" v-model="themePopupShow" position="bottom">
+      <md-popup
+        style="z-index:999"
+        v-model="themePopupShow"
+        position="bottom"
+      >
         <div class="popupText">
           <span @click="themeOnToggle">OK</span>
           <md-field>
-            <md-field-item title="主题" solid>
-              <md-radio name="normal" v-model="theme" label="标准" inline />
-              <md-radio name="dark" v-model="theme" label="幻影黑" inline />
-              <md-radio name="light" v-model="theme" label="月光银" inline />
-              <md-radio name="whitesmoke" v-model="theme" label="远山黛" inline />
-              <md-radio name="grey" v-model="theme" label="雅士灰" inline />
-              <md-radio name="macaron" v-model="theme" label="马卡龙" inline />
-              <md-radio name="blue" v-model="theme" label="靛青蓝" inline />
-              <md-radio name="darkblue" v-model="theme" label="极夜蓝" inline />
+            <md-field-item
+              title="主题"
+              solid
+            >
+              <md-radio
+                name="normal"
+                v-model="theme"
+                label="标准"
+                inline
+              />
+              <md-radio
+                name="dark"
+                v-model="theme"
+                label="幻影黑"
+                inline
+              />
+              <md-radio
+                name="light"
+                v-model="theme"
+                label="月光银"
+                inline
+              />
+              <md-radio
+                name="whitesmoke"
+                v-model="theme"
+                label="远山黛"
+                inline
+              />
+              <md-radio
+                name="grey"
+                v-model="theme"
+                label="雅士灰"
+                inline
+              />
+              <md-radio
+                name="macaron"
+                v-model="theme"
+                label="马卡龙"
+                inline
+              />
+              <md-radio
+                name="blue"
+                v-model="theme"
+                label="靛青蓝"
+                inline
+              />
+              <md-radio
+                name="darkblue"
+                v-model="theme"
+                label="极夜蓝"
+                inline
+              />
             </md-field-item>
           </md-field>
         </div>
@@ -87,7 +154,10 @@
             <p>消耗卡路里</p>
           </li>
         </ul>
-        <p v-if="this.actionState === 'submitting'" class="brief">
+        <p
+          v-if="this.actionState === 'submitting'"
+          class="brief"
+        >
           <md-field>
             <md-input-item
               v-model="brief"
@@ -181,10 +251,7 @@ export default {
     // 跑步数据
     distanceNow() {
       // mapTraceData [[22, 333], ...] -> distanceNow (xx公里)
-      return mapTraceDataToDistance(
-        this.mapTraceData,
-        window.AMap
-      );
+      return mapTraceDataToDistance(this.mapTraceData, window.AMap);
     },
     timeNow() {
       // Seconds to 00:00:00
@@ -273,9 +340,7 @@ export default {
       this.mapAddress = mapAddress;
     },
     onMapTraceDataChange(newMapTraceData) {
-      this.mapTraceData = [
-        ...newMapTraceData
-      ]
+      this.mapTraceData = [...newMapTraceData];
     },
     // 结束行程, 重设数据
     async resetRunningData() {

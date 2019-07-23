@@ -1,6 +1,9 @@
 <template>
   <transition name="top-down">
-    <section class="notice-bar" v-if="ifNotice">
+    <section
+      class="notice-bar"
+      v-if="ifNotice"
+    >
       <md-notice-bar>{{noticeInfo}}</md-notice-bar>
     </section>
   </transition>
@@ -41,12 +44,13 @@ export default {
   text-align: center;
 }
 
-.top-down-enter-active, .top-down-leave-active {
-  transition: all ease .5s;
+.top-down-enter-active,
+.top-down-leave-active {
+  transition: all ease 0.5s;
 }
 .top-down-enter, .top-down-leave-to /* .fade-leave-active below version 2.1.8 */ {
   opacity: 0;
-  transform: translate(0, -64px)
+  transform: translate(0, -64px);
 }
 </style>
 
