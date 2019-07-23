@@ -15,3 +15,6 @@ export  const UPDATE_NOTICE_BAR = 'UPDATE_NOTICE_BAR' // 设置提示数据
 export  const NOTICE_ON = 'NOTICE_ON' // 开启提示数据
 export  const NOTICE_OFF = 'NOTICE_OFF' // 关闭提示数据
 export  const CLEAR_NOTICE_BAR = 'CLEAR_NOTICE_BAR' // 清空提示数据
+
+// History
+export const SET_HISTORY_DETAIL = 'HISTORY_DETAIL';

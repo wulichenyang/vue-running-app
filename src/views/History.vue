@@ -1,34 +1,37 @@
 <template>
   <section class="history">
-    <div class="inner-wrapper">
-      <h1>
-        出行历史
-        <svg-icon icon-class="history-list" />
-      </h1>
-      <Scroll
-        ref="scroll"
-        :data="historyList"
-        class="scroll-wrapper"
-      >
-        <md-field>
-          <md-cell-item
-            :key="historyItem._id"
-            v-for="historyItem in historyList"
-            :title="historyItem.tripWay"
-            :brief="tripOrTraffic(historyItem)"
-            :addon="historyItem.date.substring(0, 10)"
-            arrow
-          />
-        </md-field>
-      </Scroll>
-    </div>
+    <section class="history-brief">
+      <div class="inner-wrapper">
+        <h1>
+          出行历史
+          <svg-icon icon-class="history-list" />
+        </h1>
+        <Scroll
+          ref="scroll"
+          :data="historyList"
+          class="scroll-wrapper"
+        >
+          <md-field>
+            <md-cell-item
+              :key="historyItem._id"
+              v-for="historyItem in historyList"
+              :title="historyItem.tripWay"
+              :brief="tripOrTraffic(historyItem)"
+              :addon="historyItem.date.substring(0, 10)"
+              @click="onClickDetail(historyItem)"
+              arrow
+            />
+          </md-field>
+        </Scroll>
+      </div>
+    </section>
+    <router-view></router-view>
   </section>
 </template>
 
 <script>
 import Scroll from "@/components/BetterScroll/Scroll.vue";
 
-import Map from "@/components/Map.vue";
 import { getHistory } from "@/api/trip";
 import { mapActions } from "vuex";
 import { ScrollView, Toast, Field, FieldItem, CellItem } from "mand-mobile";
@@ -69,42 +72,60 @@ export default {
         return `${historyItem.startPlace} - ${historyItem.endPlace}`;
       }
     },
-    ...mapActions(["addLoading", "subLoading"])
+    onClickDetail(historyDetail) {
+      this.setHistoryDetail(historyDetail);
+      this.$router.push({
+        name: "historyDetail"
+      });
+    },
+    ...mapActions(["addLoading", "subLoading", "setHistoryDetail"])
   }
 };
 </script>
 
 <style lang="scss">
 @import "../assets/css/var.scss";
-
 .history {
   height: 100%;
-  .inner-wrapper {
+  .history-brief {
     height: 100%;
-    padding: 20px;
-    box-sizing: border-box;
-    .scroll-wrapper {
+    .inner-wrapper {
       height: 100%;
-      overflow: hidden;
-      .md-field {
-        padding: 0;
-      }
-      .md-cell-item-title {
+      padding: 20px;
+      box-sizing: border-box;
+      h1 {
         font-size: $titleFontSize;
+        color: $confirmBtnColor;
+        overflow: hidden;
       }
-      .md-cell-item-body {
-        padding: 6px 0 0 0;
-        min-height: 68px !important;
+      svg {
+        filter: drop-shadow($confirmBtnColor 999px 0);
+        transform: translateX(-999px);
       }
-      .md-cell-item-brief,
-      .md-cell-item-right {
-        font-size: $briefFontSize;
-        i {
-          font-size: $briefFontSize !important;
+      .scroll-wrapper {
+        margin-top: 10px;
+        height: calc(100% - 24px);
+        overflow: hidden;
+        .md-field {
+          padding: 0;
         }
-      }
-      .md-cell-item-right {
-        margin-right: 10px;
+        .md-cell-item-title {
+          font-size: $titleFontSize;
+        }
+        .md-cell-item-body {
+          padding: 6px 0 0 0;
+          min-height: 68px !important;
+        }
+        .md-cell-item-brief,
+        .md-cell-item-right {
+          font-size: $briefFontSize;
+          i {
+            font-size: $briefFontSize !important;
+          }
+        }
+        .md-cell-item-right {
+          margin-right: 10px;
+        }
       }
     }
   }
