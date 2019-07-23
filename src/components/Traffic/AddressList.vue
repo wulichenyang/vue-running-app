@@ -18,29 +18,37 @@
             v-if="!collapsed"
           />
         </p>
-        <div class="address-inner-scroll">
-          <md-field>
-            <md-cell-item
-              :key="address.id"
-              v-for="address in addressList"
-              :title="address.name"
-              :brief="typeof address.address==='string'?address.address:address.district"
-              @click="onSelectAddress(address)"
-            ></md-cell-item>
-          </md-field>
-        </div>
+        <Scroll
+          ref="scroll"
+          :data="addressList"
+          class="scroll-wrapper"
+        >
+          <div class="inner-scroll-wrapper">
+            <md-field>
+              <md-cell-item
+                :key="address.id"
+                v-for="address in addressList"
+                :title="address.name"
+                :brief="typeof address.address==='string'?address.address:address.district"
+                @click="onSelectAddress(address)"
+              ></md-cell-item>
+            </md-field>
+          </div>
+        </Scroll>
       </div>
     </section>
   </transition>
 </template>
 
 <script>
+import Scroll from "@/components/BetterScroll/Scroll.vue";
 import { Field, CellItem } from "mand-mobile";
 export default {
   name: "addressList",
   components: {
     [Field.name]: Field,
-    [CellItem.name]: CellItem
+    [CellItem.name]: CellItem,
+    Scroll: Scroll,
   },
   props: {
     addressList: {
@@ -89,41 +97,43 @@ export default {
     transition: all ease 0.4s;
   }
   .address-inner {
-    box-shadow: $boxShadowSearchColor;
     height: 100%;
     margin: 0px 10px !important;
+    box-shadow: $boxShadowSearchColor;
+    background-color: $mainBgColor;
     p.toggle-button {
       height: 30px;
       display: flex;
       align-items: center;
       justify-content: center;
-      background: $mainBgColor;
       text-align: center;
     }
-    .address-inner-scroll {
+    .scroll-wrapper {
       height: calc(100% - 30px);
-      overflow-y: auto;
-      .md-field {
-        min-height: 100%;
-        padding: 0px 20px !important;
-        .md-cell-item {
-          &:last-child {
-            .md-cell-item-body::before {
-              border-bottom: none;
-            }
-          }
-          .md-cell-item-body {
-            padding: 6px 0 0 0;
-            min-height: 68px !important;
-            .md-cell-item-content {
-              p:nth-child(1) {
-                height: initial !important;
-                padding-top: 0px !important;
-                font-size: $formFontSize;
+      overflow: hidden;
+      .inner-scroll-wrapper {
+        .md-field {
+          min-height: 100%;
+          padding: 0px 20px !important;
+          .md-cell-item {
+            &:last-child {
+              .md-cell-item-body::before {
+                border-bottom: none;
               }
-              p:nth-child(2) {
-                font-size: $mainFontSize !important;
-                margin-top: 5px;
+            }
+            .md-cell-item-body {
+              padding: 6px 0 0 0;
+              min-height: 68px !important;
+              .md-cell-item-content {
+                p:nth-child(1) {
+                  height: initial !important;
+                  padding-top: 0px !important;
+                  font-size: $formFontSize;
+                }
+                p:nth-child(2) {
+                  font-size: $mainFontSize !important;
+                  margin-top: 5px;
+                }
               }
             }
           }

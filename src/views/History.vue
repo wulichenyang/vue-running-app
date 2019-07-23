@@ -5,10 +5,10 @@
         出行历史
         <svg-icon icon-class="history-list" />
       </h1>
-      <md-scroll-view
-        ref="scrollView"
-        @scroll="$_onScroll"
-        :scrolling-x="false"
+      <Scroll
+        ref="scroll"
+        :data="historyList"
+        class="scroll-wrapper"
       >
         <md-field>
           <md-cell-item
@@ -20,14 +20,14 @@
             arrow
           />
         </md-field>
-      </md-scroll-view>
+      </Scroll>
     </div>
   </section>
 </template>
 
-
 <script>
-// TODO: fix scroll all
+import Scroll from "@/components/BetterScroll/Scroll.vue";
+
 import Map from "@/components/Map.vue";
 import { getHistory } from "@/api/trip";
 import { mapActions } from "vuex";
@@ -39,7 +39,8 @@ export default {
     [ScrollView.name]: ScrollView,
     [Toast.name]: Toast,
     [CellItem.name]: CellItem,
-    [Field.name]: Field
+    [Field.name]: Field,
+    Scroll: Scroll
   },
   mounted() {
     this.getHistory();
@@ -77,23 +78,33 @@ export default {
 @import "../assets/css/var.scss";
 
 .history {
+  height: 100%;
   .inner-wrapper {
+    height: 100%;
     padding: 20px;
-    .md-field {
-      padding: 0;
-    }
-    .md-cell-item-title {
-      font-size: $titleFontSize;
-    }
-    .md-cell-item-body {
-      padding: 6px 0 0 0;
-      min-height: 68px !important;
-    }
-    .md-cell-item-brief,
-    .md-cell-item-right {
-      font-size: $briefFontSize;
-      i {
-        font-size: $briefFontSize !important;
+    box-sizing: border-box;
+    .scroll-wrapper {
+      height: 100%;
+      overflow: hidden;
+      .md-field {
+        padding: 0;
+      }
+      .md-cell-item-title {
+        font-size: $titleFontSize;
+      }
+      .md-cell-item-body {
+        padding: 6px 0 0 0;
+        min-height: 68px !important;
+      }
+      .md-cell-item-brief,
+      .md-cell-item-right {
+        font-size: $briefFontSize;
+        i {
+          font-size: $briefFontSize !important;
+        }
+      }
+      .md-cell-item-right {
+        margin-right: 10px;
       }
     }
   }
