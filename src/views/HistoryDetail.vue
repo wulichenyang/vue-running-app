@@ -86,7 +86,7 @@ export default {
   },
   data() {
     return {
-      type: '',
+      type: "",
       tripWay: "",
       date: "",
       distance: 0,
@@ -102,30 +102,43 @@ export default {
   },
   methods: {
     setData() {
-      console.log(this.$route.params.historyDetail)
-      if (this.$route.params.historyDetail.type === "trip") {
-        this.speed = this.$route.params.historyDetail.speed;
-        this.calorie = this.$route.params.historyDetail.calorie;
-        this.trajectory = this.$route.params.historyDetail.trajectory;
-      } else if (this.$route.params.historyDetail.type === "traffic") {
-        this.startPlace = this.$route.params.historyDetail.startPlace;
-        this.endPlace = this.$route.params.historyDetail.endPlace;
-        this.price = this.$route.params.historyDetail.price;
+      console.log(this.$route.params.historyDetail);
+      let historyDetail = this.$route.params.historyDetail;
+      if (historyDetail.type === "trip") {
+        this.speed = historyDetail.speed;
+        this.calorie = historyDetail.calorie;
+        this.trajectory = historyDetail.trajectory;
+      } else if (historyDetail.type === "traffic") {
+        this.startPlace = historyDetail.startPlace;
+        this.endPlace = historyDetail.endPlace;
+        this.price = historyDetail.price;
       }
-      this.type = this.$route.params.historyDetail.type;
-      this.tripWay = this.$route.params.historyDetail.tripWay;
-      this.distance = this.$route.params.historyDetail.distance;
-      this.date = this.$route.params.historyDetail.date.split("T")[0];
-      this.time = this.$route.params.historyDetail.time;
-      this.mark = this.$route.params.historyDetail.mark;
+      this.type = historyDetail.type;
+      this.tripWay = historyDetail.tripWay;
+      this.distance = historyDetail.distance;
+      this.date = historyDetail.date.split("T")[0];
+      this.time = historyDetail.time;
+      this.mark = historyDetail.mark;
     },
     drawRouteLine() {
       if (this.type === "trip") {
         this.$refs.mapRef.setMapTraceData(this.trajectory);
-        this.$refs.mapRef.drawTripLine();
       } else if (this.tripWay === "traffic") {
-        // this.$route.params.historyDetail.startCode.replace(/[ ]/g,"").split(',').map(x=>parseFloat(x))
+        let { startCode, endCode } = this.$route.params.historyDetail;
+        const trajectory = [
+          startCode
+            .replace(/[ ]/g, "")
+            .split(",")
+            .map(x => parseFloat(x)),
+          endCode
+            .replace(/[ ]/g, "")
+            .split(",")
+            .map(x => parseFloat(x))
+        ];
+        this.$refs.mapRef.setMapTraceData(trajectory);
       }
+      this.$refs.mapRef.drawTripLine();
+      // TODO: fix定位后无法看到其他地方的路径
     }
   },
   computed: {
