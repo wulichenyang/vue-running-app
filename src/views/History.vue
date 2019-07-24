@@ -1,6 +1,9 @@
 <template>
   <section class="history">
-    <section class="history-brief">
+    <section
+      v-if="this.$route.name === 'history'"
+      class="history-brief"
+    >
       <div class="inner-wrapper">
         <h1>
           出行历史
@@ -73,9 +76,11 @@ export default {
       }
     },
     onClickDetail(historyDetail) {
-      this.setHistoryDetail(historyDetail);
+      // 可以通过vuex设置historyDetailNow
+      // this.setHistoryDetail(historyDetail);
       this.$router.push({
-        name: "historyDetail"
+        name: "historyDetail",
+        params: { historyDetail }
       });
     },
     ...mapActions(["addLoading", "subLoading", "setHistoryDetail"])

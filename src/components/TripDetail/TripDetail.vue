@@ -466,8 +466,9 @@ export default {
     box-shadow: $boxShadowColor;
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
+    padding: 20px;
     h1 {
-      padding: 20px;
+      margin-bottom: 20px;
       font-size: $tipStrongFontSize;
       text-align: center;
       span {
@@ -475,7 +476,6 @@ export default {
       }
     }
     ul {
-      margin: 20px 0;
       display: flex;
       justify-content: space-around;
       li {
@@ -483,8 +483,6 @@ export default {
         text-align: center;
         h2 {
           font-size: $tipTopFontSize;
-        }
-        p {
         }
       }
     }

@@ -121,6 +121,9 @@ export default {
       }
       this.marker = null;
     },
+    setMapTraceData(mapTraceData) {
+      this.mapTraceData = mapTraceData || []
+    },
     clearMapTraceData() {
       this.mapTraceData = [];
       this.$emit("onMapTraceData", this.mapTraceData);
