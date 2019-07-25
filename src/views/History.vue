@@ -1,5 +1,10 @@
 <template>
   <section class="history">
+    <!-- Notice Bar -->
+    <NoticeBar
+      :ifNotice="ifNotice"
+      :noticeInfo="noticeInfo"
+    ></NoticeBar>
     <section
       v-if="this.$route.name === 'history'"
       class="history-brief"
@@ -9,23 +14,25 @@
           出行历史
           <svg-icon icon-class="history-list" />
         </h1>
-        <Scroll
-          ref="scroll"
-          :data="historyList"
-          class="scroll-wrapper"
-        >
-          <md-field>
-            <md-cell-item
-              :key="historyItem._id"
-              v-for="historyItem in historyList"
-              :title="historyItem.tripWay"
-              :brief="tripOrTraffic(historyItem)"
-              :addon="historyItem.date.substring(0, 10)"
-              @click="onClickDetail(historyItem)"
-              arrow
-            />
-          </md-field>
-        </Scroll>
+        <ScrollWrapper @onRefresh="onRefreshHistory">
+          <Scroll
+            ref="scroll"
+            :data="historyList"
+            class="scroll-wrapper"
+          >
+            <md-field>
+              <md-cell-item
+                :key="historyItem._id"
+                v-for="historyItem in historyList"
+                :title="historyItem.tripWay"
+                :brief="tripOrTraffic(historyItem)"
+                :addon="historyItem.date.substring(0, 10)"
+                @click="onClickDetail(historyItem)"
+                arrow
+              />
+            </md-field>
+          </Scroll>
+        </ScrollWrapper>
       </div>
     </section>
     <router-view></router-view>
@@ -33,20 +40,23 @@
 </template>
 
 <script>
+import ScrollWrapper from "@/components/ScrollWrapper.vue";
 import Scroll from "@/components/BetterScroll/Scroll.vue";
-
+import { mapGetters, mapActions } from "vuex";
 import { getHistory } from "@/api/trip";
-import { mapActions } from "vuex";
+import NoticeBar from "@/components/NoticeBar.vue";
 import { ScrollView, Toast, Field, FieldItem, CellItem } from "mand-mobile";
 export default {
   name: "history",
   components: {
     Map: Map,
+    ScrollWrapper: ScrollWrapper,
     [ScrollView.name]: ScrollView,
     [Toast.name]: Toast,
     [CellItem.name]: CellItem,
     [Field.name]: Field,
-    Scroll: Scroll
+    Scroll: Scroll,
+    NoticeBar: NoticeBar,
   },
   mounted() {
     this.getHistory();
@@ -56,6 +66,7 @@ export default {
       historyList: []
     };
   },
+
   methods: {
     async getHistory() {
       this.addLoading();
@@ -67,6 +78,18 @@ export default {
         Toast.failed(res.message);
         this.subLoading();
       }
+    },
+    async refreshHistory(finishRefresh) {
+      let res = await getHistory();
+      if (res.code === 0) {
+        this.updateNoticeBar({ msg: "更新历史信息成功！" });
+      } else if (res.code === 0) {
+        this.updateNoticeBar({ msg: "更新历史信息失败" });
+      }
+      finishRefresh();
+    },
+    onRefreshHistory(finishRefresh) {
+      this.refreshHistory(finishRefresh);
     },
     tripOrTraffic(historyItem) {
       if (historyItem.type === "trip") {
@@ -83,7 +106,10 @@ export default {
         params: { historyDetail }
       });
     },
-    ...mapActions(["addLoading", "subLoading", "setHistoryDetail"])
+    ...mapActions(["addLoading", "subLoading", "setHistoryDetail", "updateNoticeBar"])
+  },
+  computed: {
+    ...mapGetters(["ifNotice", "noticeInfo"])
   }
 };
 </script>
