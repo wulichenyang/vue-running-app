@@ -19,7 +19,7 @@
 import { ScrollView, ScrollViewRefresh } from "mand-mobile";
 
 export default {
-  name: "ScrollWrapper",
+  name: "RefreshWrapper",
   components: {
     [ScrollView.name]: ScrollView,
     [ScrollViewRefresh.name]: ScrollViewRefresh

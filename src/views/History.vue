@@ -1,20 +1,21 @@
 <template>
   <section class="history">
+    <!-- TODO: Fix conflict between refresh wrapper and scroll -->
     <!-- Notice Bar -->
     <NoticeBar
       :ifNotice="ifNotice"
       :noticeInfo="noticeInfo"
     ></NoticeBar>
-    <section
-      v-if="this.$route.name === 'history'"
-      class="history-brief"
-    >
-      <div class="inner-wrapper">
-        <h1>
-          出行历史
-          <svg-icon icon-class="history-list" />
-        </h1>
-        <ScrollWrapper @onRefresh="onRefreshHistory">
+    <RefreshWrapper @onRefresh="onRefreshHistory">
+      <section
+        v-if="this.$route.name === 'history'"
+        class="history-brief"
+      >
+        <div class="inner-wrapper">
+          <h1>
+            出行历史
+            <svg-icon icon-class="history-list" />
+          </h1>
           <Scroll
             ref="scroll"
             :data="historyList"
@@ -32,15 +33,15 @@
               />
             </md-field>
           </Scroll>
-        </ScrollWrapper>
-      </div>
-    </section>
+        </div>
+      </section>
+    </RefreshWrapper>
     <router-view></router-view>
   </section>
 </template>
 
 <script>
-import ScrollWrapper from "@/components/ScrollWrapper.vue";
+import RefreshWrapper from "@/components/RefreshWrapper.vue";
 import Scroll from "@/components/BetterScroll/Scroll.vue";
 import { mapGetters, mapActions } from "vuex";
 import { getHistory } from "@/api/trip";
@@ -50,13 +51,13 @@ export default {
   name: "history",
   components: {
     Map: Map,
-    ScrollWrapper: ScrollWrapper,
+    RefreshWrapper: RefreshWrapper,
     [ScrollView.name]: ScrollView,
     [Toast.name]: Toast,
     [CellItem.name]: CellItem,
     [Field.name]: Field,
     Scroll: Scroll,
-    NoticeBar: NoticeBar,
+    NoticeBar: NoticeBar
   },
   mounted() {
     this.getHistory();
@@ -82,6 +83,7 @@ export default {
     async refreshHistory(finishRefresh) {
       let res = await getHistory();
       if (res.code === 0) {
+        this.historyList = res.data;
         this.updateNoticeBar({ msg: "更新历史信息成功！" });
       } else if (res.code === 0) {
         this.updateNoticeBar({ msg: "更新历史信息失败" });
@@ -106,7 +108,12 @@ export default {
         params: { historyDetail }
       });
     },
-    ...mapActions(["addLoading", "subLoading", "setHistoryDetail", "updateNoticeBar"])
+    ...mapActions([
+      "addLoading",
+      "subLoading",
+      "setHistoryDetail",
+      "updateNoticeBar"
+    ])
   },
   computed: {
     ...mapGetters(["ifNotice", "noticeInfo"])

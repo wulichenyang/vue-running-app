@@ -5,7 +5,7 @@
       :ifNotice="ifNotice"
       :noticeInfo="noticeInfo"
     ></NoticeBar>
-    <ScrollWrapper
+    <RefreshWrapper
       @onRefresh="onRefreshTrip"
       v-show="this.$route.name === 'trip'"
     >
@@ -33,7 +33,7 @@
           ></ConfirmButton>
         </div>
       </section>
-    </ScrollWrapper>
+    </RefreshWrapper>
     <!-- Click the Button to Show Map -->
     <transition name="fademap">
       <router-view v-if="this.$route.name === 'map'"></router-view>
@@ -42,7 +42,7 @@
 </template>
 <script>
 import { TabBar } from "mand-mobile";
-import ScrollWrapper from "@/components/ScrollWrapper.vue";
+import RefreshWrapper from "@/components/RefreshWrapper.vue";
 import NoticeBar from "@/components/NoticeBar.vue";
 import ConfirmButton from "@/components/ConfirmButton.vue";
 // import Map from "@/components/Map.vue";
@@ -67,7 +67,7 @@ export default {
   name: "trip",
   components: {
     [TabBar.name]: TabBar,
-    ScrollWrapper: ScrollWrapper,
+    RefreshWrapper: RefreshWrapper,
     NoticeBar: NoticeBar,
     ConfirmButton: ConfirmButton
     // Map: Map
