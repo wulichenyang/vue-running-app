@@ -18,7 +18,15 @@ export default {
     theme: {
       type: String,
       default: "normal"
-    }
+    },
+    autoLocation: {
+      type: Boolean,
+      default: true
+    },
+    mapCenter: {
+      type: Array,
+      default: () => [116.397428, 39.90923]
+    },
   },
   mounted() {
     this.createMap();
@@ -40,63 +48,66 @@ export default {
   methods: {
     createMap() {
       /* 实例化高德地图 */
+      console.log(this.mapCenter)
       let buttonDom = document.getElementById("location-button");
       this.map = new window.AMap.Map("map", {
         resizeEnable: true, // 是否监控地图容器尺寸变化
         // mapStyle: 'amap://styles/light', // 设置地图的显示样式
-        zoom: 11, // 初始化地图层级
+        zoom: 17, // 初始化地图层级
         viewMode: "3D", // 地图模式
         // pitch: 75, // 地图俯仰角度，有效范围 0 度- 83 度
-        center: [116.397428, 39.90923] // 初始地图中心点
+        center: this.mapCenter // 初始地图中心点
       });
 
-      /* 地图插件 */
-      this.map.plugin(["AMap.Geolocation", "AMap.ControlBar"], () => {
-        /* 实例化定位按钮 */
-        this.geolocation = new window.AMap.Geolocation({
-          enableHighAccuracy: true, // 是否使用高精度定位，默认:true
-          timeout: 10000, // 超过10秒后停止定位，默认：5s
-          buttonPosition: "RB", // 定位按钮的停靠位置
-          buttonDom: buttonDom, // 绑定定位按钮到Dom
-          buttonOffset: new window.AMap.Pixel(100, 20), // 定位按钮与设置的停靠位置的偏移量，默认：Pixel(10, 20)
-          zoomToAccuracy: true // 定位成功后是否自动调整地图视野到定位点
+      if(this.autoLocation) { // 自动定位
+        /* 地图插件 */
+        this.map.plugin(["AMap.Geolocation", "AMap.ControlBar"], () => {
+          /* 实例化定位按钮 */
+          this.geolocation = new window.AMap.Geolocation({
+            enableHighAccuracy: true, // 是否使用高精度定位，默认:true
+            timeout: 10000, // 超过10秒后停止定位，默认：5s
+            buttonPosition: "RB", // 定位按钮的停靠位置
+            buttonDom: buttonDom, // 绑定定位按钮到Dom
+            buttonOffset: new window.AMap.Pixel(100, 20), // 定位按钮与设置的停靠位置的偏移量，默认：Pixel(10, 20)
+            zoomToAccuracy: true // 定位成功后是否自动调整地图视野到定位点
+          });
+
+          /* 添加定位按钮插件 */
+          this.map.addControl(this.geolocation);
+          this.geolocation.getCurrentPosition((status, result) => {
+            // if (status == "complete") {
+            //   onComplete(result);
+            // } else {
+            //   onError(result);
+            // }
+          });
+
+          /* 监听定位完成事件 */
+          window.AMap.event.addListener(
+            this.geolocation, // 监听对象
+            "complete", // 监听事件
+            this.localOnComplete // 成功回调
+          ); // 返回定位信息
+
+          /* 监听定位错误事件 */
+          window.AMap.event.addListener(
+            this.geolocation,
+            "error",
+            this.localOnError // 错误回调
+          ); // 返回定位出错信息
+
+          /************************************************/
+          /* 添加罗盘插件 */
+          var controlBar = new window.AMap.ControlBar();
+          this.map.addControl(controlBar);
+
+          /* 加载完毕 */
+          this.map.on("complete", function() {
+            // 地图图块加载完成后触发
+            console.log("地图加载完成");
+          });
         });
-
-        /* 添加定位按钮插件 */
-        this.map.addControl(this.geolocation);
-        this.geolocation.getCurrentPosition((status, result) => {
-          // if (status == "complete") {
-          //   onComplete(result);
-          // } else {
-          //   onError(result);
-          // }
-        });
-
-        /* 监听定位完成事件 */
-        window.AMap.event.addListener(
-          this.geolocation, // 监听对象
-          "complete", // 监听事件
-          this.localOnComplete // 成功回调
-        ); // 返回定位信息
-
-        /* 监听定位错误事件 */
-        window.AMap.event.addListener(
-          this.geolocation,
-          "error",
-          this.localOnError // 错误回调
-        ); // 返回定位出错信息
-
-        /************************************************/
-        /* 添加罗盘插件 */
-        var controlBar = new window.AMap.ControlBar();
-        this.map.addControl(controlBar);
-
-        /* 加载完毕 */
-        this.map.on("complete", function() {
-          // 地图图块加载完成后触发
-          console.log("地图加载完成");
-        });
-      });
+      }
     },
     destroyMap() {
       this.map.destroy();
@@ -190,9 +201,10 @@ export default {
     },
 
     drawTripLine() {
+      console.log(this.mapTraceData[0])
       this.marker = new window.AMap.Marker({
         map: this.map,
-        position: [116.478935, 39.997761],
+        position: this.mapTraceData[0] || [116.478935, 39.997761],
         icon: "https://webapi.amap.com/images/car.png",
         offset: new AMap.Pixel(-26, -13),
         autoRotation: true,
@@ -251,7 +263,14 @@ export default {
       });
     },
     // 根据起止位置查找返回推荐路线
+    // [[P:xx Q: yy, lat: xx, lng: yy], [P:xx Q: yy, lat: xx, lng: yy]]
+    // [[xx,yy], [xx,yy]]
     searchRoute(routeLocationArr, transportation, panel) {
+      if(!routeLocationArr[0].lat) {
+        routeLocationArr[0] = new window.AMap.LngLat(routeLocationArr[0][0], routeLocationArr[0][1])
+        routeLocationArr[1] = new window.AMap.LngLat(routeLocationArr[1][0], routeLocationArr[1][1])
+      }
+      console.log(routeLocationArr)
       let type = transportation.slice(5, 15);
       this.map.plugin(transportation, () => {
         this.marker = new window.AMap[type]({

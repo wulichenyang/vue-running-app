@@ -64,7 +64,11 @@
       </section>
     </section>
     <!-- 绘制路线图 -->
-    <Map ref="mapRef"></Map>
+    <Map
+      ref="mapRef"
+      :autoLocation="false"
+      :mapCenter="this.$route.params.historyDetail.trajectory[0]"
+    ></Map>
   </section>
 </template>
 
@@ -73,6 +77,7 @@
 // import { getHistory } from "@/api/trip";
 import { mapActions, mapGetters } from "vuex";
 import Map from "@/components/Map";
+import {positionPair2Array} from '@/utils/mapUtils.js'
 import { Toast } from "mand-mobile";
 export default {
   name: "history",
@@ -123,22 +128,16 @@ export default {
     drawRouteLine() {
       if (this.type === "trip") {
         this.$refs.mapRef.setMapTraceData(this.trajectory);
-      } else if (this.tripWay === "traffic") {
+        this.$refs.mapRef.drawTripLine();
+      } else if (this.type === "traffic") {
         let { startCode, endCode } = this.$route.params.historyDetail;
         const trajectory = [
-          startCode
-            .replace(/[ ]/g, "")
-            .split(",")
-            .map(x => parseFloat(x)),
-          endCode
-            .replace(/[ ]/g, "")
-            .split(",")
-            .map(x => parseFloat(x))
+          positionPair2Array(startCode),
+          positionPair2Array(endCode)
         ];
         this.$refs.mapRef.setMapTraceData(trajectory);
+        this.$refs.mapRef.searchRoute(trajectory, "AMap.Transfer");
       }
-      this.$refs.mapRef.drawTripLine();
-      // TODO: fix定位后无法看到其他地方的路径
     }
   },
   computed: {

@@ -1,7 +1,7 @@
 // Convert trace array data to distance(km)
 const mapTraceDataToDistance = (traceArr, AMap) => {
   console.log('mapTrace', traceArr)
-  if(traceArr.length) {
+  if (traceArr.length) {
     let lngLatArr = traceArr.map(position => {
       return new AMap.LngLat(position[0], position[1])
     })
@@ -15,6 +15,13 @@ const mapTraceDataToDistance = (traceArr, AMap) => {
   }
 }
 
+const positionPair2Array = (placeCodePair) => {
+  return placeCodePair.replace(/[ ]/g, "")
+    .split(",")
+    .map(x => parseFloat(x))
+}
+
 export {
   mapTraceDataToDistance,
+  positionPair2Array,
 }
