@@ -1,16 +1,16 @@
 <template>
   <section class="history">
     <!-- TODO: Fix conflict between refresh wrapper and scroll -->
-    <!-- Notice Bar -->
-    <NoticeBar
-      :ifNotice="ifNotice"
-      :noticeInfo="noticeInfo"
-    ></NoticeBar>
-    <RefreshWrapper @onRefresh="onRefreshHistory">
-      <section
-        v-if="this.$route.name === 'history'"
-        class="history-brief"
-      >
+    <section
+      v-if="this.$route.name === 'history'"
+      class="history-brief"
+    >
+      <!-- Notice Bar -->
+      <NoticeBar
+        :ifNotice="ifNotice"
+        :noticeInfo="noticeInfo"
+      ></NoticeBar>
+      <RefreshWrapper @onRefresh="onRefreshHistory">
         <div class="inner-wrapper">
           <h1>
             出行历史
@@ -34,8 +34,8 @@
             </md-field>
           </Scroll>
         </div>
-      </section>
-    </RefreshWrapper>
+      </RefreshWrapper>
+    </section>
     <router-view></router-view>
   </section>
 </template>
