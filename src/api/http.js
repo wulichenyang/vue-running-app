@@ -130,13 +130,13 @@ instance.interceptors.response.use(
 /**
  * get方法，对应get请求
  * @param {String} url [请求的url地址]
- * @param {Object} params [请求时携带的参数]
+ * @param {Object} config [请求时携带的参数]
  */
-export async function get(url, params) {
+export async function get(url, config) {
   // try {
   // 有错误处理拦截器
   return await instance.get(ApiConfig.apiPrefix + url,
-    params)
+    config)
   // } catch (error) {
   //   console.error("Api request error: " + error)
   //   return new Promise((r, f) => {
@@ -151,12 +151,12 @@ export async function get(url, params) {
 /**
 * post方法，对应post请求
 * @param {String} url [请求的url地址]
-* @param {Object} params [请求时携带的参数]
+* @param {Object} config [请求时携带的参数]
 */
-export async function post(url, params) {
+export async function post(url, config) {
   // 有错误处理拦截器
   // try {
-  return await instance.post(ApiConfig.apiPrefix + url, params)
+  return await instance.post(ApiConfig.apiPrefix + url, config)
   // } catch (error) {
   //   console.error("Api request error: " + error)
   //   return new Promise((r, f) => {

@@ -139,28 +139,65 @@ const addTrafficData = (req, res) => {
 }
 
 const getHistory = (req, res) => {
+  const page = parseInt(req.query.page);
+  const limit = parseInt(req.query.limit);
+  // Trip.find(
+  //   {
+  //     userId: req.userId
+  //   },
+  //   { userId: 0, __v: 0 },
+    // (err, docs) => {
+    //   if (err) {
+    //     res.status(500).json({
+    //       code: 1,
+    //       message: err.message
+    //     })
+    //     return;
+    //   } else {
+    //     if(docs.length > 0) {
+    //       res.send({
+    //         code: 0,
+    //         data: docs
+    //       })
+    //     }
+    //   }
+    // }
+  // )
+
   Trip.find(
     {
       userId: req.userId
     },
     { userId: 0, __v: 0 },
-    (err, docs) => {
-      if (err) {
-        res.status(500).json({
-          code: 1,
-          message: err.message
+  )
+  .sort({'date': -1})
+  .skip(page * limit)
+  .limit(limit)
+  .exec((err, docs) => {
+    if (err) {
+      res.status(500).json({
+        code: 1,
+        message: err.message
+      })
+      return;
+    } else {
+      if(docs.length > 0) {
+        res.send({
+          code: 0,
+          data: docs
         })
-        return;
-      } else {
-        if(docs.length > 0) {
-          res.send({
-            code: 0,
-            data: docs
-          })
-        }
+      }
+      // 分页已查完所有数据
+      if(docs.length === 0) {
+        res.send({
+          code: 0,
+          data: {
+            noMoreData: true
+          }
+        })
       }
     }
-  )
+  })
 }
 
 // Add one tripData

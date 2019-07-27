@@ -206,7 +206,7 @@ export default {
         map: this.map,
         position: this.mapTraceData[0] || [116.478935, 39.997761],
         icon: "https://webapi.amap.com/images/car.png",
-        offset: new AMap.Pixel(-26, -13),
+        offset: new window.AMap.Pixel(-26, -13),
         autoRotation: true,
         angle: -90
       });

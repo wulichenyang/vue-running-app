@@ -48,12 +48,12 @@ export default {
   components: {
     [Field.name]: Field,
     [CellItem.name]: CellItem,
-    Scroll: Scroll,
+    Scroll: Scroll
   },
   props: {
     addressList: {
       type: Array,
-      default: []
+      default: () => []
     },
     isAddressListCollapsed: {
       type: Boolean

@@ -7,8 +7,8 @@ export const getDistance = async () => {
   return get('/distance')
 }
 
-export const getHistory = async () => {
-  return get('/history')
+export const getHistory = async (page, limit) => {
+  return get(`/history?page=${page}&limit=${limit}`)
 }
 
 export const saveTrip = async (tripData) => {
