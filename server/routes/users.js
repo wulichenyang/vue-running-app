@@ -11,7 +11,7 @@ const {
 
 /* GET userinfo. */
 router.get('/user', function (req, res, next) {
-  User.find({ phone: req.phone }, { password: 0, role: 0 }, (err, doc) => {
+  User.find({ phone: req.phone }, { password: 0, role: 0, __v: 0, _id: 0 }, (err, doc) => {
     if (err) {
       res.status(500).send({
         code: 1,
@@ -75,7 +75,7 @@ router.post('/signup', function (req, res, next) {
                 message: err.message
               })
               // TODO: remove user
-              
+
             } else {
               res.json({
                 code: 0,
