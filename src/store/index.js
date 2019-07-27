@@ -3,6 +3,12 @@ import Vuex from 'vuex'
 import trip from '@/store/modules/trip'
 import loading from '@/store/modules/loading'
 import history from '@/store/modules/history'
+import VuexPersistence from 'vuex-persist'
+
+// 持久化存储 Vuex
+const vuexLocal = new VuexPersistence({
+  storage: window.localStorage
+})
 
 Vue.use(Vuex)
 
@@ -11,5 +17,6 @@ export default new Vuex.Store({
     trip,
     loading,
     history
-  }
+  },
+  plugins: [vuexLocal.plugin]
 })

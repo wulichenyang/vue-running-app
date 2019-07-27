@@ -48,7 +48,7 @@ const router = new Router({
       children: [{
         path: 'detail',
         name: 'historyDetail',
-        component: () => import( /* webpackChunkName: "xxx" */'@/views/HistoryDetail.vue'),
+        component: () => import( /* webpackChunkName: "xxx" */'@/components/HistoryDetail/HistoryDetail.vue'),
       }]
     },
     {

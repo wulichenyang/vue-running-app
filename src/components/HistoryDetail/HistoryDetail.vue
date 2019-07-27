@@ -3,7 +3,7 @@
     <section class="history-info">
       <!-- 跑步历史信息 -->
       <section
-        v-if="this.$route.params.historyDetail.type==='trip'"
+        v-if="type==='trip'"
         class="trip-history"
       >
         <p class="header-info">
@@ -56,7 +56,7 @@
             <p>行程花费</p>
           </li>
           <li>
-            <h2>{{calorie}}km</h2>
+            <h2>{{distance}}km</h2>
             <p>里程</p>
           </li>
         </ul>
@@ -67,17 +67,15 @@
     <Map
       ref="mapRef"
       :autoLocation="false"
-      :mapCenter="this.$route.params.historyDetail.trajectory[0]"
+      :mapCenter="trajectory && trajectory[0]"
     ></Map>
   </section>
 </template>
 
 <script>
-// import Map from "@/components/Map.vue";
-// import { getHistory } from "@/api/trip";
 import { mapActions, mapGetters } from "vuex";
 import Map from "@/components/Map";
-import {positionPair2Array} from '@/utils/mapUtils.js'
+import { positionPair2Array } from "@/utils/mapUtils.js";
 import { Toast } from "mand-mobile";
 export default {
   name: "history",
@@ -86,51 +84,19 @@ export default {
     [Toast.name]: Toast
   },
   mounted() {
-    this.setData();
     this.drawRouteLine();
   },
   data() {
-    return {
-      type: "",
-      tripWay: "",
-      date: "",
-      distance: 0,
-      time: "",
-      speed: 0,
-      calorie: 0,
-      startPlace: "",
-      endPlace: "",
-      price: 0,
-      mark: "",
-      trajectory: []
-    };
+    return {};
   },
   methods: {
-    setData() {
-      console.log(this.$route.params.historyDetail);
-      let historyDetail = this.$route.params.historyDetail;
-      if (historyDetail.type === "trip") {
-        this.speed = historyDetail.speed;
-        this.calorie = historyDetail.calorie;
-        this.trajectory = historyDetail.trajectory;
-      } else if (historyDetail.type === "traffic") {
-        this.startPlace = historyDetail.startPlace;
-        this.endPlace = historyDetail.endPlace;
-        this.price = historyDetail.price;
-      }
-      this.type = historyDetail.type;
-      this.tripWay = historyDetail.tripWay;
-      this.distance = historyDetail.distance;
-      this.date = historyDetail.date.split("T")[0];
-      this.time = historyDetail.time;
-      this.mark = historyDetail.mark;
-    },
     drawRouteLine() {
+      console.log(this.distance)
       if (this.type === "trip") {
         this.$refs.mapRef.setMapTraceData(this.trajectory);
         this.$refs.mapRef.drawTripLine();
       } else if (this.type === "traffic") {
-        let { startCode, endCode } = this.$route.params.historyDetail;
+        let { startCode, endCode } = this.historyDetail;
         const trajectory = [
           positionPair2Array(startCode),
           positionPair2Array(endCode)
@@ -141,13 +107,49 @@ export default {
     }
   },
   computed: {
-    // ...mapGetters(["historyDetail"])
+    ...mapGetters(["historyDetail"]),
+    type() {
+      return this.historyDetail.type;
+    },
+    tripWay() {
+      return this.historyDetail.tripWay;
+    },
+    date() {
+      return this.historyDetail.date && this.historyDetail.date.split("T")[0];
+    },
+    distance() {
+      return this.historyDetail.distance;
+    },
+    time() {
+      return this.historyDetail.time;
+    },
+    speed() {
+      return this.historyDetail.speed;
+    },
+    calorie() {
+      return this.historyDetail.calorie;
+    },
+    startPlace() {
+      return this.historyDetail.startPlace;
+    },
+    endPlace() {
+      return this.historyDetail.endPlace;
+    },
+    price() {
+      return this.historyDetail.price;
+    },
+    mark() {
+      return this.historyDetail.mark;
+    },
+    trajectory() {
+      return this.historyDetail.trajector;
+    }
   }
 };
 </script>
 
 <style lang="scss">
-@import "../assets/css/var.scss";
+@import "../../assets/css/var.scss";
 .history-detail {
   height: 100%;
   overflow: hidden;

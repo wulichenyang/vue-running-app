@@ -88,6 +88,7 @@ export default {
         this.addLoading();
       }
       this.refreshing = true;
+      this.noMoreData = false;
       this.page = 0;
       let res = await getHistory(this.page++, this.limit);
       if (res.code === 0) {
@@ -104,7 +105,7 @@ export default {
 
     async getMoreHistory() {
       // 还有更多的数据，可以请求
-      if (!this.noMoreData) {
+      if (!this.noMoreData && !this.refreshing) {
         // Loading more 动画
         this.loadMore = true;
         let res = await getHistory(this.page++, this.limit);
@@ -159,11 +160,15 @@ export default {
     },
     onClickDetail(historyDetail) {
       // 可以通过vuex设置historyDetailNow
-      // this.setHistoryDetail(historyDetail);
+      this.setHistoryDetail(historyDetail);
       this.$router.push({
         name: "historyDetail",
-        params: { historyDetail }
       });
+      // 通过 params 传值给 route 但不能持久化存储
+      // this.$router.push({
+      //   name: "historyDetail",
+      //   params: { historyDetail }
+      // });
     },
     ...mapActions([
       "addLoading",
