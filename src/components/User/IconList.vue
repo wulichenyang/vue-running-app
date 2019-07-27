@@ -9,7 +9,7 @@
 
 <script>
 export default {
-  name: "WrapperBox",
+  name: "IconList",
   components: {},
   props: {
     iconList: {
@@ -27,11 +27,21 @@ export default {
 @import "../../assets/css/var.scss";
 
 ul.icon-list {
+  width: 100%;
   display: flex;
-  justify-content: space-around;
+  justify-content: flex-start;
+  flex-flow:row wrap; // 自动换行
   li {
+    width: 25%;
     display: flex;
     flex-direction: column;
+    align-items: center;
+    padding: 12px 0;
+    svg {
+      width: $svgFontSize !important;
+      height: $svgFontSize !important;
+      margin-bottom: 8px;
+    }
   }
 }
 </style>

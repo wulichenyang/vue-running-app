@@ -33,5 +33,8 @@ export default {
  padding: 8px;
  box-shadow: $boxShadowSearchColor;
  margin-bottom: 10px;
+ h2 {
+   margin-top: 5px;
+ }
 }
 </style>
