@@ -9,37 +9,34 @@
     <section class="user-wrapper">
       <div class="user-inner">
         <WrapperBox>
-          <div class="user-header">
+          <div
+            class="user-header"
+            @click="onEditInfo"
+          >
             <img
               src="../assets/img/head.jpeg"
               alt="头像"
             >
             <div class="user-info">
-              <h2>{{user.realname}}</h2>
-              <p>账号: {{user.phone}}</p>
+              <h2>{{user.nickname}}</h2>
+              <p>{{user.brief}}</p>
             </div>
           </div>
           <ul class="detail-number">
-            <li>
-              <span>53</span>
-              <span>好友</span>
-            </li>
-            <li>
-              <span>23</span>
-              <span>关注</span>
-            </li>
-            <li>
-              <span>124</span>
-              <span>粉丝</span>
-            </li>
-            <li>
-              <span>3</span>
-              <span>圈子</span>
+            <li
+              :key="item.key"
+              v-for="item in detailNumberList"
+            >
+              <span>{{item.number}}</span>
+              <span>{{item.brief}}</span>
             </li>
           </ul>
         </WrapperBox>
         <WrapperBox title="我的信息">
-          <IconList :iconList="detailList">
+          <IconList
+            :iconList="detailList"
+            :onClickCallback="onClickIcon"
+          >
           </IconList>
         </WrapperBox>
         <WrapperBox title="更多功能">
@@ -48,6 +45,11 @@
         </WrapperBox>
       </div>
     </section>
+    <transition name="right-left">
+      <keep-alive>
+        <router-view></router-view>
+      </keep-alive>
+    </transition>
   </section>
 </template>
 
@@ -83,62 +85,101 @@ export default {
 
   data() {
     return {
+      detailNumberList: [
+        {
+          key: 0,
+          number: 52,
+          brief: "好友"
+        },
+        {
+          key: 1,
+          number: 15,
+          brief: "关注"
+        },
+        {
+          key: 2,
+          number: 225,
+          brief: "粉丝"
+        },
+        {
+          key: 3,
+          number: 12,
+          brief: "圈子"
+        }
+      ],
       detailList: [
         {
+          key: 0,
           name: "mileage",
-          brief: "信息总览"
+          brief: "信息总览",
+          link: "userDetail"
         },
         {
+          key: 1,
           name: "trend",
-          brief: "出行趋势"
+          brief: "出行趋势",
+          link: "userTrend"
         },
         {
+          key: 2,
           name: "Analysis",
-          brief: "数据分析"
+          brief: "数据分析",
+          link: "userAnalysis"
         },
         {
+          key: 3,
           name: "Medal",
           brief: "成就殿堂"
         }
       ],
       moreList: [
         {
+          key: 1,
           name: "p1",
           brief: "出行计划"
         },
         {
+          key: 2,
           name: "p2",
           brief: "好友排名"
         },
         {
+          key: 3,
           name: "p3",
           brief: "路况分析"
         },
         {
+          key: 4,
           name: "p4",
           brief: "交通补助"
         },
         {
+          key: 5,
           name: "p5",
           brief: "体重管理"
         },
         {
+          key: 6,
           name: "p6",
           brief: "周报"
         },
         {
+          key: 7,
           name: "p7",
           brief: "风险管理"
         },
         {
+          key: 8,
           name: "p8",
           brief: "运动课堂"
         },
         {
+          key: 9,
           name: "p9",
           brief: "智能硬件"
         },
         {
+          key: 10,
           name: "p10",
           brief: "心悦会员"
         }
@@ -147,7 +188,19 @@ export default {
   },
 
   methods: {
-    ...mapActions(["getUser", "addLoading", "subLoading", "updateNoticeBar"])
+    ...mapActions(["getUser", "addLoading", "subLoading", "updateNoticeBar"]),
+    onClickIcon(link) {
+      if (link) {
+        this.$router.push({
+          name: link
+        });
+      }
+    },
+    onEditInfo() {
+      this.$router.push({
+        name: "userInfoEditor"
+      });
+    }
   },
   computed: {
     ...mapGetters(["ifNotice", "noticeInfo", "user"])
@@ -157,7 +210,9 @@ export default {
 <style lang="scss">
 @import "../assets/css/var.scss";
 .user {
+  position: relative;
   height: 100%;
+  overflow: hidden;
   .bg-wrapper {
     width: 100%;
     height: auto;
@@ -185,11 +240,21 @@ export default {
           margin-right: 18px;
           border-radius: 50%;
           overflow: hidden;
-          box-shadow: $boxShadowSearchColor;
+          box-shadow: $avatarShadowSearchColor;
         }
         .user-info {
           flex: 1;
-
+          margin-top: 10px;
+          overflow: hidden;
+          h2 {
+            font-size: $tipTopFontSize;
+          }
+          p {
+            margin-top: 12px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
         }
       }
       ul.detail-number {
@@ -205,5 +270,13 @@ export default {
       }
     }
   }
+}
+.right-left-enter,
+.right-left-leave-to {
+  transform: translateX(100%);
+}
+.right-left-enter-active,
+.right-left-leave-active {
+  transition: ease 0.4s all;
 }
 </style>

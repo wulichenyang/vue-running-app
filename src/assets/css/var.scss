@@ -1,6 +1,7 @@
 // Frame size
 $bottomNavHeight: 64px;
 $topNavHeight: 64px;
+$backHeaderHeight: 64px;
 $avatarSize: 64px;
 $tipBorderLength: 220px;
 
@@ -43,4 +44,5 @@ $toolRightBorder: solid 1px #afaeae;
 // Box-shadow
 $toolBoxShadowColor: 0px 0px 30px #afaeae;
 $boxShadowColor: 0px 8px 30px #afaeae;
-$boxShadowSearchColor: 0px 0px 10px #afaeae;
+$boxShadowSearchColor: 0px 0px 5px #afaeae;
+$avatarShadowSearchColor: 0px 0px 3px #afaeae;

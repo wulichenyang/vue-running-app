@@ -1,6 +1,10 @@
 <template>
   <ul class="icon-list">
-    <li :key="icon.key" v-for="icon in iconList">
+    <li
+      :key="icon.key"
+      v-for="icon in iconList"
+      @click="onClickCallback(icon.link)"
+    >
       <svg-icon :icon-class="icon.name"></svg-icon>
       <span>{{icon.brief}}</span>
     </li>
@@ -15,6 +19,10 @@ export default {
     iconList: {
       type: Array,
       default: () => []
+    },
+    onClickCallback: {
+      type: Function,
+      default: (link) => {}
     }
   },
   data() {
@@ -30,7 +38,7 @@ ul.icon-list {
   width: 100%;
   display: flex;
   justify-content: flex-start;
-  flex-flow:row wrap; // 自动换行
+  flex-flow: row wrap; // 自动换行
   li {
     width: 25%;
     display: flex;

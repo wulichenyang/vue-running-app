@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import { Toast } from 'mand-mobile'
 import cookie from './utils/cookie'
-import {access_token} from './configs'
+import { access_token } from './configs'
 // import Home from '@/views/Home.vue'
 
 Vue.use(Router)
@@ -57,7 +57,28 @@ const router = new Router({
       // route level code-splitting
       // this generates a separate chunk (about.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "xxx" */ '@/views/User.vue')
+      component: () => import(/* webpackChunkName: "xxx" */ '@/views/User.vue'),
+      children: [{
+        path: 'detail',
+        name: 'userDetail',
+        component: () => import( /* webpackChunkName: "xxx" */'@/components/User/UserDetail.vue'),
+      },
+      {
+        path: 'trend',
+        name: 'userTrend',
+        component: () => import( /* webpackChunkName: "xxx" */'@/components/User/UserTrend.vue'),
+      },
+      {
+        path: 'analysis',
+        name: 'userAnalysis',
+        component: () => import( /* webpackChunkName: "xxx" */'@/components/User/UserAnalysis.vue'),
+      },
+      {
+        path: 'edit',
+        name: 'userInfoEditor',
+        component: () => import( /* webpackChunkName: "xxx" */'@/components/User/UserInfoEditor.vue'),
+      },
+      ]
     },
     {
       path: '/login',
