@@ -1,6 +1,8 @@
 
 export const SET_ID = 'SET_ID' // 设置用户Id
 export const SET_USER = 'SET_USER' // 设置用户
+export const SET_USER_EDITING = 'SET_USER_EDITING' // 设置用户正在编辑信息
+
 
 // Distance information
 export const SET_DISTANCE = 'SET_DISTANCE' // 设置用户里程

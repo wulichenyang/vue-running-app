@@ -12,11 +12,13 @@
           title="用户名"
           :addon="user.realname"
           arrow
+          @click="onEditText(title = '用户名', key = 'realname' , value = user.realname, length = 6)"
         />
         <md-cell-item
           title="昵称"
           :addon="user.nickname"
           arrow
+          @click="onEditText(title = '昵称', key = 'nickname', value = user.nickname, length = 7)"
         />
         <md-cell-item
           title="性别"
@@ -32,6 +34,7 @@
           title="个性签名"
           :addon="user.brief"
           arrow
+          @click="onEditText(title = '个性签名', key = 'brief', value = user.brief, length = 20)"
         />
         <md-cell-item
           title="地址"
@@ -40,7 +43,9 @@
         />
       </md-field>
     </SettingInfoSection>
-
+    <transition name="right-left">
+      <router-view></router-view>
+    </transition>
   </section>
 </template>
 
@@ -48,7 +53,7 @@
 import BackHeader from "@/components/BackHeader.vue";
 import SettingInfoSection from "@/components/SettingInfoSection.vue";
 import { Field, CellItem } from "mand-mobile";
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 
 export default {
   name: "userInfoEditor",
@@ -63,9 +68,22 @@ export default {
     return {};
   },
   computed: {
-    ...mapGetters(["user"])
+    ...mapGetters(["user", "editing"])
   },
-  methods: {}
+  methods: {
+    onEditText(title, key, value, length) {
+      this.setUserEditing({
+        title,
+        key,
+        value,
+        length
+      });
+      this.$router.push({
+        name: "editingForm"
+      });
+    },
+    ...mapActions(["setUserEditing"])
+  }
 };
 </script>
 

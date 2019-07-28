@@ -1,6 +1,7 @@
 import {
   get,
-  post
+  post,
+  put
 } from "./http"
 
 export const getUser = async () => {
@@ -18,6 +19,13 @@ export const login = async (logName, password) => {
   return post('/login', {
     logName,
     password
+  })
+}
+
+export const updateUser = async (key, value) => {
+  return put('/user/update', {
+    key,
+    value
   })
 }
 

@@ -74,9 +74,14 @@ const router = new Router({
         component: () => import( /* webpackChunkName: "xxx" */'@/components/User/UserAnalysis.vue'),
       },
       {
-        path: 'edit',
+        path: 'editUserInfo',
         name: 'userInfoEditor',
         component: () => import( /* webpackChunkName: "xxx" */'@/components/User/UserInfoEditor.vue'),
+        children: [{
+          path: 'editing',
+          name: 'editingForm',
+          component: () => import( /* webpackChunkName: "xxx" */'@/components/User/EditingForm.vue'),
+        }]
       },
       ]
     },

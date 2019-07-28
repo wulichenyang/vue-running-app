@@ -39,7 +39,7 @@
           >
           </IconList>
         </WrapperBox>
-        <WrapperBox title="更多功能">
+        <WrapperBox title="敬请期待">
           <IconList :iconList="moreList">
           </IconList>
         </WrapperBox>
