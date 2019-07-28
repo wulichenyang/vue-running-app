@@ -7,6 +7,7 @@
       @click="onBack"
     ></md-icon>
     <h1>{{title}}</h1>
+    <span @click="onClickRight">{{rightText}}</span>
   </header>
 </template>
 <script>
@@ -21,11 +22,18 @@ export default {
     title: {
       type: String,
       default: ""
-    }
+    },
+    rightText: {
+      type: String,
+      default: ""
+    },
   },
   methods: {
     onBack() {
-      this.$router.go(-1)
+      this.$router.go(-1);
+    },
+    onClickRight() {
+      this.$emit('onClickRight')
     }
   }
 };
@@ -35,16 +43,25 @@ export default {
 
 .back-header-wrapper {
   position: relative;
+  background-color: $mainBgColor;
   .back-icon {
     position: absolute;
     left: 22px;
     top: 22px;
   }
   h1 {
-    font-size: $tipTopFontSize;
     height: $backHeaderHeight;
+    font-size: $tipTopFontSize;
     line-height: $backHeaderHeight;
     text-align: center;
+  }
+  span {
+    position: absolute;
+    right: 22px;
+    top: 0;
+    bottom: 0;
+    font-size: $tipTopFontSize;
+    line-height: $backHeaderHeight;
   }
 }
 </style>
