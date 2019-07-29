@@ -4,6 +4,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var jwtauth = require('./middleware/jwtauth');
+const fileUpload = require('express-fileupload');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -45,6 +46,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 // 身份验证
 app.use(jwtauth)
 
+// 上传头像
+app.use(fileUpload());
 app.use(indexRouter);
 app.use(usersRouter);
 app.use(tripRouter);

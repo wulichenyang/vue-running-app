@@ -5,7 +5,8 @@
       rightText="确定"
       @onClickRight="onSubmitForm"
     />
-    <SettingInfoSection>
+    <!-- 昵称/用户名/个性签名 -->
+    <SettingInfoSection v-if="editing.key == 'realname' || editing.key == 'nickname' || editing.key == 'brief'">
       <md-field>
         <md-input-item
           v-model="inputValue"
@@ -15,6 +16,16 @@
         ></md-input-item>
       </md-field>
     </SettingInfoSection>
+    <!-- 性别 -->
+    <SettingInfoSection v-else-if="editing.key === 'gender'">
+      <md-field>
+      </md-field>
+    </SettingInfoSection>
+    <!-- 生日
+    <SettingInfoSection v-else-if="editing.key === 'birthday'">
+      <md-field>
+      </md-field>
+    </SettingInfoSection> -->
 
   </section>
 </template>
@@ -52,12 +63,12 @@ export default {
     async onSubmitForm() {
       // 更新
       let res = await updateUser(this.editing.key, this.inputValue.trim());
-      if(res.code === 0) {
+      if (res.code === 0) {
         // 成功后重新获取用户数据
         Toast.succeed(res.message);
         this.getUser();
         this.$router.go(-1);
-      } else if(res.code === 1){
+      } else if (res.code === 1) {
         // 更新失败
         Toast.failed(res.message);
       }

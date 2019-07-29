@@ -143,4 +143,39 @@ router.put('/user/update', (req, res, next) => {
   }
 })
 
+const updataUserAvatar = (req, res, avatarUrl) => {
+  User.findOneAndUpdate(
+    {
+      _id: req.userId
+    },
+    {
+      $set: {
+        avatar: avatarUrl
+      }
+    },
+    (err, doc) => {
+      if (err) {
+        errInfo(res, err.message)
+        return
+      } else { // 更新成功
+        resInfo(res, undefined, '头像修改成功')
+      }
+    })
+}
+
+router.put('/user/avatar', (req, res, next) => {
+  console.log(req.files);
+  const avatar = req.files.avatar;
+  const  avatarUrl = avatar.name;
+  // 移动图片
+  avatar.mv('../public/images/avatar/' + avatarUrl, function (err) {
+    if (err) {
+      errInfo(res, err);
+    } else {
+      // 更改用户avatar路径信息
+      updataUserAvatar(req, res, avatarUrl)
+    }
+  })
+})
+
 module.exports = router;

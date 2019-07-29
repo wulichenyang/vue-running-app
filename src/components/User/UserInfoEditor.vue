@@ -3,11 +3,29 @@
     <BackHeader title="个人信息" />
     <SettingInfoSection>
       <md-field>
-        <md-cell-item
-          title="头像"
-          addon="可用8000.34"
-          arrow
-        />
+        <label for="my_file">
+          <md-cell-item
+            title="头像"
+            arrow
+          >
+            <img
+              class="avatar"
+              slot="right"
+              :src="user.avatar !== '' ? `/img/avatar/${user.avatar}` :'/img/avatar/head.jpg'"
+              alt="头像"
+            >
+            <!-- 头像上传 -->
+            <input
+              type="file"
+              ref="upload"
+              name="avatar"
+              id='my_file'
+              style="display:none;"
+              accept="image/jpg"
+              @change="changeAvatar"
+            />
+          </md-cell-item>
+        </label>
         <md-cell-item
           title="用户名"
           :addon="user.realname"
@@ -50,11 +68,12 @@
 </template>
 
 <script>
+import { changeAvatar } from "@/api/user";
 import BackHeader from "@/components/BackHeader.vue";
 import SettingInfoSection from "@/components/SettingInfoSection.vue";
-import { Field, CellItem } from "mand-mobile";
+import { Field, CellItem, Toast } from "mand-mobile";
 import { mapGetters, mapActions } from "vuex";
-
+// TODO: Add Better-Scroll in some pages
 export default {
   name: "userInfoEditor",
   components: {
@@ -71,6 +90,7 @@ export default {
     ...mapGetters(["user", "editing"])
   },
   methods: {
+    // 修改文本
     onEditText(title, key, value, length) {
       this.setUserEditing({
         title,
@@ -82,7 +102,30 @@ export default {
         name: "editingForm"
       });
     },
-    ...mapActions(["setUserEditing"])
+    // 修改头像
+    async changeAvatar(event) {
+      let img = event.target.files[0];
+      console.log('img', img)
+      let size = img.size;
+      // 图片不大于3M
+      if (size > 3145728) {
+        Toast.failed("图片太大啦");
+        return false;
+      }
+      let formData = new FormData();
+      formData.append("avatar", img, img.name);
+      console.log('avatar', formData)
+      let res = await changeAvatar(formData);
+      // 更新头像成功
+      if (res.code === 0) {
+        Toast.succeed(res.message);
+        this.getUser();
+      } else if(res.code === 1) {
+        // 更新失败
+        Toast.failed(res.message);
+      }
+    },
+    ...mapActions(["setUserEditing", "getUser"])
   }
 };
 </script>
@@ -100,6 +143,13 @@ export default {
   .md-field {
     zoom: 0.5;
     padding: 0;
+    .md-cell-item-right {
+      img {
+        width: $avatarBigSize;
+        overflow: hidden;
+        border-radius: 50%;
+      }
+    }
   }
 }
 </style>

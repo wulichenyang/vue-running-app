@@ -14,7 +14,7 @@
             @click="onEditInfo"
           >
             <img
-              src="../assets/img/head.jpeg"
+              src="/img/avatar/head.jpg"
               alt="头像"
             >
             <div class="user-info">

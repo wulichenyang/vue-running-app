@@ -29,6 +29,10 @@ export const updateUser = async (key, value) => {
   })
 }
 
+export const changeAvatar = async (avatar) => {
+  return put('/user/avatar', avatar)
+}
+
 // export const getSunburstGraphData = async () => {
 //   return get('/trip/sunburstGraphData')
 // }

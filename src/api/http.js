@@ -149,32 +149,32 @@ export async function get(url, config) {
   // }
 }
 /**
+ * delete方法，对应delete请求
+ * @param {String} url [请求的url地址]
+ * @param {Object} config [请求时携带的参数]
+ */
+export async function del(url, config) {
+  // try {
+  // 有错误处理拦截器
+  return await instance.delete(ApiConfig.apiPrefix + url,
+    config)
+}
+/**
 * post方法，对应post请求
 * @param {String} url [请求的url地址]
 * @param {Object} config [请求时携带的参数]
 */
-export async function post(url, config) {
+export async function post(url, data, config) {
   // 有错误处理拦截器
-  // try {
-  return await instance.post(ApiConfig.apiPrefix + url, config)
-  // } catch (error) {
-  //   console.error("Api request error: " + error)
-  //   return new Promise((r, f) => {
-  //     return f({
-  //       data: {},
-  //       message: "Post Api request error",
-  //       code: 1,
-  //     })
-  //   })
-  // }
+  return await instance.post(ApiConfig.apiPrefix + url, data, config)
 }
 /**
 * put方法，对应put请求
 * @param {String} url [请求的url地址]
 * @param {Object} config [请求时携带的参数]
 */
-export async function put(url, config) {
-  return await instance.put(ApiConfig.apiPrefix + url, config)
+export async function put(url, data, config) {
+  return await instance.put(ApiConfig.apiPrefix + url, data, config)
 }
 
 // export default instance;
