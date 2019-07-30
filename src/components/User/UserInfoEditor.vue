@@ -1,6 +1,10 @@
 <template>
   <section class="user-info-editor">
     <BackHeader title="个人信息" />
+    <Crop
+      @hide="onCancelCrop"
+      @finish="onCropFinish"
+     />
     <SettingInfoSection>
       <md-field>
         <label for="my_file">
@@ -70,6 +74,7 @@
 <script>
 import { changeAvatar } from "@/api/user";
 import BackHeader from "@/components/BackHeader.vue";
+import Crop from "@/components/Crop.vue";
 import SettingInfoSection from "@/components/SettingInfoSection.vue";
 import { Field, CellItem, Toast } from "mand-mobile";
 import { mapGetters, mapActions } from "vuex";
@@ -80,7 +85,8 @@ export default {
     BackHeader: BackHeader,
     SettingInfoSection: SettingInfoSection,
     [Field.name]: Field,
-    [CellItem.name]: CellItem
+    [CellItem.name]: CellItem,
+    Crop: Crop
   },
   props: {},
   data() {
@@ -102,25 +108,62 @@ export default {
         name: "editingForm"
       });
     },
+
+    checkImg(img) {
+      // 上传数量检测
+      if (img.length > 1) {
+        Toast.failed("最多上传一张图片");
+        return false;
+      }
+      // 上传类型检测
+      if (
+        ["image/jpg", "image/jpeg", "image/png", "image/gif"].indexOf(
+          img.type
+        ) < 0
+      ) {
+        Toast.Toast("请选择图片");
+        return false;
+      }
+      let size = img.size;
+      // 图片不大于3M
+      if (size > 3 * 1024 * 1024) {
+        Toast.failed("图片不要超过3M");
+        return false;
+      }
+      return true;
+    },
+
+    getFormData(img) {
+      let formData = new FormData();
+      formData.append("avatar", img, img.name);
+      console.log("avatar", formData);
+      return formData;
+    },
+    
+    onCancelCrop() {
+
+    },
+
+    onCropFinish() {
+
+    },
     // 修改头像
     async changeAvatar(event) {
       let img = event.target.files[0];
-      console.log('img', img)
-      let size = img.size;
-      // 图片不大于3M
-      if (size > 3145728) {
-        Toast.failed("图片太大啦");
+      console.log("img", img);
+      // 检查图片有效性
+      if (checkImg(img) === false) {
         return false;
       }
-      let formData = new FormData();
-      formData.append("avatar", img, img.name);
-      console.log('avatar', formData)
+
+      // 构建提交表单
+      let formData = getFormData(img);
       let res = await changeAvatar(formData);
       // 更新头像成功
       if (res.code === 0) {
         Toast.succeed(res.message);
         this.getUser();
-      } else if(res.code === 1) {
+      } else if (res.code === 1) {
         // 更新失败
         Toast.failed(res.message);
       }
