@@ -2,9 +2,11 @@
   <section class="user-info-editor">
     <BackHeader title="个人信息" />
     <Crop
+      v-show="showCrop"
+      ref="crop"
       @hide="onCancelCrop"
       @finish="onCropFinish"
-     />
+    />
     <SettingInfoSection>
       <md-field>
         <label for="my_file">
@@ -73,11 +75,14 @@
 
 <script>
 import { changeAvatar } from "@/api/user";
+import { getObjectUrl } from "@/utils/image.js";
 import BackHeader from "@/components/BackHeader.vue";
 import Crop from "@/components/Crop.vue";
 import SettingInfoSection from "@/components/SettingInfoSection.vue";
 import { Field, CellItem, Toast } from "mand-mobile";
 import { mapGetters, mapActions } from "vuex";
+import Exif from "exif-js";
+
 // TODO: Add Better-Scroll in some pages
 export default {
   name: "userInfoEditor",
@@ -90,7 +95,11 @@ export default {
   },
   props: {},
   data() {
-    return {};
+    return {
+      filename: null,
+      orientation: null, // 裁切角度
+      showCrop: false // 显示裁剪头像组件
+    };
   },
   computed: {
     ...mapGetters(["user", "editing"])
@@ -133,31 +142,22 @@ export default {
       return true;
     },
 
-    getFormData(img) {
+    initFormData(img) {
       let formData = new FormData();
       formData.append("avatar", img, img.name);
       console.log("avatar", formData);
       return formData;
     },
-    
+
+    // 取消并隐藏裁切组件
     onCancelCrop() {
-
+      this.showCrop = false;
     },
 
-    onCropFinish() {
-
-    },
-    // 修改头像
-    async changeAvatar(event) {
-      let img = event.target.files[0];
-      console.log("img", img);
-      // 检查图片有效性
-      if (checkImg(img) === false) {
-        return false;
-      }
-
+    // 提交头像文件
+    async onCropFinish(img) {
       // 构建提交表单
-      let formData = getFormData(img);
+      let formData = initFormData(img);
       let res = await changeAvatar(formData);
       // 更新头像成功
       if (res.code === 0) {
@@ -167,6 +167,32 @@ export default {
         // 更新失败
         Toast.failed(res.message);
       }
+    },
+
+    // 修改头像
+    changeAvatar(event) {
+      let img = event.target.files[0];
+      console.log("img", img);
+
+      // 检查图片有效性
+      if (this.checkImg(img) === false) {
+        return false;
+      }
+
+      // 获取选区图片的临时引用路径
+      let url = getObjectUrl(img);
+      let filename = img.name;
+
+      // 初始化裁剪框
+      Exif.getData(img, () => {
+        let orientation = Exif.getTag(img, "Orientation");
+        this.orientation = orientation;
+        let url = getObjectUrl(img);
+        this.showCrop = true; // 显示裁剪组件
+        this.$refs.crop.initCrop(url, this.orientation);
+      });
+      
+      // 提交头像文件表单 => Crop.vue $emit触发onCropFinsh
     },
     ...mapActions(["setUserEditing", "getUser"])
   }

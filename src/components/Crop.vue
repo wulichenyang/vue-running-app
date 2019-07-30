@@ -16,7 +16,7 @@
 
 <script>
 import Cropper from "cropperjs";
-import { compress } from "@/utils/image.js";
+import { compress, base64Img2Blob } from "@/utils/image.js";
 export default {
   name: "Crop",
   components: {
@@ -86,15 +86,15 @@ export default {
       image.src = base64;
       image.onload = () => {
         let data = compress(image, this.orientation);
-        // 压缩完成，将base64回调给父组件
-        this.$emit('finish', data)
+        // 压缩完成，将base64回调转换成Blob给父组件
+        this.$emit('finish', base64Img2Blob(data))
       };
     },
     removeCrop() {
       // 取消裁剪，销毁裁剪对象
-      this.$emit("hide");
       this.cropper.destroy();
       this.cropper = null;
+      this.$emit("hide");
     },
     startCrop() {
       // 开始裁剪
