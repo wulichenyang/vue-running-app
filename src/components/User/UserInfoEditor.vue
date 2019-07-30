@@ -21,7 +21,7 @@
               name="avatar"
               id='my_file'
               style="display:none;"
-              accept="image/jpg"
+              accept="image/jpg,image/jpeg,image/png,image/gif"
               @change="changeAvatar"
             />
           </md-cell-item>

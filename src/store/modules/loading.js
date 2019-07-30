@@ -18,10 +18,17 @@ export default {
   mutations: {
     // Loading
     [types.ADD_LOADING](state) {
+      console.log('in')
       state.loading = state.loading + 1
+      console.log(state.loading)
     },
     [types.SUB_LOADING](state) {
+      console.log('out')
       state.loading = state.loading - 1
+      console.log(state.loading)
+    },
+    [types.RESET_LOADING](state) {
+      state.loading = 0
     },
     [types.FETCHING_ERROR](state, { msg }) {
       Toast.failed(`获取${msg}信息失败`)
@@ -51,6 +58,9 @@ export default {
     },
     fetchingError({ commit }, { msg }) {
       commit(types.FETCHING_ERROR, { msg })
+    },
+    resetLoading({ commit }) {
+      commit(types.RESET_LOADING)
     },
 
     // Notice Bar

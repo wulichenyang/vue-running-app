@@ -168,7 +168,10 @@ router.put('/user/avatar', (req, res, next) => {
   const avatar = req.files.avatar;
   const  avatarUrl = avatar.name;
   // 移动图片
-  avatar.mv('../public/images/avatar/' + avatarUrl, function (err) {
+  // Product： 自动在server的根目录找
+  // avatar.mv('public/images/avatar/' + avatarUrl, function (err) {
+  // Dev：存储在前端public下
+  avatar.mv('../public/img/avatar/' + avatarUrl, function (err) {
     if (err) {
       errInfo(res, err);
     } else {

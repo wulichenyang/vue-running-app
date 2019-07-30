@@ -19,12 +19,16 @@
 import BottomNav from "@/components/BottomNav.vue";
 import Loading from "@/components/Loading.vue";
 
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 
 export default {
   components: {
     BottomNav: BottomNav,
     Loading: Loading
+  },
+  created() {
+    // 防止意外退出vuex缓存loading
+    this.resetLoading()
   },
   mounted() {
     // // For iphone to disable cache, in Dev mode
@@ -34,7 +38,9 @@ export default {
     //   }
     // };
   },
-  methods: {},
+  methods: {
+    ...mapActions(["resetLoading"])
+  },
 
   computed: {
     showNav() {

@@ -14,7 +14,7 @@
             @click="onEditInfo"
           >
             <img
-              src="/img/avatar/head.jpg"
+              :src="user.avatar !== '' ? `/img/avatar/${user.avatar}` :'/img/avatar/head.jpg'"
               alt="头像"
             >
             <div class="user-info">
