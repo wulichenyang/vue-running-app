@@ -60,7 +60,7 @@ import Scroll from "@/components/BetterScroll/Scroll.vue";
 import WrapperBox from "@/components/User/WrapperBox.vue";
 import IconList from "@/components/User/IconList.vue";
 import { mapGetters, mapActions } from "vuex";
-import { getUser } from "@/api/user";
+// import { getUser } from "@/api/user";
 import NoticeBar from "@/components/NoticeBar.vue";
 import { ScrollView, Toast, Field, FieldItem, CellItem } from "mand-mobile";
 export default {
@@ -77,10 +77,10 @@ export default {
     NoticeBar: NoticeBar
   },
   mounted() {
-    if (!this.user) {
+    // if (!this.user) {
       // Vuex 里没有缓存 user 数据时请求数据
       this.getUser();
-    }
+    // }
   },
 
   data() {

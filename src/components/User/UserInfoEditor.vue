@@ -22,6 +22,7 @@
             >
             <!-- 头像上传 -->
             <input
+              v-if="!destroyInput"
               type="file"
               ref="upload"
               name="avatar"
@@ -96,9 +97,10 @@ export default {
   props: {},
   data() {
     return {
-      filename: null,
+      filename: "", // 上传头像名
       orientation: null, // 裁切角度
-      showCrop: false // 显示裁剪头像组件
+      showCrop: false, // 显示裁剪头像组件
+      destroyInput: false
     };
   },
   computed: {
@@ -142,9 +144,9 @@ export default {
       return true;
     },
 
-    initFormData(img) {
+    initFormData(imgBlob) {
       let formData = new FormData();
-      formData.append("avatar", img, img.name);
+      formData.append("avatar", imgBlob, this.filename);
       console.log("avatar", formData);
       return formData;
     },
@@ -157,7 +159,7 @@ export default {
     // 提交头像文件
     async onCropFinish(img) {
       // 构建提交表单
-      let formData = initFormData(img);
+      let formData = this.initFormData(img);
       let res = await changeAvatar(formData);
       // 更新头像成功
       if (res.code === 0) {
@@ -167,8 +169,17 @@ export default {
         // 更新失败
         Toast.failed(res.message);
       }
+      // 销毁裁剪组件
+      this.$refs.crop.removeCrop();
     },
-
+    // 重新加载input
+    // 防止重名图片不触发onchange，
+    initImgInput() {
+      this.destroyInput = true;
+      setTimeout(() => {
+        this.destroyInput = false;
+      }, 20);
+    },
     // 修改头像
     changeAvatar(event) {
       let img = event.target.files[0];
@@ -181,7 +192,12 @@ export default {
 
       // 获取选区图片的临时引用路径
       let url = getObjectUrl(img);
-      let filename = img.name;
+
+      // 保存图片名
+      this.filename = img.name;
+
+      // 防止第二次选择相同名称图片时不触发onChange，每次都重新加载input
+      this.initImgInput();
 
       // 初始化裁剪框
       Exif.getData(img, () => {
@@ -191,7 +207,7 @@ export default {
         this.showCrop = true; // 显示裁剪组件
         this.$refs.crop.initCrop(url, this.orientation);
       });
-      
+
       // 提交头像文件表单 => Crop.vue $emit触发onCropFinsh
     },
     ...mapActions(["setUserEditing", "getUser"])
