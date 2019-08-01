@@ -150,7 +150,8 @@ export default {
       console.log("avatar", formData);
       return formData;
     },
-
+    // TODO:
+    // - fix taking photo for avatar
     // 取消并隐藏裁切组件
     onCancelCrop() {
       this.showCrop = false;
@@ -202,6 +203,7 @@ export default {
       // 初始化裁剪框
       Exif.getData(img, () => {
         let orientation = Exif.getTag(img, "Orientation");
+        console.log(orientation)
         this.orientation = orientation;
         let url = getObjectUrl(img);
         this.showCrop = true; // 显示裁剪组件

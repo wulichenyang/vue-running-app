@@ -3,6 +3,7 @@ var router = express.Router();
 let User = require('../models/user')
 let Distance = require('../models/distance')
 let jwt = require('jsonwebtoken')
+const fs = require('fs')
 
 const {
   privateKey
@@ -142,7 +143,14 @@ router.put('/user/update', (req, res, next) => {
     errInfo(res, checkInfo);
   }
 })
-
+const removePrevAvatar = (avatarName) => {
+  fs.unlink('../public/img/avatar/' + avatarName, (err) => {
+    if(err) {
+      console.log('删除头像失败')
+    }
+    console.log('删除' + avatarName + '成功')
+  })
+}
 const updataUserAvatar = (req, res, avatarUrl) => {
   User.findOneAndUpdate(
     {
@@ -158,6 +166,7 @@ const updataUserAvatar = (req, res, avatarUrl) => {
         errInfo(res, err.message)
         return
       } else { // 更新成功
+        removePrevAvatar(doc.avatar)
         resInfo(res, undefined, '头像修改成功')
       }
     })

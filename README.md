@@ -49,4 +49,4 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 
 - 如果图片引用是src，则只需使用相对路径引用，webpack打包时会进行hash图片处理
 
-- 本项目server在前端根目录，上传的头像保存在/public/img/avatar内部，具体部署server时，需修改server里保存头像的路径，并反向代理前端图片头像的引用路径到server运行端口下
+- 本项目server在前端根目录，上传的头像保存在/public/img/avatar内部，具体部署server时，需修改server里保存头像的路径，修改删除路径，并反向代理前端图片头像的引用路径到server运行端口下

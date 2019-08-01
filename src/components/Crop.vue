@@ -9,31 +9,39 @@
         :src="previewImageUrl"
       >
     </div>
-    <button @click="removeCrop">取消</button>
-    <button @click="startCrop">确定</button>
+    <section class="button-group">
+      <ConfirmButton
+        text="取消"
+        @onClickButton="removeCrop"
+      ></ConfirmButton>
+      <ConfirmButton
+        text="确定"
+        @onClickButton="startCrop"
+      ></ConfirmButton>
+    </section>
   </section>
 </template>
 
 <script>
+import ConfirmButton from "@/components/ConfirmButton.vue";
 import Cropper from "cropperjs";
 import { compress, base64Img2Blob } from "@/utils/image.js";
-import 'cropperjs/dist/cropper.css';
+import "cropperjs/dist/cropper.css";
 export default {
   name: "Crop",
   components: {
-    Cropper: Cropper
+    Cropper: Cropper,
+    ConfirmButton: ConfirmButton
   },
   data() {
     return {
-      orientation: null,
       cropper: null,
       previewImageEl: null,
       previewImageUrl: null
     };
   },
   methods: {
-    initCrop(url, orientation) {
-      this.orientation = orientation;
+    initCrop(url) {
       let aspectRatio = 1;
       if (!this.cropper) {
         // 初始化裁剪框
@@ -53,7 +61,7 @@ export default {
           rotatable: true, // 是否允许旋转图片
           crop: function(e) {
             // 输出结果数据裁剪图像
-            console.log(e)
+            console.log(e);
           }
         });
       }
@@ -79,7 +87,7 @@ export default {
       let image = new Image();
       image.src = base64;
       image.onload = () => {
-        let data = compress(image, this.orientation);
+        let data = compress(image);
         // 压缩完成，将base64回调转换成Blob给父组件
         this.$emit("finish", base64Img2Blob(data));
       };
@@ -109,10 +117,31 @@ export default {
   height: calc(100% - 64px) !important;
   .crop-image-wrapper {
     margin-top: 50px;
-    height: calc(100% - 100px) !important;
+    height: calc(100% - 200px) !important;
     text-align: center;
     img {
       max-width: 100%;
+    }
+  }
+  .button-group {
+    display: flex;
+    text-align: center;
+    justify-content: space-between;
+    padding-left: 50px;
+    padding-right: 50px;
+    .start-btn-wrapper {
+      flex: 0.45;
+      width: 45%;
+      .start-btn {
+        width: 100%;
+      }
+    }
+    .start-btn-wrapper:nth-child(1) {
+      .start-btn {
+        background-color: transparent !important;
+        color: $mainFontColor;
+        border: $buttonBorder;
+      }
     }
   }
 }

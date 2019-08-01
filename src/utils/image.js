@@ -52,7 +52,7 @@ const rotateImg = (img, direction, canvas) => {
   }
 }
 
-const compress = (img, orientation) => {
+const compress = (img) => {
   // 图片压缩
   // alert('图片的朝向' + orientation)
   let canvas = document.createElement('canvas')
@@ -93,21 +93,22 @@ const compress = (img, orientation) => {
     }
   } else { ctx.drawImage(img, 0, 0, width, height) }
   // 修复ios上传图片的时候 被旋转的问题
-  if (orientation && orientation !== '' && orientation !== 1) {
-    switch (orientation) {
-      case 6: // 需要顺时针（向左）90度旋转
-        rotateImg(img, 'left', canvas)
-        break
-      case 8: // 需要逆时针（向右）90度旋转
-        rotateImg(img, 'right', canvas)
-        break
-      case 3: // 需要180度旋转
-        rotateImg(img, 'right', canvas)
-        // 转两次
-        rotateImg(img, 'right', canvas)
-        break
-    }
-  }
+  // if (orientation && orientation !== '' && orientation !== 1) {
+  //   alert(orientation)
+  //   switch (orientation) {
+  //     case 6: // 需要逆时针（向左）90度旋转
+  //       rotateImg(img, 'left', canvas)
+  //       break
+  //     case 8: // 需要顺时针（向右）90度旋转
+  //       rotateImg(img, 'right', canvas)
+  //       break
+  //     case 3: // 需要180度旋转
+  //       rotateImg(img, 'right', canvas)
+  //       // 转两次
+  //       rotateImg(img, 'right', canvas)
+  //       break
+  //   }
+  // }
 
   // 设置jpegs图片的质量
   let ndata = canvas.toDataURL('image/jpeg', 1)
