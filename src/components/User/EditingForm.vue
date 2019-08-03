@@ -16,11 +16,12 @@
         ></md-input-item>
       </md-field>
     </SettingInfoSection>
-    <!-- 性别 -->
+    <!-- 性别
     <SettingInfoSection v-else-if="editing.key === 'gender'">
       <md-field>
+
       </md-field>
-    </SettingInfoSection>
+    </SettingInfoSection> -->
     <!-- 生日
     <SettingInfoSection v-else-if="editing.key === 'birthday'">
       <md-field>

@@ -49,11 +49,13 @@
           title="性别"
           :addon="user.gender === 0 ? '女' : user.gender === 1 ? '男' : '未知'"
           arrow
+          @click="showGenderSelector"
         />
         <md-cell-item
-          title="年龄"
-          :addon="user.age === 0 ? '未知': user.age"
+          title="生日"
+          :addon="user.birth.split('T')[0]"
           arrow
+          @click="showBirthPicker"
         />
         <md-cell-item
           title="个性签名"
@@ -68,6 +70,29 @@
         />
       </md-field>
     </SettingInfoSection>
+
+    <!-- 性别选择 -->
+    <md-selector
+      v-model="isSelectorShow"
+      :default-value="user.gender"
+      :data="genderData"
+      max-height="320px"
+      title="选择性别"
+      large-radius
+      @choose="onChooseGender"
+    ></md-selector>
+
+    <!-- 生日选择 -->
+    <md-date-picker
+      v-model="isDatePickerShow"
+      ref="datePicker"
+      :min-date="minDate"
+      :max-date="maxDate"
+      :default-date="currentDate"
+      :title="`选择生日`"
+      @confirm="onDatePickerConfirm"
+    ></md-date-picker>
+
     <transition name="right-left">
       <router-view></router-view>
     </transition>
@@ -80,9 +105,11 @@ import { getObjectUrl } from "@/utils/image.js";
 import BackHeader from "@/components/BackHeader.vue";
 import Crop from "@/components/Crop.vue";
 import SettingInfoSection from "@/components/SettingInfoSection.vue";
-import { Field, CellItem, Toast } from "mand-mobile";
+import { Field, CellItem, Toast, Selector, DatePicker } from "mand-mobile";
 import { mapGetters, mapActions } from "vuex";
 import Exif from "exif-js";
+import { updateUser } from "../../api/user";
+import { localDate } from "@/utils/time.js";
 
 // TODO: Add Better-Scroll in some pages
 export default {
@@ -92,6 +119,8 @@ export default {
     SettingInfoSection: SettingInfoSection,
     [Field.name]: Field,
     [CellItem.name]: CellItem,
+    [Selector.name]: Selector,
+    [DatePicker.name]: DatePicker,
     Crop: Crop
   },
   props: {},
@@ -100,7 +129,26 @@ export default {
       filename: "", // 上传头像名
       orientation: null, // 裁切角度
       showCrop: false, // 显示裁剪头像组件
-      destroyInput: false
+      destroyInput: false,
+      isSelectorShow: false, // 性别
+      isDatePickerShow: false, // 生日
+      genderData: [
+        {
+          value: 0,
+          text: "女"
+        },
+        {
+          value: 1,
+          text: "男"
+        },
+        {
+          value: 2,
+          text: "未知"
+        }
+      ],
+      minDate: new Date("1900/1/1"),
+      maxDate: new Date(),
+      currentDate: new Date("1990/1/1")
     };
   },
   computed: {
@@ -152,6 +200,7 @@ export default {
     },
     // TODO:
     // - fix taking photo for avatar
+    // - diable submit button
     // 取消并隐藏裁切组件
     onCancelCrop() {
       this.showCrop = false;
@@ -203,7 +252,7 @@ export default {
       // 初始化裁剪框
       Exif.getData(img, () => {
         let orientation = Exif.getTag(img, "Orientation");
-        console.log(orientation)
+        console.log(orientation);
         this.orientation = orientation;
         let url = getObjectUrl(img);
         this.showCrop = true; // 显示裁剪组件
@@ -211,6 +260,36 @@ export default {
       });
 
       // 提交头像文件表单 => Crop.vue $emit触发onCropFinsh
+    },
+
+    showGenderSelector() {
+      this.isSelectorShow = true;
+    },
+
+    showBirthPicker() {
+      this.isDatePickerShow = true;
+    },
+
+    async onDatePickerConfirm(columnsValue) {
+      const date = localDate(this.$refs.datePicker.getFormatDate("yyyy/MM/dd"));
+      let res = await updateUser("birth", date);
+      if (res.code === 0) {
+        // 成功
+        this.getUser();
+      } else if (res.code === 1) {
+        // 失败
+        Toast.failed("更新生日失败");
+      }
+    },
+
+    async onChooseGender({ text, value }) {
+      console.log(value);
+      let res = await updateUser("gender", value);
+      if (res.code === 0) {
+        this.getUser();
+      } else {
+        Toast.failed(res.message);
+      }
     },
     ...mapActions(["setUserEditing", "getUser"])
   }
@@ -236,6 +315,17 @@ export default {
         overflow: hidden;
         border-radius: 50%;
       }
+    }
+  }
+  .md-selector {
+    zoom: 0.5;
+  }
+  .md-date-picker {
+    .md-popup-title-bar {
+      zoom: 0.6;
+    }
+    .md-popup-box {
+      zoom: 0.8;
     }
   }
 }

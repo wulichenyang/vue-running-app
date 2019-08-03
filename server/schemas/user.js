@@ -14,8 +14,8 @@ let userSchema = new Schema({
   realname: {type: String, default: '用户名'},
   // 性别 0女 \ 1男 \ 2未知
   gender: { type: Number, default: 2},
-  // 年龄
-  age: { type: Number, default: 0},
+  // 生日
+  birth: { type: Date, default: Date.now()},
   // 头像
   avatar: { type: String, default: '' },
   // 地址
