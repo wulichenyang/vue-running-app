@@ -165,13 +165,13 @@ export default {
 @import "../../assets/css/var.scss";
 .search-bar {
   position: relative;
-  border-bottom-left-radius: 5px;
-  border-bottom-right-radius: 5px;
-  overflow: hidden;
   .md-field {
-    box-shadow: $boxShadowSearchColor;
     margin: 0 10px 10px 10px;
     padding: 0 20px 12px 20px !important;
+    overflow: hidden;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    box-shadow: $boxShadowColor;
   }
   p {
     display: flex;
@@ -212,7 +212,7 @@ export default {
   .md-field {
     margin: 0 10px 10px 10px;
     padding: 0 20px 12px 20px !important;
-    box-shadow: $boxShadowSearchColor;
+    box-shadow: $boxShadowColor;
     .md-cell-item {
       height: 64px;
       .md-cell-item-body {

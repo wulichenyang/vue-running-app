@@ -30,7 +30,7 @@ $confirmBtnColor: #2f86f6;
 
 // Background color
 $mainBgColor: #fff;
-$mainBgGrayColor: #f3f3f3;
+$mainBgGrayColor: #f6f6f6;
 $noticeBgColor: #fff;
 $loadingBgColor: #fff;
 $coverBgColor: rgba(255, 255, 255, 0.3);
@@ -45,6 +45,6 @@ $toolRightBorder: solid 1px #afaeae;
 
 // Box-shadow
 $toolBoxShadowColor: 0px 0px 30px #afaeae;
-$boxShadowColor: 0px 8px 30px #afaeae;
-$boxShadowSearchColor: 0px 0px 5px #afaeae;
+$boxShadowColor: 0 1px 3px rgba(26,26,26,.1);
+// $boxShadowSearchColor: 0px 0px 2px #afaeae;
 $avatarShadowSearchColor: 0px 0px 3px #afaeae;

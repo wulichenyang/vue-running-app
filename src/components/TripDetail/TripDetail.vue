@@ -17,7 +17,7 @@
           <svg-icon icon-class="city" />
           <span v-if="mapData.district">{{mapData.district}}</span>
           <span v-else-if="mapData.city">{{mapData.city}}</span>
-          <span v-else>未知地区</span>
+          <span v-else>未填写</span>
         </li>
         <li
           class="tool-item"

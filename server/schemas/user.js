@@ -12,14 +12,14 @@ let userSchema = new Schema({
   role: { type: String, default: 'user' }, 
   // 真实姓名 仅作为资料
   realname: {type: String, default: '用户名'},
-  // 性别 0女 \ 1男 \ 2未知
+  // 性别 0女 \ 1男 \ 2保密
   gender: { type: Number, default: 2},
   // 生日
   birth: { type: Date, default: Date.now()},
   // 头像
   avatar: { type: String, default: '' },
   // 地址
-  address: {type: String, default: '未知地址'},
+  address: {type: String, default: '未填写'},
   // 个性签名，70个字符限制
   brief: { type: String, default: '编辑签名，展示我的独特态度' },
   // // 邮箱号

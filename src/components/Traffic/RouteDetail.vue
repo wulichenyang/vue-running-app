@@ -91,7 +91,7 @@ export default {
   }
   .route-inner {
     background-color: $mainBgColor;
-    box-shadow: $boxShadowSearchColor;
+    box-shadow: $boxShadowColor;
     height: 100%;
     margin: 0px 10px !important;
     .amap-call {

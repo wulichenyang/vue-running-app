@@ -99,7 +99,7 @@ export default {
   .address-inner {
     height: 100%;
     margin: 0px 10px !important;
-    box-shadow: $boxShadowSearchColor;
+    box-shadow: $boxShadowColor;
     background-color: $mainBgColor;
     p.toggle-button {
       height: 30px;

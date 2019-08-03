@@ -31,8 +31,9 @@ export default {
 .wrapper-box {
  background-color: $mainBgColor;
  padding: 8px;
- box-shadow: $boxShadowSearchColor;
+ box-shadow: $boxShadowColor;
  margin-bottom: 10px;
+ border-radius: 8px;
  h2 {
    margin-top: 5px;
  }

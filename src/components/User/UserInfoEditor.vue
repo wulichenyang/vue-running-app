@@ -47,13 +47,13 @@
         />
         <md-cell-item
           title="性别"
-          :addon="user.gender === 0 ? '女' : user.gender === 1 ? '男' : '未知'"
+          :addon="user.gender === 0 ? '女' : user.gender === 1 ? '男' : '保密'"
           arrow
           @click="showGenderSelector"
         />
         <md-cell-item
           title="生日"
-          :addon="user.birth.split('T')[0]"
+          :addon="this.user.birth.split('T')[0]"
           arrow
           @click="showBirthPicker"
         />
@@ -88,7 +88,7 @@
       ref="datePicker"
       :min-date="minDate"
       :max-date="maxDate"
-      :default-date="currentDate"
+      :default-date="new Date(this.user.birth)"
       :title="`选择生日`"
       @confirm="onDatePickerConfirm"
     ></md-date-picker>
@@ -143,12 +143,11 @@ export default {
         },
         {
           value: 2,
-          text: "未知"
+          text: "保密"
         }
       ],
       minDate: new Date("1900/1/1"),
       maxDate: new Date(),
-      currentDate: new Date("1990/1/1")
     };
   },
   computed: {
