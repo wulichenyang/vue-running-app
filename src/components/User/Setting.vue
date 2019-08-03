@@ -27,6 +27,7 @@
     </SettingInfoSection>
 
     <!-- 登出 -->
+    <!-- TODO 退出后有残余信息 -->
     <ConfirmButton
       text="退出账号"
       @onClickButton="onConfirmLogout"

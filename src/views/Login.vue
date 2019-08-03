@@ -104,6 +104,9 @@ export default {
           // TODO posting
           this.posting = false;
           this.resetForm();
+          // 清除之前的vuex
+          this.clearAllInfo();
+          // 清除之前的token
           this.setCookie(res.data.token);
           Toast.succeed(res.message);
           this.$router.push({ path: "/" });
@@ -147,7 +150,7 @@ export default {
     toSignUp() {
       this.$router.push({ path: "signup" });
     },
-    ...mapActions([])
+    ...mapActions(["clearAllInfo"])
   }
 };
 </script>

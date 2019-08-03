@@ -26,20 +26,23 @@
           @onShowPulldown="onShowPulldown"
           @onHidePulldown="onHidePulldown"
         >
-          <md-field>
+          <md-field v-if="historyList.length > 0">
             <p v-if="showPulldownInfo">下拉刷新</p>
             <p v-if="refreshing">刷新中...</p>
             <md-cell-item
-              :key="historyItem._id"
               v-for="historyItem in historyList"
+              :key="historyItem._id"
               :title="historyItem.tripWay"
               :brief="tripOrTraffic(historyItem)"
-              :addon="historyItem.date.substring(0, 10)"
+              :addon="historyItem.date && historyItem.date.substring(0, 10)"
               @click="onClickDetail(historyItem)"
               arrow
             />
             <p v-if="loadMore || noMoreData">{{loadMore? '加载更多...' : noMoreData ? '没有更多数据啦~' : ''}}</p>
           </md-field>
+          <div class="no-trip" v-else>
+            <p>您还没有出行记录哟~</p>
+          </div>
         </Scroll>
       </div>
     </section>
@@ -96,7 +99,13 @@ export default {
       this.page = 0;
       let res = await getHistory(this.page++, this.limit);
       if (res.code === 0) {
-        this.historyList = res.data;
+        // 没有出行记录
+        if(res.data.noMoreData) {
+          this.subLoading();
+          return;
+        } else {
+          this.historyList = res.data;
+        }
       } else if (res.code === 1) {
         Toast.failed(res.message);
       }
@@ -133,14 +142,14 @@ export default {
     onLoadMoreHistory() {
       this.getMoreHistory();
     },
-    
+
     onShowPulldown() {
-      console.log('trigger')
-      this.showPulldownInfo = true
+      console.log("trigger");
+      this.showPulldownInfo = true;
     },
 
     onHidePulldown() {
-      this.showPulldownInfo = false
+      this.showPulldownInfo = false;
     },
     // async refreshHistory(finishRefresh) {
     //   let res = await getHistory();
@@ -166,7 +175,7 @@ export default {
       // 可以通过vuex设置historyDetailNow
       this.setHistoryDetail(historyDetail);
       this.$router.push({
-        name: "historyDetail",
+        name: "historyDetail"
       });
       // 通过 params 传值给 route 但不能持久化存储
       // this.$router.push({
@@ -210,6 +219,9 @@ export default {
         margin-top: 10px;
         height: calc(100% - 24px);
         overflow: hidden;
+        .no-trip {
+          text-align: center;
+        }
         .md-field {
           padding: 0;
         }
