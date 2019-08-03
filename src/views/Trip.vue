@@ -101,7 +101,10 @@ export default {
     ...mapGetters(["distance", "ifNotice", "noticeInfo"])
   },
   mounted() {
-    this.getDistance();
+    // vuex没有缓存
+    if(!this.distance) {
+      this.getDistance();
+    }
   },
   methods: {
     onTripWayChange(e) {

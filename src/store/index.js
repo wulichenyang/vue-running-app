@@ -8,6 +8,7 @@ import VuexPersistence from 'vuex-persist'
 
 // 持久化存储 Vuex
 const vuexLocal = new VuexPersistence({
+  key: 'running_vuex', // localStorage 存储名称
   storage: window.localStorage
 })
 

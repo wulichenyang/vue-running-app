@@ -66,6 +66,10 @@ export default {
     NoticeBar: NoticeBar
   },
   mounted() {
+    //TODO: in vuex
+    // if(!this.historyList) {
+
+    // }
     this.getHistory();
   },
   data() {

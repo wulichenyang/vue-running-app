@@ -17,7 +17,7 @@
             <img
               class="avatar"
               slot="right"
-              :src="user.avatar !== '' ? `/img/avatar/${user.avatar}` :'/img/avatar/head.jpg'"
+              :src="(user && user.avatar !== '' ? `/img/avatar/${user.avatar}` :'/img/avatar/head.jpg') || '/img/avatar/head.jpg'"
               alt="头像"
             >
             <!-- 头像上传 -->
@@ -35,37 +35,37 @@
         </label>
         <md-cell-item
           title="用户名"
-          :addon="user.realname"
+          :addon="user && user.realname"
           arrow
-          @click="onEditText(title = '用户名', key = 'realname' , value = user.realname, length = 6)"
+          @click="onEditText(title = '用户名', key = 'realname' , value = user && user.realname, length = 6)"
         />
         <md-cell-item
           title="昵称"
-          :addon="user.nickname"
+          :addon="user && user.nickname"
           arrow
-          @click="onEditText(title = '昵称', key = 'nickname', value = user.nickname, length = 7)"
+          @click="onEditText(title = '昵称', key = 'nickname', value = user && user.nickname, length = 7)"
         />
         <md-cell-item
           title="性别"
-          :addon="user.gender === 0 ? '女' : user.gender === 1 ? '男' : '保密'"
+          :addon="user && user.gender === 0 ? '女' : user && user.gender === 1 ? '男' : '保密'"
           arrow
           @click="showGenderSelector"
         />
         <md-cell-item
           title="生日"
-          :addon="this.user.birth.split('T')[0]"
+          :addon="user && user.birth.split('T')[0]"
           arrow
           @click="showBirthPicker"
         />
         <md-cell-item
           title="个性签名"
-          :addon="user.brief"
+          :addon="user && user.brief"
           arrow
-          @click="onEditText(title = '个性签名', key = 'brief', value = user.brief, length = 20)"
+          @click="onEditText(title = '个性签名', key = 'brief', value = user && user.brief, length = 20)"
         />
         <md-cell-item
           title="地址"
-          :addon="user.address"
+          :addon="user && user.address"
           arrow
         />
       </md-field>
@@ -74,7 +74,7 @@
     <!-- 性别选择 -->
     <md-selector
       v-model="isSelectorShow"
-      :default-value="user.gender"
+      :default-value="user && user.gender"
       :data="genderData"
       max-height="320px"
       title="选择性别"
@@ -88,7 +88,7 @@
       ref="datePicker"
       :min-date="minDate"
       :max-date="maxDate"
-      :default-date="new Date(this.user.birth)"
+      :default-date="new Date(user && user.birth)"
       :title="`选择生日`"
       @confirm="onDatePickerConfirm"
     ></md-date-picker>
@@ -113,7 +113,7 @@ import { localDate } from "@/utils/time.js";
 
 // TODO: Add Better-Scroll in some pages
 export default {
-  name: "userInfoEditor",
+  name: "userInfoDetail",
   components: {
     BackHeader: BackHeader,
     SettingInfoSection: SettingInfoSection,
@@ -129,7 +129,7 @@ export default {
       filename: "", // 上传头像名
       orientation: null, // 裁切角度
       showCrop: false, // 显示裁剪头像组件
-      destroyInput: false,
+      destroyInput: false, // 删除头像上传input
       isSelectorShow: false, // 性别
       isDatePickerShow: false, // 生日
       genderData: [
@@ -147,7 +147,7 @@ export default {
         }
       ],
       minDate: new Date("1900/1/1"),
-      maxDate: new Date(),
+      maxDate: new Date()
     };
   },
   computed: {

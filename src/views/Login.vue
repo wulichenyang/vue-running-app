@@ -86,6 +86,13 @@ export default {
   },
   mounted() {},
   methods: {
+    setCookie(token) {
+      // 移除之前的账号token信息
+      if (cookie.getCookie(access_token) !== "") {
+        cookie.removeCookie(access_token);
+      }
+      cookie.setCookie(access_token, token, 24 * 30); // 30 天
+    },
     // TODO listen to enter key
     async onLogin() {
       if (this.onPhoneCheck() && this.onPasswordCheck()) {
@@ -97,7 +104,7 @@ export default {
           // TODO posting
           this.posting = false;
           this.resetForm();
-          cookie.setCookie(access_token, res.data.token, 0.2); // 12分钟
+          this.setCookie(res.data.token);
           Toast.succeed(res.message);
           this.$router.push({ path: "/" });
         } else if (res.code === 1) {

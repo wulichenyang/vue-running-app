@@ -18,6 +18,10 @@ export default {
     [types.SET_USER_EDITING](state, { editing }) {
       state.editing = editing
     },
+    [types.RESET_USER](state) {
+      state.user = null
+      state.editing = null
+    },
   },
   actions: {
     async getUser({ commit, dispatch }) {
@@ -44,5 +48,12 @@ export default {
     setUserEditing({ commit }, editing) {
       commit(types.SET_USER_EDITING, { editing })
     },
+    // 登出时清空所有vuex信息
+    clearAllInfo({ commit }) {
+      commit(types.RESET_LOADING)
+      commit(types.RESET_USER)
+      commit(types.RESET_TRIP)
+      commit(types.RESET_HISTORY)
+    }
   }
 }

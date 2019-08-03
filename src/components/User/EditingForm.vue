@@ -6,7 +6,7 @@
       @onClickRight="onSubmitForm"
     />
     <!-- 昵称/用户名/个性签名 -->
-    <SettingInfoSection v-if="editing.key == 'realname' || editing.key == 'nickname' || editing.key == 'brief'">
+    <SettingInfoSection v-if="editing && editing.key == 'realname' || editing && editing.key == 'nickname' || editing.key == 'brief'">
       <md-field>
         <md-input-item
           v-model="inputValue"

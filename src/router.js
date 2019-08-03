@@ -58,31 +58,66 @@ const router = new Router({
       // this generates a separate chunk (about.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
       component: () => import(/* webpackChunkName: "xxx" */ '@/views/User.vue'),
-      children: [{
-        path: 'detail',
-        name: 'userDetail',
-        component: () => import( /* webpackChunkName: "xxx" */'@/components/User/UserDetail.vue'),
-      },
-      {
-        path: 'trend',
-        name: 'userTrend',
-        component: () => import( /* webpackChunkName: "xxx" */'@/components/User/UserTrend.vue'),
-      },
-      {
-        path: 'analysis',
-        name: 'userAnalysis',
-        component: () => import( /* webpackChunkName: "xxx" */'@/components/User/UserAnalysis.vue'),
-      },
-      {
-        path: 'editUserInfo',
-        name: 'userInfoEditor',
-        component: () => import( /* webpackChunkName: "xxx" */'@/components/User/UserInfoEditor.vue'),
-        children: [{
-          path: 'editing',
-          name: 'editingForm',
-          component: () => import( /* webpackChunkName: "xxx" */'@/components/User/EditingForm.vue'),
-        }]
-      },
+      children: [
+        //   {
+        //   path: 'detail',
+        //   name: 'userDetail',
+        //   component: () => import( /* webpackChunkName: "xxx" */'@/components/User/UserDetail.vue'),
+        // },
+        {
+          path: 'userInfoDetail',
+          name: 'userInfoDetail',
+          component: () => import( /* webpackChunkName: "xxx" */'@/components/User/UserInfoDetail.vue'),
+          children: [{
+            path: 'editing',
+            name: 'editingForm',
+            component: () => import( /* webpackChunkName: "xxx" */'@/components/User/EditingForm.vue'),
+          }]
+        },
+        {
+          path: 'setting',
+          name: 'setting',
+          component: () => import( /* webpackChunkName: "xxx" */'@/components/User/Setting.vue'),
+          children: [
+            {
+              path: 'userInfoDetail',
+              name: 'userInfoDetail',
+              component: () => import( /* webpackChunkName: "xxx" */'@/components/User/UserInfoDetail.vue'),
+              children: [{
+                path: 'editing',
+                name: 'editingForm',
+                component: () => import( /* webpackChunkName: "xxx" */'@/components/User/EditingForm.vue'),
+              }]
+            },
+            {
+              path: 'account',
+              name: 'account',
+              component: () => import( /* webpackChunkName: "xxx" */'@/components/User/Account.vue'),
+              children: [
+                {
+                  path: 'editing',
+                  name: 'editingForm',
+                  component: () => import( /* webpackChunkName: "xxx" */'@/components/User/EditingForm.vue'),
+                }
+              ]
+            },
+            {
+              path: 'about',
+              name: 'about',
+              component: () => import( /* webpackChunkName: "xxx" */'@/components/User/About.vue'),
+            }
+          ]
+        },
+        {
+          path: 'trend',
+          name: 'userTrend',
+          component: () => import( /* webpackChunkName: "xxx" */'@/components/User/UserTrend.vue'),
+        },
+        {
+          path: 'analysis',
+          name: 'userAnalysis',
+          component: () => import( /* webpackChunkName: "xxx" */'@/components/User/UserAnalysis.vue'),
+        },
       ]
     },
     {

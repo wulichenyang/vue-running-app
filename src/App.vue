@@ -5,9 +5,7 @@
       :style="{'height': !showNav ? '100% !important': ''}"
     >
       <transition name="fademap">
-        <keep-alive>
-          <router-view />
-        </keep-alive>
+        <router-view />
       </transition>
     </main>
     <BottomNav v-if="showNav"></BottomNav>
@@ -28,7 +26,7 @@ export default {
   },
   created() {
     // 防止意外退出vuex缓存loading
-    this.resetLoading()
+    this.resetLoading();
   },
   mounted() {
     // // For iphone to disable cache, in Dev mode

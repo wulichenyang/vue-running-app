@@ -13,14 +13,27 @@
             class="user-header"
             @click="onEditInfo"
           >
+
+            <!-- 头像 -->
             <img
-              :src="user.avatar !== '' ? `/img/avatar/${user.avatar}` :'/img/avatar/head.jpg'"
+              :src="user && user.avatar !== '' ? `/img/avatar/${user.avatar}` :'/img/avatar/head.jpg'"
               alt="头像"
             >
+
+            <!-- 中间信息 -->
             <div class="user-info">
-              <h2>{{user.nickname}}</h2>
-              <p>{{user.brief}}</p>
+              <h2>{{user && user.nickname}}</h2>
+              <p>{{user && user.brief}}</p>
             </div>
+
+            <!-- 设置按钮 -->
+            <div @click.stop="onClickSetting">
+              <svg-icon
+                class="place-svg"
+                icon-class="setting"
+              />
+            </div>
+
           </div>
           <ul class="detail-number">
             <li
@@ -32,6 +45,8 @@
             </li>
           </ul>
         </WrapperBox>
+
+        <!-- 我的信息 -->
         <WrapperBox title="我的信息">
           <IconList
             :iconList="detailList"
@@ -39,6 +54,8 @@
           >
           </IconList>
         </WrapperBox>
+
+        <!-- 待续模块 -->
         <WrapperBox title="敬请期待">
           <IconList :iconList="moreList">
           </IconList>
@@ -64,7 +81,7 @@ import { mapGetters, mapActions } from "vuex";
 import NoticeBar from "@/components/NoticeBar.vue";
 import { ScrollView, Toast, Field, FieldItem, CellItem } from "mand-mobile";
 export default {
-  name: "history",
+  name: "user",
   components: {
     Map: Map,
     WrapperBox: WrapperBox,
@@ -77,10 +94,10 @@ export default {
     NoticeBar: NoticeBar
   },
   mounted() {
-    // if (!this.user) {
+    if (!this.user) {
       // Vuex 里没有缓存 user 数据时请求数据
       this.getUser();
-    // }
+    }
   },
 
   data() {
@@ -198,7 +215,12 @@ export default {
     },
     onEditInfo() {
       this.$router.push({
-        name: "userInfoEditor"
+        name: "userInfoDetail"
+      });
+    },
+    onClickSetting() {
+      this.$router.push({
+        name: "setting"
       });
     }
   },
@@ -232,6 +254,7 @@ export default {
       padding: 0 14px;
       .user-header {
         display: flex;
+        position: relative;
         margin-bottom: 20px;
         img {
           margin-top: 10px;
@@ -256,6 +279,12 @@ export default {
             overflow: hidden;
             text-overflow: ellipsis;
           }
+        }
+        .svg-icon {
+          width: $iconFontSize !important;
+          height: $iconFontSize !important;
+          margin-top: 10px;
+          margin-right: 20px;
         }
       }
       ul.detail-number {

@@ -122,6 +122,9 @@ export default {
       } else if (this.password.length < 4) {
         this.passwordError = "* 请填写超过3位的密码";
         return false;
+      } else if (this.password.length > 20) {
+        this.passwordError = "* 密码不要超过20位";
+        return false;
       } else {
         this.passwordError = "";
         return true;
