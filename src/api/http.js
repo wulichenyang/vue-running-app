@@ -8,6 +8,7 @@ import { ApiConfig } from "../configs/index"
 import { Toast } from 'mand-mobile'
 import cookie from '../utils/cookie';
 import { access_token } from "../configs";
+import router from '@/router'
 
 // import cookie from "@/assets/js/cookie.ts";
 // import router from "@/router"
@@ -50,8 +51,12 @@ const errorHandle = (status, msg) => {
     case 401:
       // toLogin();
       // Toast('401 未登录')
+      router.push({
+        name: 'login'
+      })
       Toast.failed(msg)
       console.log("401")
+      // 返回登录界面
       break;
     // 403 token过期
     // 清除token并跳转登录页
@@ -59,7 +64,15 @@ const errorHandle = (status, msg) => {
       // Toast('403 登录过期，请重新登录')
       Toast.failed(msg)
       console.log("403 登录过期，请重新登录");
-      // localStorage.removeItem('token');
+      // 服务器验证token过期
+      // 清除vuex in localStorage
+      localStorage.removeItem('running_vuex');
+      // 清除cookie
+      cookie.removeCookie(access_token);
+      // 返回登录界面
+      router.push({
+        name: 'login'
+      })
       // store.commit('loginSuccess', null);
       // setTimeout(() => {
       //   toLogin();
