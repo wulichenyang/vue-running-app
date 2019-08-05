@@ -87,6 +87,7 @@ export default {
   mounted() {},
   methods: {
     setCookie(token) {
+      // TODO: 修改为：多账号同时登录token保存
       // 移除之前的账号token信息
       if (cookie.getCookie(access_token) !== "") {
         cookie.removeCookie(access_token);
@@ -106,7 +107,7 @@ export default {
           this.resetForm();
           // 清除之前的vuex
           this.clearAllInfo();
-          // 清除之前的token
+          // 清除之前的token，并设置新cookie
           this.setCookie(res.data.token);
           Toast.succeed(res.message);
           this.$router.push({ path: "/" });
