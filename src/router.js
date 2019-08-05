@@ -139,13 +139,14 @@ const router = new Router({
 
   ]
 })
-// TODO: logout
 // 导航守卫，非登录状态先登录
 router.beforeEach((to, from, next) => {
   let token = cookie.getCookie(access_token)
   // let username = cookie.getCookie('vue_running_username')
   // 登录验证 路由改变时刷新cookie中的token过期时间 30天
   if (!token && (to.name !== 'login' && to.name !== 'signup')) {
+    // token过期后清理vuex
+    router.app.$options.store.dispatch('clearAllInfo')
     Toast.succeed('请登录', 1000)
     next({ path: '/login' })
     return
