@@ -142,7 +142,6 @@ const router = new Router({
 // 导航守卫，非登录状态先登录
 router.beforeEach((to, from, next) => {
   let token = cookie.getCookie(access_token)
-  console.log('token:', token)
   // 登录验证 路由改变时刷新cookie中的token过期时间 30天
   if (!token && (to.name !== 'login' && to.name !== 'signup')) {
     // token过期后清理vuex
@@ -151,7 +150,6 @@ router.beforeEach((to, from, next) => {
     next({ path: '/login' })
     return
   } else {
-    console.log(access_token)
     // 刷新token在cookie里的时间
     console.log('setCookie in router')
     cookie.setCookie(access_token, token, 24 * 30) // 30天

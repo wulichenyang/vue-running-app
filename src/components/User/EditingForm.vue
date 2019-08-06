@@ -5,6 +5,7 @@
       rightText="确定"
       @onClickRight="onSubmitForm"
     />
+
     <!-- 昵称/用户名/个性签名 -->
     <SettingInfoSection v-if="editing && editing.key == 'realname' || editing && editing.key == 'nickname' || editing.key == 'brief'">
       <md-field>
@@ -16,17 +17,28 @@
         ></md-input-item>
       </md-field>
     </SettingInfoSection>
-    <!-- 性别
-    <SettingInfoSection v-else-if="editing.key === 'gender'">
-      <md-field>
 
-      </md-field>
-    </SettingInfoSection> -->
-    <!-- 生日
-    <SettingInfoSection v-else-if="editing.key === 'birthday'">
+    <!-- 修改密码 -->
+    <SettingInfoSection v-else-if="editing.key === 'password'">
       <md-field>
+        <md-input-item
+          v-model="prevPassword"
+          :title="`旧${editing.title}`"
+          type="password"
+          is-amount
+          :maxlength="editing.length"
+        ></md-input-item>
       </md-field>
-    </SettingInfoSection> -->
+      <md-field>
+        <md-input-item
+          v-model="newPassword"
+          :title="`新${editing.title}`"
+          type="password"
+          is-amount
+          :maxlength="editing.length"
+        ></md-input-item>
+      </md-field>
+    </SettingInfoSection>
 
   </section>
 </template>
@@ -34,9 +46,10 @@
 <script>
 import BackHeader from "@/components/BackHeader.vue";
 import SettingInfoSection from "@/components/SettingInfoSection.vue";
-import { updateUser } from "@/api/user";
+import { updateUser, checkPrevPassword } from "@/api/user";
 import { Field, CellItem, Toast, InputItem } from "mand-mobile";
 import { mapGetters, mapActions } from "vuex";
+import md5 from "md5";
 
 export default {
   name: "editingForm",
@@ -51,7 +64,11 @@ export default {
   props: {},
   data() {
     return {
-      inputValue: ""
+      // 昵称/用户名/个性签名
+      inputValue: "",
+      // 新旧密码
+      prevPassword: "",
+      newPassword: ""
     };
   },
   mounted() {
@@ -61,9 +78,27 @@ export default {
     ...mapGetters(["user", "editing"])
   },
   methods: {
-    async onSubmitForm() {
-      // 更新
-      let res = await updateUser(this.editing.key, this.inputValue.trim());
+    checkPassword(prevPassword, newPassword) {
+      let err = null;
+      if (prevPassword === newPassword) {
+        err = "新密码和旧密码相同";
+      } else if (prevPassword.length === 0 || newPassword.length === 0) {
+        err = "密码不能为空";
+      } else if (prevPassword.length < 4 || newPassword.length < 4) {
+        err = "请填写超过3位的密码";
+      } else if (prevPassword.length > 20 || newPassword.length > 20) {
+        err = "密码不要超过20位";
+      }
+      return err;
+    },
+
+    clearPassword() {
+      this.prevPassword = "";
+      this.newPassword = "";
+    },
+
+    async updateUserInfo() {
+      let res = await updateUser(this.editing.key, this.inputValue);
       if (res.code === 0) {
         // 成功后重新获取用户数据
         Toast.succeed(res.message);
@@ -73,6 +108,33 @@ export default {
         // 更新失败
         Toast.failed(res.message);
       }
+      // 清除密码表单
+      if (this.editing.key === "password") {
+        this.clearPassword();
+      }
+    },
+
+    async onSubmitForm() {
+      if (this.editing.key === "password") {
+        // 检查两个密码格式
+        let err = this.checkPassword(this.prevPassword, this.newPassword);
+        if (err) {
+          Toast.failed(err);
+          return;
+        }
+        // 检查之旧密码是否正确
+        let res = await checkPrevPassword(md5(this.prevPassword));
+        if (res.code === 1) {
+          // 旧密码不正确
+          Toast.failed("旧密码不正确");
+          return;
+        }
+        // 允许更改密码
+        this.inputValue = md5(this.newPassword);
+      }
+
+      // 更新用户信息
+      this.updateUserInfo();
     },
     ...mapActions(["getUser"])
   }

@@ -33,6 +33,10 @@ export const changeAvatar = async (avatar) => {
   return put('/user/avatar', avatar)
 }
 
+export const checkPrevPassword = async (password) => {
+  return put('/user/checkPrevPassword', {password})
+}
+
 // export const getSunburstGraphData = async () => {
 //   return get('/trip/sunburstGraphData')
 // }

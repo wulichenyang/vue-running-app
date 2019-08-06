@@ -143,6 +143,7 @@ router.put('/user/update', (req, res, next) => {
     errInfo(res, checkInfo);
   }
 })
+
 const removePrevAvatar = (avatarName) => {
   fs.unlink('../public/img/avatar/' + avatarName, (err) => {
     if(err) {
@@ -182,10 +183,27 @@ router.put('/user/avatar', (req, res, next) => {
   // Dev：存储在前端public下
   avatar.mv('../public/img/avatar/' + avatarUrl, function (err) {
     if (err) {
-      errInfo(res, err);
+      errInfo(res, err.message);
     } else {
       // 更改用户avatar路径信息
       updataUserAvatar(req, res, avatarUrl)
+    }
+  })
+})
+
+// 检查当前password是否正确
+router.put('/user/checkPrevPassword', (req, res, next) => {
+  const { password } = req.body
+  console.log('check password', password)
+  User.find({ _id: req.userId, password }, (err, doc) => {
+    if (err) {
+      errInfo(res, err.message)
+      return
+    } else if (doc.length > 0) { // 密码正确
+      resInfo(res, undefined, '密码正确')
+      return
+    } else {
+      errInfo(res, '旧密码不正确')
     }
   })
 })

@@ -17,7 +17,6 @@ import BackHeader from "@/components/BackHeader.vue";
 import SettingInfoSection from "@/components/SettingInfoSection.vue";
 import { Field, CellItem, Toast, Selector, DatePicker } from "mand-mobile";
 import { mapGetters, mapActions } from "vuex";
-import { updateUser } from "../../api/user";
 
 // TODO: Add Better-Scroll in some pages
 export default {
