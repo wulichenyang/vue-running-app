@@ -21,18 +21,19 @@ export default {
     this.initPie(this.data);
   },
   data() {
-    return {
-    };
+    return {};
   },
   methods: {
     initPie(data) {
-      if(data.length === 0) {
+      if (data.length === 0) {
         return;
       }
-      console.log(data)
+      console.log(data);
       var chart = new G2.Chart({
         container: "pie",
         forceFit: true,
+        height: 400,
+        padding: ['auto', 50,'auto',50]
       });
       chart.source(data, {
         percent: {
@@ -50,14 +51,6 @@ export default {
         showTitle: false,
         itemTpl:
           '<li><span style="background-color:{color};" class="g2-tooltip-marker"></span>{name}: {value}</li>'
-      });
-      // 辅助文本
-      chart.guide().html({
-        position: ["50%", "50%"],
-        html:
-          '<div style="color:#8c8c8c;font-size: 14px;text-align: center;width: 10em;">主机<br><span style="color:#8c8c8c;font-size:20px">200</span>台</div>',
-        alignX: "middle",
-        alignY: "middle"
       });
       var interval = chart
         .intervalStack()
@@ -91,10 +84,7 @@ export default {
 .pie {
   // TODO: fix height
   position: relative;
-  min-height: 400px;
-  padding: 20px;
-  canvas {
-    min-height: 100%;
-  }
+  min-height: 200px;
+  // padding: 20px
 }
 </style>
