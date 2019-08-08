@@ -19,6 +19,10 @@ export const saveTraffic = async (trafficData) => {
   return post('/addTraffic', { trafficData })
 }
 
+export const getTripRatio = async () => {
+  return get('/tripRatio')
+}
+
 // export const getSunburstGraphData = async () => {
 //   return get('/xxx')
 // }

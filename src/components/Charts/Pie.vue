@@ -16,12 +16,19 @@ export default {
       default: () => []
     }
   },
-  mounted() {
-    // TODO: 思考挂载过程 => mounted两次
-    this.initPie(this.data);
-  },
+  // updated() {
+  //   // TODO: 思考挂载过程 => mounted两次
+  //   console.log(this.data);
+  //   this.initPie(this.data);
+  // },
   data() {
     return {};
+  },
+  watch: {
+    data(newData) {
+      console.log(123);
+      this.initPie(newData);
+    }
   },
   methods: {
     initPie(data) {
@@ -33,7 +40,7 @@ export default {
         container: "pie",
         forceFit: true,
         height: 400,
-        padding: ['auto', 50,'auto',50]
+        padding: ["auto", 50, "auto", 50]
       });
       chart.source(data, {
         percent: {

@@ -155,6 +155,38 @@ const getHistory = (req, res) => {
   })
 }
 
+const getTripRatio = (req, res) => {
+  Trip.find(
+    {
+      userId: req.userId
+    },
+    { tripWay: 1 , _id: 0},
+  )
+  .exec((err, docs) => {
+    if (err) {
+      res.status(500).json({
+        code: 1,
+        message: err.message
+      })
+      return;
+    } else {
+      if(docs.length > 0) {
+        res.send({
+          code: 0,
+          data: docs
+        })
+      }
+      // 没有数据
+      if(docs.length === 0) {
+        res.send({
+          code: 0,
+          data: []
+        })
+      }
+    }
+  })
+}
+
 // Add one tripData
 router.post('/addTrip', (req, res, next) => {
   // Insert new trip data
@@ -169,6 +201,11 @@ router.post('/addTraffic', (req, res, next) => {
 
 router.get('/history', (req, res, next) => {
   getHistory(req, res)
+})
+
+// 获取出行种类的次数（比例）
+router.get('/tripRatio', (req, res, next) => {
+ getTripRatio(req, res)
 })
 
 module.exports = router;
