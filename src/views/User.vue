@@ -6,7 +6,7 @@
         alt="背景墙"
       >
     </section>
-    <section class="user-wrapper">
+    <Scroll class="user-wrapper">
       <div class="user-inner">
         <WrapperBox>
           <div
@@ -61,7 +61,7 @@
           </IconList>
         </WrapperBox>
       </div>
-    </section>
+    </Scroll>
     <transition name="right-left">
       <keep-alive>
         <router-view></router-view>

@@ -18,7 +18,7 @@ export default {
   },
   // updated() {
   //   // TODO: 思考挂载过程 => mounted两次
-  //   console.log(this.data);
+  //   console.log("wer", this.data);
   //   this.initPie(this.data);
   // },
   data() {
@@ -26,7 +26,6 @@ export default {
   },
   watch: {
     data(newData) {
-      console.log(123);
       this.initPie(newData);
     }
   },
@@ -40,7 +39,7 @@ export default {
         container: "pie",
         forceFit: true,
         height: 400,
-        padding: ["auto", 50, "auto", 50]
+        padding: ["auto", 60, "auto", 60]
       });
       chart.source(data, {
         percent: {

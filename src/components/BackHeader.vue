@@ -44,6 +44,7 @@ export default {
 .back-header-wrapper {
   position: relative;
   background-color: $mainBgColor;
+  z-index: 999;
   .back-icon {
     position: absolute;
     left: 22px;

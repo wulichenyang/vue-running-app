@@ -49,7 +49,6 @@ import { mapGetters, mapActions } from "vuex";
 import cookie from "@/utils/cookie";
 import { access_token } from "@/configs";
 
-// TODO: Add Better-Scroll in some pages
 export default {
   name: "setting",
   components: {

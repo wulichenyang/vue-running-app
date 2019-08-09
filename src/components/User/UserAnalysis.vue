@@ -1,16 +1,19 @@
 <template>
   <section class="user-analysis">
     <BackHeader title="数据分析" />
-    <section class="user-analysis-inner">
-      <WrapperBox title="出行方式分布">
-        <Pie></Pie>
-      </WrapperBox>
-      <Pie :data="pieData"></Pie>
-    </section>
+    <Scroll class="scroll-wrapper">
+      <section class="user-analysis-inner">
+        <WrapperBox title="出行方式分布">
+          <Pie></Pie>
+        </WrapperBox>
+        <Pie :data="pieData"></Pie>
+      </section>
+    </Scroll>
   </section>
 </template>
 
 <script>
+import Scroll from "@/components/BetterScroll/Scroll";
 import G2 from "@antv/g2";
 import BackHeader from "@/components/BackHeader.vue";
 import Pie from "@/components/Charts/Pie.vue";
@@ -25,7 +28,8 @@ export default {
     BackHeader: BackHeader,
     Pie: Pie,
     WrapperBox: WrapperBox,
-    [Toast.name]: Toast
+    [Toast.name]: Toast,
+    Scroll: Scroll
   },
   props: {},
   mounted() {
@@ -49,19 +53,18 @@ export default {
       };
 
       let allCount = tripTimeArr.length;
-
-      let computedCountMap = tripTimeArr.reduce((prev, cur) => {
-        let tripWay = tripWayMap[cur.tripWay];
-        return {
-          ...prev,
-          [tripWay]: ++prev[tripWayMap[cur.tripWay]]
-        };
+      // 每种出行方式的比例
+      let computedCountMap = tripTimeArr.reduce((totalCountMap, cur) => {
+        totalCountMap[tripWayMap[cur.tripWay]] = ++totalCountMap[
+          tripWayMap[cur.tripWay]
+        ];
+        return totalCountMap;
       }, countMap);
 
       return Object.keys(computedCountMap).map(tripWay => {
         return {
           item: tripWay,
-          percent: (computedCountMap[tripWay] / allCount)
+          percent: parseFloat((computedCountMap[tripWay] / allCount).toFixed(2))
         };
       });
     },
@@ -70,7 +73,7 @@ export default {
       let res = await getTripRatio();
       if (res.code === 0) {
         console.log(res.data);
-        this.pieData = [...this.computeRatio(res.data)];
+        this.pieData = this.computeRatio(res.data);
         console.log(this.pieData);
       } else if (res.code === 1) {
         Toast.failed("获取出行失败");
@@ -87,9 +90,12 @@ export default {
   top: 0;
   bottom: 0;
   width: 100%;
-  z-index: 999;
+  // z-index: 1;
   transition: all ease 0.4s;
   background-color: $mainBgGrayColor;
+  .scroll-wrapper {
+    height: calc(100% - #{$backHeaderHeight} - #{$bottomNavHeight});
+  }
   .user-analysis-inner {
     padding: 14px;
   }

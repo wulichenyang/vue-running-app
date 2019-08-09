@@ -7,91 +7,93 @@
       @hide="onCancelCrop"
       @finish="onCropFinish"
     />
-    <SettingInfoSection>
-      <md-field>
-        <label for="my_file">
-          <md-cell-item
-            title="头像"
-            arrow
-          >
-            <img
-              class="avatar"
-              slot="right"
-              :src="(user && user.avatar !== '' ? `/img/avatar/${user.avatar}` :'/img/avatar/head.jpg') || '/img/avatar/head.jpg'"
-              alt="头像"
+    <Scroll class="scroll-wrapper">
+      <SettingInfoSection>
+        <md-field>
+          <label for="my_file">
+            <md-cell-item
+              title="头像"
+              arrow
             >
-            <!-- 头像上传 -->
-            <input
-              v-if="!destroyInput"
-              type="file"
-              ref="upload"
-              name="avatar"
-              id='my_file'
-              style="display:none;"
-              accept="image/jpg,image/jpeg,image/png,image/gif"
-              @change="changeAvatar"
-            />
-          </md-cell-item>
-        </label>
-        <md-cell-item
-          title="用户名"
-          :addon="user && user.realname"
-          arrow
-          @click="onEditText(title = '用户名', key = 'realname' , value = user && user.realname, length = 6)"
-        />
-        <md-cell-item
-          title="昵称"
-          :addon="user && user.nickname"
-          arrow
-          @click="onEditText(title = '昵称', key = 'nickname', value = user && user.nickname, length = 7)"
-        />
-        <md-cell-item
-          title="性别"
-          :addon="user && user.gender === 0 ? '女' : user && user.gender === 1 ? '男' : '保密'"
-          arrow
-          @click="showGenderSelector"
-        />
-        <md-cell-item
-          title="生日"
-          :addon="user && user.birth.split('T')[0]"
-          arrow
-          @click="showBirthPicker"
-        />
-        <md-cell-item
-          title="个性签名"
-          :addon="user && user.brief"
-          arrow
-          @click="onEditText(title = '个性签名', key = 'brief', value = user && user.brief, length = 20)"
-        />
-        <md-cell-item
-          title="地址"
-          :addon="user && user.address"
-          arrow
-        />
-      </md-field>
-    </SettingInfoSection>
+              <img
+                class="avatar"
+                slot="right"
+                :src="(user && user.avatar !== '' ? `/img/avatar/${user.avatar}` :'/img/avatar/head.jpg') || '/img/avatar/head.jpg'"
+                alt="头像"
+              >
+              <!-- 头像上传 -->
+              <input
+                v-if="!destroyInput"
+                type="file"
+                ref="upload"
+                name="avatar"
+                id='my_file'
+                style="display:none;"
+                accept="image/jpg,image/jpeg,image/png,image/gif"
+                @change="changeAvatar"
+              />
+            </md-cell-item>
+          </label>
+          <md-cell-item
+            title="用户名"
+            :addon="user && user.realname"
+            arrow
+            @click="onEditText(title = '用户名', key = 'realname' , value = user && user.realname, length = 6)"
+          />
+          <md-cell-item
+            title="昵称"
+            :addon="user && user.nickname"
+            arrow
+            @click="onEditText(title = '昵称', key = 'nickname', value = user && user.nickname, length = 7)"
+          />
+          <md-cell-item
+            title="性别"
+            :addon="user && user.gender === 0 ? '女' : user && user.gender === 1 ? '男' : '保密'"
+            arrow
+            @click="showGenderSelector"
+          />
+          <md-cell-item
+            title="生日"
+            :addon="user && user.birth.split('T')[0]"
+            arrow
+            @click="showBirthPicker"
+          />
+          <md-cell-item
+            title="个性签名"
+            :addon="user && user.brief"
+            arrow
+            @click="onEditText(title = '个性签名', key = 'brief', value = user && user.brief, length = 20)"
+          />
+          <md-cell-item
+            title="地址"
+            :addon="user && user.address"
+            arrow
+          />
+        </md-field>
+      </SettingInfoSection>
 
-    <!-- 性别选择 -->
-    <md-selector
-      v-model="isSelectorShow"
-      :default-value="user && user.gender"
-      :data="genderData"
-      max-height="320px"
-      title="选择性别"
-      large-radius
-      @choose="onChooseGender"
-    ></md-selector>
+      <!-- 性别选择 -->
+      <md-selector
+        v-model="isSelectorShow"
+        :default-value="user && user.gender"
+        :data="genderData"
+        max-height="320px"
+        title="选择性别"
+        large-radius
+        @choose="onChooseGender"
+      ></md-selector>
 
-    <!-- 生日选择 -->
-    <md-date-picker
-      v-model="isDatePickerShow"
-      ref="datePicker"
-      :min-date="minDate"
-      :max-date="maxDate"
-      :default-date="new Date(user && user.birth)"
-      :title="`选择生日`"
-      @confirm="onDatePickerConfirm"
-    ></md-date-picker>
+      <!-- 生日选择 -->
+      <md-date-picker
+        v-model="isDatePickerShow"
+        ref="datePicker"
+        :min-date="minDate"
+        :max-date="maxDate"
+        :default-date="new Date(user && user.birth)"
+        :title="`选择生日`"
+        @confirm="onDatePickerConfirm"
+      ></md-date-picker>
+    </Scroll>
 
     <transition name="right-left">
       <router-view></router-view>
@@ -100,6 +102,7 @@
 </template>
 
 <script>
+import Scroll from "@/components/BetterScroll/Scroll";
 import { changeAvatar } from "@/api/user";
 import { getObjectUrl } from "@/utils/image.js";
 import BackHeader from "@/components/BackHeader.vue";
@@ -111,7 +114,6 @@ import Exif from "exif-js";
 import { updateUser } from "../../api/user";
 import { localDate } from "@/utils/time.js";
 
-// TODO: Add Better-Scroll in some pages
 export default {
   name: "userInfoDetail",
   components: {
@@ -121,7 +123,8 @@ export default {
     [CellItem.name]: CellItem,
     [Selector.name]: Selector,
     [DatePicker.name]: DatePicker,
-    Crop: Crop
+    Crop: Crop,
+    Scroll: Scroll
   },
   props: {},
   data() {
@@ -305,6 +308,9 @@ export default {
   z-index: 999;
   transition: all ease 0.4s;
   background-color: $mainBgGrayColor;
+  .scroll-wrapper {
+    height: calc(100% - #{$bottomNavHeight});
+  }
   .md-field {
     zoom: 0.5;
     padding: 0;
