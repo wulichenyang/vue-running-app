@@ -27,6 +27,14 @@ export const getDistanceComparation = async () => {
   return get('/distanceComparation')
 }
 
+export const getTripDistanceTrend = async () => {
+  return get('/tripDistanceTrend')
+}
+
+export const getTrafficDistanceTrend = async () => {
+  return get('/trafficDistanceTrend')
+}
+
 // export const getSunburstGraphData = async () => {
 //   return get('/xxx')
 // }

@@ -55,8 +55,8 @@ export default {
       // [
       //   {
       //     name: 'trip',
-      //     day: '2018-01-01',
-      //     distance: 10.1
+      //     x: '2018-01-01',
+      //     y: 10.1
       //   }
       //   ...
       // ]
@@ -126,8 +126,10 @@ export default {
         }
         return total
       }, totalMap)
-      // traffic: {2019-08-03: 8.79, 2019-08-09: 0}
-      // trip: {2019-08-03: 0.01, 2019-08-09: 0.04}
+      // {
+        // traffic: {2019-08-03: 8.79, 2019-08-09: 0}
+        // trip: {2019-08-03: 0.01, 2019-08-09: 0.04}
+      // }
       console.log('totalmap', totalMap)
       let trafficArr = Object.keys(totalMap.traffic).map(date => {
         return {

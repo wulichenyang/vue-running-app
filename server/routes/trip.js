@@ -194,27 +194,24 @@ const getPrevSixDay = (date) => {
 }
 
 
-const getDistanceOfSevenDays = (req, res, date) => {
+const getDistanceOfSevenDays = (req, res, date, condition, projection) => {
   // 计算倒数第七天 - 6天  -> 00:00:00
   let prevSixDay = getPrevSixDay(date)
   console.log(prevSixDay)
   Trip.find(
     {
-      date: { $gte: new Date(prevSixDay) }
+      date: { $gte: new Date(prevSixDay) },
+      ...condition
     },
-    {
-      type: 1,
-      distance: 1,
-      date: 1,
-    },
+    projection,
     (err, docs) => {
-      if(err) {
+      if (err) {
         res.send({
           code: 1,
           message: err.message
         })
       }
-      if(docs.length > 0) {
+      if (docs.length > 0) {
         res.send({
           code: 0,
           data: docs
@@ -229,7 +226,7 @@ const getDistanceOfSevenDays = (req, res, date) => {
   )
 }
 
-const getDistanceComparation = (req, res) => {
+const getRecentDistance = (req, res, condition, projection) => {
   // 获取最近的日期
   Trip
     .find()
@@ -245,7 +242,10 @@ const getDistanceComparation = (req, res) => {
         // 最近的日期
         console.log(doc[0].date)
         // 获取最近日期七天以内，每天trip和traffic的里程数据累计
-        getDistanceOfSevenDays(req, res, doc[0].date)
+        getDistanceOfSevenDays(req, res, doc[0].date,
+          condition,
+          projection
+        )
       } else {
         res.send({
           code: 0,
@@ -254,9 +254,32 @@ const getDistanceComparation = (req, res) => {
         })
       }
     })
+}
 
+const getTripDistanceTrend = (req, res) => {
+  getRecentDistance(req, res,
+    {
+      type: 'trip'
+    },
+    {
+      type: 1,
+      tripWay: 1,
+      distance: 1,
+      date: 1,
+    })
+}
 
-  // 累计reduce 七天
+const getTrafficDistanceTrend = (req, res) => {
+  getRecentDistance(req, res,
+    {
+      type: 'traffic'
+    },
+    {
+      type: 1,
+      tripWay: 1,
+      distance: 1,
+      date: 1,
+    })
 }
 
 // Add one tripData
@@ -282,7 +305,23 @@ router.get('/tripRatio', (req, res, next) => {
 
 // 获取最近7天trip/traffic里程数据
 router.get('/distanceComparation', (req, res, next) => {
-  getDistanceComparation(req, res)
+  getRecentDistance(req, res,
+    {},
+    {
+      type: 1,
+      distance: 1,
+      date: 1,
+    })
+})
+
+// 获取最近7天 trip 里程数据
+router.get('/tripDistanceTrend', (req, res, next) => {
+  getTripDistanceTrend(req, res)
+})
+
+// 获取最近7天 traffic 里程数据
+router.get('/trafficDistanceTrend', (req, res, next) => {
+  getTrafficDistanceTrend(req, res)
 })
 
 module.exports = router;
