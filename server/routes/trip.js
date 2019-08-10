@@ -77,7 +77,7 @@ const updateDistance = (req, res, showSuccess, payloadName) => {
             errInfo(res, err.message)
             return;
           } else {
-            if(showSuccess) {
+            if (showSuccess) {
               // Successful
               resInfo(res, undefined, "成功保存本次行程")
             }
@@ -125,34 +125,34 @@ const getHistory = (req, res) => {
     },
     { userId: 0, __v: 0 },
   )
-  .sort({'date': -1})
-  .skip(page * limit)
-  .limit(limit)
-  .exec((err, docs) => {
-    if (err) {
-      res.status(500).json({
-        code: 1,
-        message: err.message
-      })
-      return;
-    } else {
-      if(docs.length > 0) {
-        res.send({
-          code: 0,
-          data: docs
+    .sort({ 'date': -1 })
+    .skip(page * limit)
+    .limit(limit)
+    .exec((err, docs) => {
+      if (err) {
+        res.status(500).json({
+          code: 1,
+          message: err.message
         })
+        return;
+      } else {
+        if (docs.length > 0) {
+          res.send({
+            code: 0,
+            data: docs
+          })
+        }
+        // 分页已查完所有数据
+        if (docs.length === 0) {
+          res.send({
+            code: 0,
+            data: {
+              noMoreData: true
+            }
+          })
+        }
       }
-      // 分页已查完所有数据
-      if(docs.length === 0) {
-        res.send({
-          code: 0,
-          data: {
-            noMoreData: true
-          }
-        })
-      }
-    }
-  })
+    })
 }
 
 const getTripRatio = (req, res) => {
@@ -160,31 +160,103 @@ const getTripRatio = (req, res) => {
     {
       userId: req.userId
     },
-    { tripWay: 1 , _id: 0},
+    { tripWay: 1, _id: 0 },
   )
-  .exec((err, docs) => {
-    if (err) {
-      res.status(500).json({
-        code: 1,
-        message: err.message
-      })
-      return;
-    } else {
+    .exec((err, docs) => {
+      if (err) {
+        res.status(500).json({
+          code: 1,
+          message: err.message
+        })
+        return;
+      } else {
+        if (docs.length > 0) {
+          res.send({
+            code: 0,
+            data: docs
+          })
+        }
+        // 没有数据
+        if (docs.length === 0) {
+          res.send({
+            code: 0,
+            data: []
+          })
+        }
+      }
+    })
+}
+
+const getPrevSixDay = (date) => {
+  var prevSevenDay = new Date(date.getTime() - 144 * 60 * 60 * 1000);
+  let newDate = new Date(prevSevenDay.toISOString().split('T')[0])
+  return newDate.toISOString()
+}
+
+
+const getDistanceOfSevenDays = (req, res, date) => {
+  // 计算倒数第七天 - 6天  -> 00:00:00
+  let prevSixDay = getPrevSixDay(date)
+  console.log(prevSixDay)
+  Trip.find(
+    {
+      date: { $gte: new Date(prevSixDay) }
+    },
+    {
+      type: 1,
+      distance: 1,
+      date: 1,
+    },
+    (err, docs) => {
+      if(err) {
+        res.send({
+          code: 1,
+          message: err.message
+        })
+      }
       if(docs.length > 0) {
         res.send({
           code: 0,
           data: docs
         })
-      }
-      // 没有数据
-      if(docs.length === 0) {
+      } else {
         res.send({
           code: 0,
           data: []
         })
       }
     }
-  })
+  )
+}
+
+const getDistanceComparation = (req, res) => {
+  // 获取最近的日期
+  Trip
+    .find()
+    .sort({ date: -1 })
+    .limit(1)
+    .exec((err, doc) => {
+      if (err) {
+        res.send({
+          code: 1,
+          message: '查找日期失败'
+        })
+      } else if (doc.length >= 1) {
+        // 最近的日期
+        console.log(doc[0].date)
+        // 获取最近日期七天以内，每天trip和traffic的里程数据累计
+        getDistanceOfSevenDays(req, res, doc[0].date)
+      } else {
+        res.send({
+          code: 0,
+          data: [],
+          message: '没有出行数据'
+        })
+      }
+    })
+
+
+  // 累计reduce 七天
 }
 
 // Add one tripData
@@ -205,7 +277,12 @@ router.get('/history', (req, res, next) => {
 
 // 获取出行种类的次数（比例）
 router.get('/tripRatio', (req, res, next) => {
- getTripRatio(req, res)
+  getTripRatio(req, res)
+})
+
+// 获取最近7天trip/traffic里程数据
+router.get('/distanceComparation', (req, res, next) => {
+  getDistanceComparation(req, res)
 })
 
 module.exports = router;

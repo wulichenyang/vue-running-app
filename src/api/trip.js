@@ -23,6 +23,10 @@ export const getTripRatio = async () => {
   return get('/tripRatio')
 }
 
+export const getDistanceComparation = async () => {
+  return get('/distanceComparation')
+}
+
 // export const getSunburstGraphData = async () => {
 //   return get('/xxx')
 // }

@@ -9,7 +9,7 @@
 import G2 from "@antv/g2";
 
 export default {
-  name: "pie",
+  name: "pieChart",
   props: {
     data: {
       type: Array,
@@ -34,7 +34,6 @@ export default {
       if (data.length === 0) {
         return;
       }
-      console.log(data);
       var chart = new G2.Chart({
         container: "pie",
         forceFit: true,

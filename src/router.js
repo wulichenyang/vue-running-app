@@ -151,7 +151,6 @@ router.beforeEach((to, from, next) => {
     return
   } else {
     // 刷新token在cookie里的时间
-    console.log('setCookie in router')
     cookie.setCookie(access_token, token, 24 * 30) // 30天
     // cookie.setCookie('username', username, 24 * 30)
     next()
