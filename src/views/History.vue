@@ -14,7 +14,7 @@
           出行历史
           <svg-icon icon-class="history-list" />
         </h1>
-        <Scroll
+        <!-- <Scroll
           ref="scroll"
           :data="historyList"
           class="scroll-wrapper"
@@ -25,25 +25,62 @@
           @pulldown="getHistory(refresh=true)"
           @onShowPulldown="onShowPulldown"
           @onHidePulldown="onHidePulldown"
+        > -->
+        <md-scroll-view
+          ref="historyScrollView"
+          :scrolling-x="false"
+          @refreshing="$_onRefresh"
+          @end-reached="$_onEndReached"
         >
-          <md-field v-if="historyList.length > 0">
-            <p v-if="showPulldownInfo">下拉刷新</p>
-            <p v-if="refreshing">刷新中...</p>
-            <md-cell-item
-              v-for="historyItem in historyList"
-              :key="historyItem._id"
-              :title="historyItem.tripWay"
-              :brief="tripOrTraffic(historyItem)"
-              :addon="historyItem.date && historyItem.date.substring(0, 10)"
-              @click="onClickDetail(historyItem)"
-              arrow
-            />
-            <p v-if="loadMore || noMoreData">{{loadMore? '加载更多...' : noMoreData ? '没有更多数据啦~' : ''}}</p>
-          </md-field>
-          <div class="no-trip" v-else>
-            <p>您还没有出行记录哟~</p>
-          </div>
-        </Scroll>
+          <!-- 下拉刷新提示 -->
+          <md-scroll-view-refresh
+            slot="refresh"
+            slot-scope="{ scrollTop, isRefreshActive, isRefreshing }"
+            :scroll-top="scrollTop"
+            :is-refreshing="isRefreshing"
+            :is-refresh-active="isRefreshActive"
+          ></md-scroll-view-refresh>
+
+          <!-- 历史列表 -->
+          <section>
+            <md-field v-if="historyList.length > 0">
+              <!-- <p
+                class="refresh-tips"
+                v-if="showPulldownInfo"
+              >下拉刷新</p>
+              <p
+                class="refresh-tips"
+                v-if="refreshing"
+              >刷新中...</p> -->
+              <md-cell-item
+                v-for="historyItem in historyList"
+                :key="historyItem._id"
+                :title="historyItem.tripWay"
+                :brief="tripOrTraffic(historyItem)"
+                :addon="historyItem.date && historyItem.date.substring(0, 10)"
+                @click="onClickDetail(historyItem)"
+                arrow
+              />
+              <!-- <p
+                class="refresh-tips"
+                v-if="loadMore || noMoreData"
+              >{{loadMore? '加载更多...' : noMoreData ? '没有更多数据啦~' : ''}}</p> -->
+            </md-field>
+            <div
+              class="no-trip"
+              v-else
+            >
+              <p class="refresh-tips">您还没有出行记录哟~</p>
+            </div>
+          </section>
+          <!-- 上拉加载更多信息 -->
+          <md-scroll-view-more
+            slot="more"
+            :is-finished="noMoreData"
+          >
+          </md-scroll-view-more>
+        </md-scroll-view>
+        <!-- </Scroll> -->
       </div>
     </section>
     <router-view></router-view>
@@ -55,7 +92,15 @@ import Scroll from "@/components/BetterScroll/Scroll.vue";
 import { mapGetters, mapActions } from "vuex";
 import { getHistory } from "@/api/trip";
 import NoticeBar from "@/components/NoticeBar.vue";
-import { ScrollView, Toast, Field, FieldItem, CellItem } from "mand-mobile";
+import {
+  ScrollView,
+  Toast,
+  Field,
+  FieldItem,
+  CellItem,
+  ScrollViewRefresh,
+  ScrollViewMore
+} from "mand-mobile";
 export default {
   name: "history",
   components: {
@@ -66,7 +111,9 @@ export default {
     [CellItem.name]: CellItem,
     [Field.name]: Field,
     Scroll: Scroll,
-    NoticeBar: NoticeBar
+    NoticeBar: NoticeBar,
+    [ScrollViewRefresh.name]: ScrollViewRefresh,
+    [ScrollViewMore.name]: ScrollViewMore
   },
   mounted() {
     //TODO: in vuex
@@ -90,20 +137,53 @@ export default {
   },
 
   methods: {
-    async getHistory(refresh = false) {
-      if (!refresh) {
-        this.addLoading();
-      }
+
+    // 重置上拉加载更多动作
+    resetLoadmore() {
+      this.$refs.historyScrollView.finishLoadMore();
+    },
+
+    // 重置刷新动作
+    resetRefresh() {
+      this.$refs.historyScrollView.finishRefresh();
+    },
+
+    // 下拉刷新
+    async $_onRefresh() {
+      // 下拉刷新，重置上拉加载
+      this.resetLoadmore();
+      await this.getHistory();
+      this.$refs.historyScrollView.finishRefresh();
+    },
+
+    // 上拉加载更多
+    $_onEndReached() {
+      // 上拉加载更多，重置下拉刷新
+      this.resetRefresh();
+      this.getMoreHistory();
+    },
+
+    // 重置请求信息
+    resetInfo() {
       this.refreshing = true;
       this.noMoreData = false;
       this.page = 0;
+    },
+
+    // 第一次请求历史数据
+    async getHistory(refresh = true) {
+      if (refresh) {
+        this.addLoading();
+      }
+      this.resetInfo();
       let res = await getHistory(this.page++, this.limit);
       if (res.code === 0) {
         // 没有出行记录
-        if(res.data.noMoreData) {
+        if (res.data.noMoreData) {
           this.subLoading();
           return;
         } else {
+          this.subLoading();
           this.historyList = res.data;
         }
       } else if (res.code === 1) {
@@ -116,11 +196,15 @@ export default {
       this.refreshing = false;
     },
 
+    // 第二次及以后请求数据
     async getMoreHistory() {
       // 还有更多的数据，可以请求
+      if (this.noMoreData) {
+        return;
+      }
       if (!this.noMoreData && !this.refreshing) {
         // Loading more 动画
-        this.loadMore = true;
+        // this.loadMore = true;
         let res = await getHistory(this.page++, this.limit);
 
         if (res.code === 0) {
@@ -130,27 +214,29 @@ export default {
           } else {
             this.historyList = [...this.historyList, ...res.data];
           }
+          this.$refs.scrollView.finishLoadMore();
         } else if (res.code === 1) {
           Toast.failed(res.message);
+          this.$refs.scrollView.finishLoadMore();
         }
-        setTimeout(() => {
-          this.loadMore = false;
-        }, 1000);
+        // setTimeout(() => {
+        // this.loadMore = false;
+        // }, 1000);
       }
     },
 
-    onLoadMoreHistory() {
-      this.getMoreHistory();
-    },
+    // onLoadMoreHistory() {
+    //   this.getMoreHistory();
+    // },
 
-    onShowPulldown() {
-      console.log("trigger");
-      this.showPulldownInfo = true;
-    },
+    // onShowPulldown() {
+    //   console.log("trigger");
+    //   this.showPulldownInfo = true;
+    // },
 
-    onHidePulldown() {
-      this.showPulldownInfo = false;
-    },
+    // onHidePulldown() {
+    //   this.showPulldownInfo = false;
+    // },
     // async refreshHistory(finishRefresh) {
     //   let res = await getHistory();
     //   if (res.code === 0) {
@@ -215,10 +301,16 @@ export default {
         filter: drop-shadow($confirmBtnColor 999px 0);
         transform: translateX(-999px);
       }
-      .scroll-wrapper {
+      .scroll-wrapper,
+      .md-scroll-view {
         margin-top: 10px;
         height: calc(100% - 24px);
         overflow: hidden;
+        .refresh-tips {
+          text-align: center;
+          margin: 5px 0;
+          color: $linkFontColor;
+        }
         .no-trip {
           text-align: center;
         }
