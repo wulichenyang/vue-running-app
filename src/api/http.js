@@ -9,6 +9,9 @@ import { Toast } from 'mand-mobile'
 import cookie from '../utils/cookie';
 import { access_token } from "../configs";
 import router from '@/router'
+import store from '@/store/index'
+import * as types from '@/store/mutation-types'
+
 
 // import cookie from "@/assets/js/cookie.ts";
 // import router from "@/router"
@@ -25,15 +28,17 @@ import router from '@/router'
 //     path: '/login',
 //   });
 // }
-
+const resetLoading = () => {
+  store.commit(types.RESET_LOADING)
+}
 /**
  * 请求失败后的错误统一处理
  * @param {Number} status 请求失败的状态码
  */
 const errorHandle = (status, msg) => {
   // 状态码判断
-  // TODO: fix reset loading in vuex
-
+  // Reset loading in vuex  
+  resetLoading();
   switch (status) {
     // 501: Not Implemented
     case 501:
