@@ -32,6 +32,8 @@ import router from '@/router'
  */
 const errorHandle = (status, msg) => {
   // 状态码判断
+  // TODO: fix reset loading in vuex
+
   switch (status) {
     // 501: Not Implemented
     case 501:
