@@ -107,10 +107,14 @@ export default {
   data() {
     return {
       // 出行信息
+      
+      // 出发位置
       startAddress: "",
       startAddressDetail: {},
+      // 终点位置
       terminalAddress: "",
       terminalAddressDetail: {},
+      // 出行方式
       trafficWay: "公交/地铁",
       addressList: [],
       timer: null,
@@ -119,7 +123,7 @@ export default {
       isAddressListCollapsed: false,
       showRouteDetail: false,
       trafficeWayNow: "AMap.Transfer",
-      distance: 0,
+      distance: 0, // 里程
       panelId: "panel",
 
       // 出行提交模态框
@@ -130,9 +134,10 @@ export default {
           handler: this.onSaveRoute
         }
       ],
-      cost: 0,
-      date: null,
-      markText: ""
+      cost: 0, // 花费
+      date: null, // 日期
+      markText: "", // 备注信息
+      submitting: false, // 提交中信息
     };
   },
   beforeDestroy() {
@@ -236,6 +241,12 @@ export default {
       this.showRouteDetail = false;
     },
     async saveRoute() {
+      // 提交中返回
+      if (this.submitting) {
+        return;
+      }
+      this.submitting = true;
+      // 检查数据完整性
       if (
         !this.startAddressDetail ||
         !this.terminalAddressDetail ||
@@ -246,7 +257,7 @@ export default {
         Toast.failed("路线信息不完整");
         return;
       }
-
+      // 取表单数据
       let startCode = `${this.startAddressDetail.location.lng}, ${this.startAddressDetail.location.lat}`;
       let endCode = `${this.terminalAddressDetail.location.lng}, ${this.terminalAddressDetail.location.lat}`;
 
@@ -263,10 +274,13 @@ export default {
         endCode,
         mark: this.markText || "未备注"
       };
+      // 保存交通出行信息
       let res = await saveTraffic(trafficData);
       if (res.code === 0) {
         Toast.info(res.message);
       }
+      // 重置提交中flag
+      this.submitting = false;
     },
     clearForm() {
       this.cost = 0;
@@ -277,6 +291,7 @@ export default {
       this.distance = 0;
       this.markText = "";
       this.ifShowForm = false;
+      this.submitting = false;
     }
   }
 };

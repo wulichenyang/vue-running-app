@@ -68,7 +68,8 @@ export default {
       inputValue: "",
       // 新旧密码
       prevPassword: "",
-      newPassword: ""
+      newPassword: "",
+      submitting: false // 表单提交中
     };
   },
   mounted() {
@@ -98,6 +99,12 @@ export default {
     },
 
     async updateUserInfo() {
+      // 提交中返回
+      if (this.submitting) {
+        return;
+      }
+      this.submitting = true;
+      // 修改用户信息
       let res = await updateUser(this.editing.key, this.inputValue);
       if (res.code === 0) {
         // 成功后重新获取用户数据
@@ -108,6 +115,8 @@ export default {
         // 更新失败
         Toast.failed(res.message);
       }
+      // 重置提交中flag
+      this.submitting = false;
       // 清除密码表单
       if (this.editing.key === "password") {
         this.clearPassword();

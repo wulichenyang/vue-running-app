@@ -78,7 +78,7 @@ export default {
       password: "",
       phoneError: "",
       passwordError: "",
-      posting: false
+      submitting: false //提交中
     };
   },
   computed: {
@@ -96,14 +96,17 @@ export default {
     },
     // TODO listen to enter key
     async onLogin() {
+      // 提交中返回
+      if (this.submitting) {
+        return;
+      }
+      this.submitting = true;
+
       if (this.onPhoneCheck() && this.onPasswordCheck()) {
         console.log("logging");
-        this.posting = true;
         let res = await login(this.phone, md5(this.password));
         // Success
         if (res.code === 0) {
-          // TODO posting
-          this.posting = false;
           this.resetForm();
           // 清除之前的vuex
           this.clearAllInfo();
@@ -113,9 +116,13 @@ export default {
           this.$router.push({ path: "/" });
         } else if (res.code === 1) {
           // Fail
-          this.posting = false;
           Toast.failed(res.message);
         }
+        // 重置提交中flag
+        this.submitting = false;
+      } else {
+        // 重置提交中flag
+        this.submitting = false;
       }
     },
 

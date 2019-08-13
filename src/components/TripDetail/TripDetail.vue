@@ -230,7 +230,8 @@ export default {
       timeSecond: 0,
       timeHd: null, // 时间循环句柄
       markText: "",
-      brief: "" // 行程备注
+      brief: "", // 行程备注
+      submitting: false, // 提交表单中
     };
   },
   mounted() {},
@@ -294,6 +295,12 @@ export default {
       }
     },
     async saveTripData() {
+      // 提交中返回
+      if(this.submitting) {
+        return;
+      }
+      this.submitting = true;
+      // 获取表单值
       let type =
         location.pathname.indexOf("trip") > 0
           ? "trip"
@@ -303,6 +310,7 @@ export default {
       let tripWayCode = location.pathname.split("/").pop();
       let tripWayCN = tripWayMap[tripWayCode];
       let markText = this.brief;
+      // 提交私人出行信息
       let res = await saveTrip({
         type,
         tripWay: `${tripWayCN}`,
@@ -317,6 +325,8 @@ export default {
       if (res.code === 0) {
         Toast.succeed(res.message);
       }
+      // 重置提交中flag
+      this.submitting = false;
     },
     themeOnToggle() {
       this.themePopupShow = !this.themePopupShow;

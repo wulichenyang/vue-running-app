@@ -150,7 +150,8 @@ export default {
         }
       ],
       minDate: new Date("1900/1/1"),
-      maxDate: new Date()
+      maxDate: new Date(),
+      submitting: false // 表单提交中
     };
   },
   computed: {
@@ -273,6 +274,12 @@ export default {
     },
 
     async onDatePickerConfirm(columnsValue) {
+      // 提交中返回
+      if (this.submitting) {
+        return;
+      }
+      this.submitting = true;
+      // 修改生日
       const date = localDate(this.$refs.datePicker.getFormatDate("yyyy/MM/dd"));
       let res = await updateUser("birth", date);
       if (res.code === 0) {
@@ -282,9 +289,16 @@ export default {
         // 失败
         Toast.failed("更新生日失败");
       }
+      // 重置提交中flag
+      this.submitting = false;
     },
 
     async onChooseGender({ text, value }) {
+      // 提交中返回
+      if (this.submitting) {
+        return;
+      }
+      this.submitting = true;
       console.log(value);
       let res = await updateUser("gender", value);
       if (res.code === 0) {
@@ -292,6 +306,8 @@ export default {
       } else {
         Toast.failed(res.message);
       }
+      // 重置提交中flag
+      this.submitting = false;
     },
     ...mapActions(["setUserEditing", "getUser"])
   }

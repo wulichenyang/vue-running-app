@@ -70,7 +70,7 @@ export default {
       password: "",
       phoneError: "",
       passwordError: "",
-      posting: false
+      submitting: false // 表单提交中
     };
   },
   computed: {
@@ -79,22 +79,30 @@ export default {
   mounted() {},
   methods: {
     async onSignup() {
+      // 提交中返回
+      if (this.submitting) {
+        return;
+      }
+      this.submitting = true;
+      // 检查表单信息
       if (this.onPhoneCheck() && this.onPasswordCheck()) {
         console.log("signing");
-        this.posting = true;
+        // 提交注册信息
         let res = await signup(this.phone, md5(this.password));
         // Success
         if (res.code === 0) {
-          // TODO posting
-          this.posting = false;
           this.resetForm();
           Toast.succeed(res.message);
           this.$router.push({ path: "login" });
         } else if (res.code === 1) {
           // Fail
-          this.posting = false;
           Toast.failed(res.message);
         }
+        // 重置提交中flag
+        this.submitting = false;
+      } else {
+        // 重置提交中flag
+        this.submitting = false;
       }
     },
 
