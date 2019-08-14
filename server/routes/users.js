@@ -14,6 +14,10 @@ const {
   resInfo
 } = require('./utils')
 
+const avatarPath = process.env.NODE_ENV === 'dev' ? 
+  '../public/img/avatar/' : process.env.NODE_ENV === 'production' ? 
+  'public/images/avatar/' : '../public/img/avatar';
+
 /* GET userinfo. */
 router.get('/user', function (req, res, next) {
   User.find({ phone: req.phone }, { password: 0, role: 0, __v: 0, _id: 0 }, (err, doc) => {
@@ -145,7 +149,7 @@ router.put('/user/update', (req, res, next) => {
 })
 
 const removePrevAvatar = (avatarName) => {
-  fs.unlink('../public/img/avatar/' + avatarName, (err) => {
+  fs.unlink(avatarPath + avatarName, (err) => {
     if(err) {
       console.log('删除头像失败')
     }
@@ -180,8 +184,9 @@ router.put('/user/avatar', (req, res, next) => {
   // 移动图片
   // Product： 自动在server的根目录找
   // avatar.mv('public/images/avatar/' + avatarUrl, function (err) {
-  // Dev：存储在前端public下
-  avatar.mv('../public/img/avatar/' + avatarUrl, function (err) {
+  // Dev：存储在前端public下 ../public/img/avatar/
+  
+  avatar.mv(avatarPath + avatarUrl, function (err) {
     if (err) {
       errInfo(res, err.message);
     } else {

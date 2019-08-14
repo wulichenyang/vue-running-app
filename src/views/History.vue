@@ -236,6 +236,18 @@ export default {
         color: $confirmBtnColor;
         overflow: hidden;
       }
+      .rolling-container {
+        svg {
+          max-width: 24px;
+          max-height: 24px;
+        }
+      }
+      .refresh-tip {
+        text-align: center;
+        margin: 5px 0;
+        color: $linkFontColor;
+        font-size: $mainFontSize !important;
+      }
       svg {
         filter: drop-shadow($confirmBtnColor 999px 0);
         transform: translateX(-999px);
@@ -246,12 +258,7 @@ export default {
         height: calc(100% - 24px);
         overflow: hidden;
         .scroll-view-container {
-          height: auto !important; 
-        }
-        .refresh-tips {
-          text-align: center;
-          margin: 5px 0;
-          color: $linkFontColor;
+          height: auto !important;
         }
         .no-trip {
           text-align: center;
