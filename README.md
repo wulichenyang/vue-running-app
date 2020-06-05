@@ -1,34 +1,52 @@
 # vue-running-app
 
-## Project setup
-```
-yarn install
+## 跑步记录、地图路线
+
 ```
 
-### Compiles and hot-reloads for development
-```
-yarn run serve
+基于高德地图的行程记录网站
+
+功能：
+
+    - 支持记录行程数据、保存行程路线，查看消耗卡路里；
+    - 实时计算当前速度、路程；
+    - 查询起止节点推荐路径、推荐具体乘车信息
+    - 查询用户个人历史出行信息记录、出行历史可视化分析信息；
+    - 登录和修改用户个人信息、修改头像
+
 ```
 
-### Compiles and minifies for production
-```
-yarn run build
-```
+## 功能列表
 
-### Run your tests
-```
-yarn run test
-```
+### 用户页面
 
-### Lints and fixes files
-```
-yarn run lint
-```
+- [x] 行程页面
+- [x] 搜索路线
+- [x] 历史行程
+- [x] 历史详情
+- [x] 个人主页
+- [x] 出行趋势（私人出行历程趋势、交通出行历程趋势）
+- [x] 数据分析（出行方式分布、出行/交通历程对比）
+- [x] 用户详情
+- [x] 头像修改
+- [x] 用户设置
+- [x] 用户密码
+- [ ] 个人主页其他项目
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
 
-## Data structure of server end
+## 效果展示
+
+### 行程记录
+<img src="https://github.com/wulichenyang/vue-running-app/blob/master/screenshots/run.gif" width="320" height="619"/>
+
+### 路线查询、历史出行记录
+<img src="https://github.com/wulichenyang/vue-running-app/blob/master/screenshots/search.gif" width="320" height="619"/>
+
+### 用户信息、可视化分析查询
+<img src="https://github.com/wulichenyang/vue-running-app/blob/master/screenshots/profile.gif" width="320" height="619"/>
+
+
+## 数据交互接口规范
 ```
 {
   data: {
@@ -43,6 +61,8 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 }
 
 ```
+
+
 ## 注意
 
 ### 路径问题
